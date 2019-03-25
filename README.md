@@ -4,10 +4,10 @@ A Python API wrapper to communicate with the Topl blockchain via requests made u
 # Installation & Usage
 To install from pip run "pip install LokiPy" in your project directory<br/><br/>
 
-Create an instance of LokiJS in your JS application by using:<br/>
-* from LokiJS import Requests;<br/><br/>
+Create an instance of LokiPy in your Python application by using:<br/>
+* from LokiPy import Requests;<br/><br/>
 Most of the functions return jsons loaded from requests made using the requests module. Example usage: <br/>
-* LokiObj = Requests.LokiJS();<br/>
+* LokiObj = Requests.LokiPy();<br/>
 * print(LokiObj.getMempool());<br/><br/>
 
 See the Requests.py file for various other methods that can be invoked by your LokiPy instance to communicate with the Topl blockchain. 
