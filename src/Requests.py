@@ -1,5 +1,8 @@
 import requests
 import json
+import os
+import base58
+from pyblake2 import blake2b
 
 
 class LokiPy(object):
@@ -386,3 +389,27 @@ class LokiPy(object):
 ##########################################################
 ################## Utils Api Route #######################
 ##########################################################
+
+####### Generate random seed of specified length (default length is 32) #######
+
+    def seed(self, seedLength=32):
+        bytes = os.urandom(seedLength);
+        return base58.b58encode(bytes).decode("utf-8");
+
+
+############# Generate Blake2b256 hash of entered string ##############
+
+    def blakeHash(self, message):
+        encoded_message = message.encode("utf-8");
+        h = blake2b(digest_size=32);
+        h.update(encoded_message);
+        return base58.b58encode(bytes.fromhex(h.hexdigest())).decode("utf-8");
+
+
+
+##########################################################
+########### Check if transaction is confirmed ############
+##########################################################
+
+# TODO imlement
+# def onConfirm(self):
