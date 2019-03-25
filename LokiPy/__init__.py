@@ -1,1 +1,1 @@
-from LokiPy.Requests import LokiPy
+from .Requests import LokiPy
