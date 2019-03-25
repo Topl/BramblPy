@@ -1,5 +1,5 @@
 # LokiPy
-A Python API wrapper to communicate with the Topl blockchain via requests made using the request module.
+A Python API wrapper to communicate with the Topl blockchain via requests made using the requests module.
 
 # Installation & Usage
 To install from pip run "pip3 install LokiPy" in your project directory<br/><br/>
