@@ -41,12 +41,16 @@ printJson(LokiObj.transferArbitsByPublicKey('A9vRt6hw7w4c7b4qEkQHYptpqBGpKM5MGoX
 print("-----------------------------");
 print("transferArbitsByPublicKey result:");
 printJson(LokiObj.transferArbitsByPublicKey('A9vRt6hw7w4c7b4qEkQHYptpqBGpKM5MGoXyrkGCbrfb', 1, 0, '', publicKeysToSendFrom=['6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ'], publicKeyToSendChangeTo='6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ'));
-
+#
 print("")
 print(">>>>>>>>>>>>>>>>>>>>>> Asset Api Route");
 print("-----------------------------");
 print("createAssets result:")
 printJson(LokiObj.createAssets("6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ", "6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ", 10, "testAssets", 0, ""));
+
+print("-----------------------------");
+print("createAssets with onConfirm result:")
+printJson(LokiObj.createAssets("6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ", "6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ", 10, "testAssets", 0, "", onConfirm = True, interval = 3, repeats = 3));
 
 print("-----------------------------");
 print("transferAssets result:")

@@ -1,8 +1,14 @@
+ # A Python API wrapper module for the Bifrost Protocol
+ #
+ # @author Yamir Tainwala <y.tainwala@topl.me>
+ # @date 2019
+
 import requests
 import json
 import os
 import base58
 from pyblake2 import blake2b
+import time
 
 class LokiPy(object):
 
@@ -136,7 +142,7 @@ class LokiPy(object):
 
 ########### transferPolys #################
 
-    def transferPolys(self, recipient, amount, fee, data):
+    def transferPolys(self, recipient, amount, fee, data, onConfirm = False, interval = 3, repeats = 3):
         route = 'wallet/';
         payload = {
             "jsonrpc": "2.0",
@@ -150,12 +156,30 @@ class LokiPy(object):
             }]
         };
         response = requests.request('POST', self.url + route, headers = self.headers, data = json.dumps(payload), allow_redirects = False, timeout = self.timeout);
-        return json.loads(response.text);
+        try:
+            response_text = json.loads(response.text);
+            if onConfirm:
+                txHash = response_text["result"]["txHash"];
+                count = 0;
+                txByIdResponse = "";
+                while count < repeats:
+                    txByIdResponse = self.getTransactionById(txHash);
+                    if "result" in txByIdResponse:
+                        return txByIdResponse;
+                    count = count + 1;
+                    time.sleep(interval);
+                return txByIdResponse;
+            else:
+                return response_text;
+
+        except Exception as e:
+            print("Unable to parse response:", e);
+            raise;
 
 
 ########### transferArbits #################
 
-    def transferArbits(self, recipient, amount, fee, data):
+    def transferArbits(self, recipient, amount, fee, data, onConfirm = False, interval = 3, repeats = 3):
         route = 'wallet/';
         payload = {
             "jsonrpc": "2.0",
@@ -169,7 +193,25 @@ class LokiPy(object):
             }]
         };
         response = requests.request('POST', self.url + route, headers = self.headers, data = json.dumps(payload), allow_redirects = False, timeout = self.timeout);
-        return json.loads(response.text);
+        try:
+            response_text = json.loads(response.text);
+            if onConfirm:
+                txHash = response_text["result"]["txHash"];
+                count = 0;
+                txByIdResponse = "";
+                while count < repeats:
+                    txByIdResponse = self.getTransactionById(txHash);
+                    if "result" in txByIdResponse:
+                        return txByIdResponse;
+                    count = count + 1;
+                    time.sleep(interval);
+                return txByIdResponse;
+            else:
+                return response_text;
+
+        except Exception as e:
+            print("Unable to parse response:", e);
+            raise;
 
 
 ########### transferArbitsByPublicKey #################
@@ -177,7 +219,7 @@ class LokiPy(object):
 # specified, publicKeysToSendFrom must be a list of Base 58 encoded string addresses
 # and publicKeyToSendChangeTo must be a Base58 encoded string
 
-    def transferArbitsByPublicKey(self, recipient, amount, fee, data, publicKeysToSendFrom = [], publicKeyToSendChangeTo = ''):
+    def transferArbitsByPublicKey(self, recipient, amount, fee, data, publicKeysToSendFrom = [], publicKeyToSendChangeTo = '', onConfirm = False, interval = 3, repeats = 3):
         route = 'wallet/';
         payload = {
             "jsonrpc": "2.0",
@@ -193,7 +235,25 @@ class LokiPy(object):
             }]
         };
         response = requests.request('POST', self.url + route, headers = self.headers, data = json.dumps(payload), allow_redirects = False, timeout = self.timeout);
-        return json.loads(response.text);
+        try:
+            response_text = json.loads(response.text);
+            if onConfirm:
+                txHash = response_text["result"]["txHash"];
+                count = 0;
+                txByIdResponse = "";
+                while count < repeats:
+                    txByIdResponse = self.getTransactionById(txHash);
+                    if "result" in txByIdResponse:
+                        return txByIdResponse;
+                    count = count + 1;
+                    time.sleep(interval);
+                return txByIdResponse;
+            else:
+                return response_text;
+
+        except Exception as e:
+            print("Unable to parse response:", e);
+            raise;
 
 
 ##########################################################
@@ -202,7 +262,7 @@ class LokiPy(object):
 
 ########### createAssets #################
 
-    def createAssets(self, issuer, recipient, amount, assetCode, fee, data):
+    def createAssets(self, issuer, recipient, amount, assetCode, fee, data, onConfirm = False, interval = 3, repeats = 3):
         route = 'asset/';
         payload = {
             "jsonrpc": "2.0",
@@ -218,12 +278,30 @@ class LokiPy(object):
             }]
         };
         response = requests.request('POST', self.url + route, headers = self.headers, data = json.dumps(payload), allow_redirects = False, timeout = self.timeout);
-        return json.loads(response.text);
+        try:
+            response_text = json.loads(response.text);
+            if onConfirm:
+                txHash = response_text["result"]["txHash"];
+                count = 0;
+                txByIdResponse = "";
+                while count < repeats:
+                    txByIdResponse = self.getTransactionById(txHash);
+                    if "result" in txByIdResponse:
+                        return txByIdResponse;
+                    count = count + 1;
+                    time.sleep(interval);
+                return txByIdResponse;
+            else:
+                return response_text;
+
+        except Exception as e:
+            print("Unable to parse response:", e);
+            raise;
 
 
 ########### transferAssets #################
 
-    def transferAssets(self, issuer, recipient, amount, assetCode, fee, data):
+    def transferAssets(self, issuer, recipient, amount, assetCode, fee, data, onConfirm = False, interval = 3, repeats = 3):
         route = 'asset/';
         payload = {
             "jsonrpc": "2.0",
@@ -239,7 +317,25 @@ class LokiPy(object):
             }]
         };
         response = requests.request('POST', self.url + route, headers = self.headers, data = json.dumps(payload), allow_redirects = False, timeout = self.timeout);
-        return json.loads(response.text);
+        try:
+            response_text = json.loads(response.text);
+            if onConfirm:
+                txHash = response_text["result"]["txHash"];
+                count = 0;
+                txByIdResponse = "";
+                while count < repeats:
+                    txByIdResponse = self.getTransactionById(txHash);
+                    if "result" in txByIdResponse:
+                        return txByIdResponse;
+                    count = count + 1;
+                    time.sleep(interval);
+                return txByIdResponse;
+            else:
+                return response_text;
+
+        except Exception as e:
+            print("Unable to parse response:", e);
+            raise;
 
 
 ##########################################################
