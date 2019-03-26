@@ -13,7 +13,14 @@ Most of the functions return jsons loaded from requests made using the requests 
 Getting a response once a transaction is confirmed and included in a block:<br/>
 * LokiObj.createAssets(issuer="6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ", recipient="6sYyiTguyQ455w2dGEaNbrwkAWAEYV1Zk6FtZMknWDKQ", amount=10, assetCode="testAssets", fee=0, data="", onConfirm = True, interval = 3, repeats = 3); <br/>
 
-Setting the 'onConfirm' field to be True in certain requests (those that generate transactions) returns a response once that transaction is confirmed and included in a block instead of once it is created and sent to the mempool. The 'interval' parameter can be defined to specify the interval in seconds before repeating the findTransactionById request contained within the function and the 'repeats' field can be defined to specify the number of times the findTransactionById request should be repeated at the specified interval. Both these fields assume a default value of 3 if not explicitly specified. Leaving out these 3 fields initiates a transaction without awaiting confirmation.<br/><br/>
+Setting the 'onConfirm' field to be True in certain requests (those that generate transactions) returns a response once that transaction is confirmed and included in a block instead of once it is created and sent to the mempool. The 'interval' parameter can be defined to specify the interval in seconds before repeating the findTransactionById request contained within the function and the 'repeats' field can be defined to specify the number of times the findTransactionById request should be repeated at the specified interval. Both these fields assume a default value of 3 if not explicitly specified. Leaving out these 3 fields initiates a transaction without awaiting confirmation.<br/>
+
+The following methods extend the onConfirm functionality:<br/>
+* createAssets<br/>
+* transferAssets<br/>
+* transferPolys<br/>
+* transferArbits<br/>
+* transferArbitsByPublicKey<br/><br/>
 
 See the Requests.py file for various other methods that can be invoked by your LokiPy instance to communicate with the Topl blockchain.
 
