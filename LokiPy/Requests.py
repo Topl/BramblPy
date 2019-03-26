@@ -501,10 +501,4 @@ class LokiPy(object):
         return base58.b58encode(bytes.fromhex(h.hexdigest())).decode("utf-8");
 
 
-
 ##########################################################
-########### Check if transaction is confirmed ############
-##########################################################
-
-# TODO imlement
-# def onConfirm(self):
