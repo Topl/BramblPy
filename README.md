@@ -25,7 +25,9 @@ The following methods extend the onConfirm functionality:<br/>
 * transferAssets<br/>
 * transferPolys<br/>
 * transferArbits<br/>
-* transferArbitsByPublicKey<br/><br/>
+* transferArbitsByPublicKey<br/>
+
+----------------------------------------------------------------------<br/>
 
 See the Requests.py file for various other methods that can be invoked by your LokiPy instance to communicate with the Topl blockchain.
 
