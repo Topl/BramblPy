@@ -41,5 +41,5 @@ To api-key protect your node and requests follow these steps:<br/>
 
 # License
 LokiJS is licensed under the
-[Open Software License v. 3.0 (OSL-3.0)](https://opensource.org/licenses/OSL-3.0), also included
+[Mozilla Public License version 2.0 (MPL 2.0)](https://www.mozilla.org/en-US/MPL/2.0), also included
 in our repository in the `LICENSE` file.
