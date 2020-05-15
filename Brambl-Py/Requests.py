@@ -11,7 +11,7 @@ url = "https://valhalla.torus.topl.co/" #temp name, make sure to change and clea
 '''
 General builder function for formatting API request
 
-{list} routeInfo [route, method,ID]
+{dict} routeInfo {route, method,ID}
 {object} obj - internal reference for accessing constructor data
 returns {object} JSON response from the node
 '''
