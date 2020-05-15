@@ -15,15 +15,15 @@ General builder function for formatting API request
 {object} obj - internal reference for accessing constructor data
 returns {object} JSON response from the node
 '''
-def BramblRequest(routeInfo, params, obj): #obj is meant for the self of request,rename method
+def BramblRequest(self,routeInfo, params): #obj is meant for the self of request,rename method
     params = json.dumps(params)
     body = {
         "jsonrpc": "2.0",
-        "id": routeInfo[2],
-        "method": routeInfo[1],
+        "id": routeInfo['id'],
+        "method": routeInfo['method'],
         "params": [params]#should already be a json object
     }
-    response = requests.request('POST',obj.url+routeInfo[0], json= body, allow_redirects = True ,headers = obj.headers)
+    response = requests.request('POST',self.url+routeInfo['route'], json= body, allow_redirects = True ,headers = self.headers)
     if response.status_code != 200:
         raise Exception('A connection could not be established')
     return response
@@ -42,83 +42,81 @@ class Requests():
             "Content-Type": "application/json",
              'x-api-key': self.apiKey
         }
+
+
     #temp showcase of request with params
-    def sendParamTest(self,params):
+    def sendParamTest(self,params, ID = '1'):
         route = 'debug/'
         method = 'info'
-        Id = "1"
-        return (BramblRequest([route,method,Id],params,self)).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
         
-    def getBalancesByKey(self,params):
+    def getBalancesByKey(self,params, ID = '1'):
         pass
 
-    def listOpenKeyfiles(self):
+    def listOpenKeyfiles(self, ID = '1'):
         params = {}
         route = 'wallet/'
         method = 'listOpenKeyfiles'
-        Id = '1'
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
-    def generateKeyfile(self,params):
+    def generateKeyfile(self,params, ID = '1'):
         if not params:
             raise Exception('A parameter object must be specified')
         if 'password' not in params:
             raise Exception('A password must be provided to encrypt the keyfile')
         route = 'wallet/'
         method = 'generateKeyfile'
-        Id = '1'
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
-    def lockKeyfile(self,params):
+    def lockKeyfile(self,params, ID = '1'):
         pass
 
-    def unlockKeyfile(self,params):
+    def unlockKeyfile(self,params, ID = '1'):
         pass
 
-    def signTransaction(self,params):
+    def signTransaction(self,params, ID = '1'):
         pass
 
-    def broadcastTx(self,params):
+    def broadcastTx(self,params, ID = '1'):
         pass
 
-    def transferPolys(self,params):
+    def transferPolys(self,params, ID = '1'):
         pass
 
-    def transferArbits(self,params):
+    def transferArbits(self,params, ID = '1'):
         pass
 
-    def createAssets(self,params):
+    def createAssets(self,params, ID = '1'):
         pass
 
-    def createAssetsPrototype(self,params):
+    def createAssetsPrototype(self,params, ID = '1'):
         pass
 
-    def transferAssets(self,params):
+    def transferAssets(self,params, ID = '1'):
         pass
 
-    def transferAssetsPrototype(self,params):
+    def transferAssetsPrototype(self,params, ID = '1'):
         pass
 
-    def transferTargetAssets(self,params):
+    def transferTargetAssets(self,params, ID = '1'):
         pass
 
-    def transferTargetAssetsPrototype(self,params):
+    def transferTargetAssetsPrototype(self,params, ID = '1'):
         pass
 
-    def getTransactionById(self,params):
+    def getTransactionById(self,params, ID = '1'):
         pass
 
-    def getTransactionFromMempool(self,params):
+    def getTransactionFromMempool(self,params, ID = '1'):
         pass
 
-    def getMempool(self):
+    def getMempool(self, ID = '1'):
         params = {}
         route = 'nodeView/'
         method = 'mempool'
-        Id = '1'
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
-    def getBlockById(self, params):
+    def getBlockById(self, params, ID = '1'):
         if not params:
             raise Exception('A parameter object must be specified')
         if 'blockId' not in params:
@@ -126,16 +124,15 @@ class Requests():
         route = 'nodeView/'
         method = 'blockById'
         Id = '1'
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
-    def chainInfo(self):
+    def chainInfo(self, ID = '1'):
         params = {}
         route = 'debug/'
         method = 'info'
-        Id = "1"
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
-    def calcDelay(self,params):
+    def calcDelay(self,params, ID = '1'):
         if not params:
             raise Exception('A parameter object must be specified')
         if 'blockId' not in params:
@@ -144,20 +141,21 @@ class Requests():
             raise Exception('A number of blocks must be specified')
         route = 'debug/'
         method = 'delay'
-        Id = '1'
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
-    def myBlocks(self):
+    def myBlocks(self, ID = '1'):
         params = {}
         route = 'debug/'
         method = 'myBlocks'
-        Id = '1'
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
-    def blockGenerators(self):
+    def blockGenerators(self, ID = '1'):
         params = {}
         route = 'debug/'
         method = 'generators'
-        Id = '1'
-        return BramblRequest([route,method,Id],params,self).text
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+
+
+b = Requests(url,os.getenv('VALHALLA_KEY'))
+print(b.chainInfo())
 
