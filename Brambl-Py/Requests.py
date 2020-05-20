@@ -6,6 +6,7 @@ import os
 import sys
 import settings
 print('everything is working')
+print(os.path.dirname(os.path.realpath(__file__)))
 url = "https://valhalla.torus.topl.co/" #temp name, make sure to change and clean
 
 '''
@@ -25,6 +26,7 @@ def BramblRequest(self,routeInfo, params): #obj is meant for the self of request
     }
     response = requests.request('POST',self.url+routeInfo['route'], json= body, allow_redirects = True ,headers = self.headers)
     if response.status_code != 200:
+        print(response.status_code())
         raise Exception('A connection could not be established')
     return response
 '''
@@ -35,7 +37,7 @@ A class for sending requests to the Brambl layer interface of the given chain pr
 '''
 class Requests():
     #constructor function
-    def __init__(self,url,apiKey):
+    def __init__(self,url = 'http://localhost:9085', apiKey = 'topl_the_world!'):
         self.url = url
         self.apiKey = apiKey
         self.headers = {

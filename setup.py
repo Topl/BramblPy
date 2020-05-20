@@ -6,12 +6,12 @@ with open('README.md','r') as fh:
 setuptools.setup(
   name = 'Brambl-Py',
   version = '0.0.1',
-  author = '',
-  author_email="author@example.com",
-    description="A small example package",
+  author = 'Arjun Mehta',
+  author_email="arjun.mehta1001@gmail.com",
+    description="A Python API wrapper to communicate with the Topl blockchain.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/Topl/Brambl-Py",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
