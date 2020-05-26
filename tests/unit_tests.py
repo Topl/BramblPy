@@ -1,6 +1,7 @@
 import os
 import sys
-#path = os.getcwd() + '/Brambl-Py/' #update path once directory rename is sorted
+import settings
+path = os.getcwd() + '/brambl/' #update path once directory rename is sorted
 sys.path.insert(1,path)
 import Requests
 
