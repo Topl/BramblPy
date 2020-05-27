@@ -1,4 +1,3 @@
-
 import json
 import requests
 import asyncio
@@ -26,8 +25,8 @@ def BramblRequest(self,routeInfo, params): #obj is meant for the self of request
     }
     response = requests.request('POST',self.url+routeInfo['route'], json= body, allow_redirects = True ,headers = self.headers)
     if response.status_code != 200:
-        print(response.status_code())
         raise Exception('A connection could not be established')
+        pirnt(response.status_code())
     return response
 '''
 A class for sending requests to the Brambl layer interface of the given chain provider
