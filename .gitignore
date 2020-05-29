@@ -1,5 +1,6 @@
 #Enviroments
 *.env
+virt_env/
 
 
 # Byte-compiled / optimized / DLL files
