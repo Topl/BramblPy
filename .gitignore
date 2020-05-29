@@ -1,6 +1,7 @@
 <<<<<<< Updated upstream
 #Enviroments
 *.env
+virt_env/
 
 
 =======
