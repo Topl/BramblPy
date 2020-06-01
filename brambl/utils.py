@@ -1,8 +1,10 @@
 from Crypto.Hash import BLAKE2b
 import donna25519
+import base58
 
 obj = BLAKE2b.new(digest_bits=512)
 obj.update(b'Hello World')
+print(base58.b58encode(obj.digest()))
 
 
 def keyPair():
@@ -25,11 +27,4 @@ carl = keyPair()
 shared = signData(alice,bob)#create a shared key 
 print(verify(shared,alice,bob))#intended message for bob
 print(verify(shared,alice,carl))#message not intended for carl
-
-
-
-    
-
-
-
 
