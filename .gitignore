@@ -1,8 +1,11 @@
+<<<<<<< Updated upstream
 #Enviroments
 *.env
 virt_env/
 
 
+=======
+>>>>>>> Stashed changes
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -110,13 +113,14 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+*.env
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+virt_env/
 
 # Spyder project settings
 .spyderproject
