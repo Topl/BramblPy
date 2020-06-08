@@ -1,16 +1,20 @@
 import os
 from Crypto.Hash import BLAKE2b
 from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import scrypt
 import axolotl_curve25519 as curve
 from Crypto.Random import get_random_bytes
+import base64
 import base58
+from binascii import hexlify
 import json
 
 #BLAKE2b Test
+"""
 obj = BLAKE2b.new(digest_bits=512)
 obj.update(b'Hello World')
 print(base58.b58encode(obj.digest()))
-
+"""
 
 
 #curve25519 Test
@@ -31,7 +35,7 @@ def verify(pubKey,message, signature):
         return False
 
 
-
+"""
 alice = keyPair()
 bob = keyPair()
 signature = signData(alice.privateKey,'Hello World')
@@ -43,7 +47,7 @@ publicWrong = verify(bob.publicKey,'Hello World',signature)
 print(publicWrong)
 messageWrong = verify(alice.publicKey,'Wrong Message',signature)
 print(messageWrong)
-
+"""
 
 #AES Test
 def gencipher(algorithm,key, message):
@@ -70,8 +74,53 @@ def genDecipher(key,cipher):
     pt = (decipher.decrypt(ct)).decode('utf-8')#decrypt message, change to string
     return pt
 
-key = get_random_bytes(32)#random key
+"""
+password = 'My password is password.'
+salt = get_random_bytes(32)
+key = scrypt(password,salt,32,N=2**14, r=8, p=1)
 result = gencipher('aes-256-ctr',key,'Hello World')
 message = genDecipher(key,result)
 print(message)
+"""
+
+
+def hashFunc():
+    return BLAKE2b.new(digest_bits=256)
+
+def digestAndEncode(hash,encoding=''):#switch statement does not exist
+    if encoding == 'hex':
+        return hexlify(hash.digest())
+    elif encoding == 'base64':
+        return base64.b64encode(hash.digest())
+    elif encoding == 'base58':
+        return base58.b58encode(hash.digest())
+    else:
+        return hash.digest()
+
+
+def any(message,encoding):
+    msg = (json.dumps(message)).encode('utf-8')
+    hash = hashFunc().update(msg)
+    return digestAndEncode(hash,encoding).decode('utf-8')
+
+
+def string(message,encoding):
+    msg = (message).encode('utf-8')
+    hash = hashFunc().update(msg)
+    return (digestAndEncode(hash,encoding)).decode('utf-8')
+
+def file(filePath,encoding):
+    doc = open(filePath,'r')
+    msg = (doc.read()).encode('utf-8')
+    hash = hashFunc().update(msg)
+    doc.close()
+    return (digestAndEncode(hash,encoding)).decode('utf-8')
+
+
+print(any({'dic':'tionary'},'base64'))
+print(string('this is a string','base58'))
+print(file('/home/arjunmehta/Brambl-Py/tests/fileTest.txt','hex'))
+
+
+
 
