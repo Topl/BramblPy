@@ -110,11 +110,14 @@ def string(message,encoding):
     return (digestAndEncode(hash,encoding)).decode('utf-8')
 
 def file(filePath,encoding):
-    doc = open(filePath,'r')
-    msg = (doc.read()).encode('utf-8')
-    hash = hashFunc().update(msg)
-    doc.close()
-    return (digestAndEncode(hash,encoding)).decode('utf-8')
+    BLOCK_SIZE = 65536    #64kb
+    hash = hashFunc()
+    with open(filePath,'rb') as f:
+        fb = f.read(BLOCK_SIZE)
+        while len(fb) > 0:
+            hash.update(fb)
+            fb = f.read(BLOCK_SIZE)
+    return digestAndEncode(hash,encoding).decode('utf-8')
 
 
 print(any({'dic':'tionary'},'base64'))
