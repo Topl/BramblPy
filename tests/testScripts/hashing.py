@@ -15,4 +15,5 @@ print(message)
 
 
 print(Hash.string('this is test','base58'))
+print(Hash.any({'helo':'helo'},'hex'))
 print(Hash.file('/home/arjunmehta/Brambl-Py/tests/fileTest.txt','base64'))
