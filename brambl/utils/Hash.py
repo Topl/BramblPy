@@ -9,14 +9,6 @@ import base58
 from binascii import hexlify
 import json
 
-#BLAKE2b Test
-"""
-obj = BLAKE2b.new(digest_bits=512)
-obj.update(b'Hello World')
-print(base58.b58encode(obj.digest()))
-"""
-
-
 #curve25519 Test
 class keyPair():
     def __init__(self):
@@ -33,21 +25,6 @@ def verify(pubKey,message, signature):
         return True
     else:
         return False
-
-
-"""
-alice = keyPair()
-bob = keyPair()
-signature = signData(alice.privateKey,'Hello World')
-
-success = verify(alice.publicKey,'Hello World',signature)#successful test
-print(success)
-#wrong case tests
-publicWrong = verify(bob.publicKey,'Hello World',signature)
-print(publicWrong)
-messageWrong = verify(alice.publicKey,'Wrong Message',signature)
-print(messageWrong)
-"""
 
 #AES Test
 def gencipher(algorithm,key, message):
@@ -73,16 +50,6 @@ def genDecipher(key,cipher):
     decipher = AES.new(key,AES.MODE_CTR,nonce=nonce)#new Cipher object
     pt = (decipher.decrypt(ct)).decode('utf-8')#decrypt message, change to string
     return pt
-
-"""
-password = 'My password is password.'
-salt = get_random_bytes(32)
-key = scrypt(password,salt,32,N=2**14, r=8, p=1)
-result = gencipher('aes-256-ctr',key,'Hello World')
-message = genDecipher(key,result)
-print(message)
-"""
-
 
 def hashFunc():
     return BLAKE2b.new(digest_bits=256)
@@ -120,9 +87,8 @@ def file(filePath,encoding):
     return digestAndEncode(hash,encoding).decode('utf-8')
 
 
-print(any({'dic':'tionary'},'base64'))
-print(string('this is a string','base58'))
-print(file('/home/arjunmehta/Brambl-Py/tests/fileTest.txt','hex'))
+
+
 
 
 
