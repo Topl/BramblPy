@@ -4,6 +4,7 @@ import pathlib
 path = os.getcwd() + '/brambl/utils/' #update path once directory rename is sorted
 sys.path.insert(1,path)
 import Hash
+import canonicaljson
 
 
 password = 'My password is password.'
@@ -15,5 +16,6 @@ print(message)
 
 
 print(Hash.string('this is test','base58'))
-print(Hash.any({'helo':'helo'},'hex'))
+
 print(Hash.file('/home/arjunmehta/Brambl-Py/tests/fileTest.txt','base64'))
+

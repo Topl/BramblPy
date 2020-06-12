@@ -8,7 +8,6 @@ import base64
 import base58
 from binascii import hexlify
 import json
-import canonicaljson
 
 #curve25519 Test
 class keyPair():
@@ -65,12 +64,12 @@ def digestAndEncode(hash,encoding=''):#switch statement does not exist
     else:
         return hash.digest()
 
-
+'''
 def any(message,encoding):
     msg = canonicaljson.encode_canonical_json(message)
     hash = hashFunc().update(msg)
     return digestAndEncode(hash,encoding).decode('utf-8')
-
+'''
 
 def string(message,encoding):
     msg = (message).encode('utf-8')
