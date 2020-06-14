@@ -19,6 +19,13 @@ defaultOptions = {
 def isFunction(f):
     return callable(f)
 
+class KeyManager():
+
+    def __init__(self,params):
+        self.params = params
+        
+
+
 
 
 
