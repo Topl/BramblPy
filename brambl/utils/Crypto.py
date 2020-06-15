@@ -1,20 +1,17 @@
 import os
+from Crypto.Hash import BLAKE2b
 from Crypto.Cipher import AES
 import axolotl_curve25519 as curve
 import base58
 import json
 
+#BLAKE2b Test
+obj = BLAKE2b.new(digest_bits=512)
+obj.update(b'Hello World')
+print(base58.b58encode(obj.digest()))
+
 #curve25519 Test
-class keyPair():
-    def __init__(self):
-        self.privateKey = curve.generatePrivateKey(os.urandom(32))#32 bit key
-        self.publicKey = curve.generatePublicKey(self.privateKey)
-
-def signData(privKey,message):
-    return curve.calculateSignature(os.urandom(64),privKey,base58.b58encode(message))
-            
-
-def verify(pubKey,message, signature):
+def sigverify(pubKey,message, signature):
     verified = curve.verifySignature(pubKey,base58.b58encode(message),signature)
     if verified == 0:#return 0 if verified
         return True
@@ -22,7 +19,7 @@ def verify(pubKey,message, signature):
         return False
 
 #AES Test
-def gencipher(algorithm,key, message):
+def aesCipher(algorithm,key, message):
     if algorithm != 'aes-256-ctr':
         raise Exception('Algorithm not supported')
 
@@ -37,7 +34,7 @@ def gencipher(algorithm,key, message):
     return result
 
 
-def genDecipher(key,cipher):
+def aesDecipher(key,cipher):
     b58 = json.loads(cipher)
     nonce = base58.b58decode(b58['nonce'])#decode to original 
     ct = base58.b58decode(b58['ciphertext'])
