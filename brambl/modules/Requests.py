@@ -3,9 +3,6 @@ import requests
 import asyncio
 import os
 import sys
-import settings
-print('everything is working')
-print(os.path.dirname(os.path.realpath(__file__)))
 url = "https://valhalla.torus.topl.co/" #temp name, make sure to change and clean
 
 '''
