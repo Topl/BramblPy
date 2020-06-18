@@ -37,9 +37,9 @@ def getMAC(derivedKey,ciphertext):
     keccak256.update(derivedKey[16:]+str2pybuf(ciphertext,'base58'))
     return keccak256.digest()
 
-key = scrypt('password','salt',32,N=2**14,r=8,p=1)
+key = scrypt('new password','salt',32,N=2**14,r=8,p=1)
 
-MUC = getMAC(key,'ststsadf')
+MUC = getMAC(key,'Thisisamessage')
 print(hexlify(MUC))
 
 class KeyManager():
