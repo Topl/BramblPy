@@ -7,6 +7,7 @@ chardet==3.0.4
 frozendict==1.2
 idna==2.9
 numpy==1.18.5
+pyaes==1.6.1
 pycryptodome==3.9.7
 python-axolotl-curve25519==0.4.1.post2
 python-dotenv==0.13.0

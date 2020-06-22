@@ -122,6 +122,8 @@ class KeyManager():
 
 new = KeyManager({'password': 'pasz'})
 
+print(new.constants)
+
 
 
 
