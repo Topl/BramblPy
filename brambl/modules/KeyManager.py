@@ -1,12 +1,13 @@
 import os
 from Crypto.Hash import BLAKE2b
 from Crypto.Hash import keccak
+from Crypto.Random import get_random_bytes
 from Crypto.Protocol.KDF import scrypt
 import axolotl_curve25519 as curve
 import base58
 import json
 from binascii import hexlify
-
+import pyaes
 
 defaultOptions = {
     'cipher': 'aes-256-ctr',
@@ -32,15 +33,62 @@ def str2pybuf(string,enc):
         return base58.b58decode(string)
 
 
+def encrypt(plaintext,key,iv,algo):
+    if algo == 'aes-256-ctr':
+        cipher = pyaes.AESModeOfOperationCTR
+        #cipher = pyaes.AESModeOfOperationCTR
+
+
 def getMAC(derivedKey,ciphertext):
     keccak256 = keccak.new(digest_bits=256)
     keccak256.update(derivedKey[16:]+str2pybuf(ciphertext,'base58'))
     return keccak256.digest()
 
-key = scrypt('new password','salt',32,N=2**14,r=8,p=1)
+def create(params,cb):
+    keyBytes = params['keyBytes']
+    ivBytes = params['ivBytes']
+    
+    def bifrostBlake2b(Buffer):
+        blake = BLAKE2b.new(32)
+        return blake.update(Buffer).digest()
 
-MUC = getMAC(key,'Thisisamessage')
-print(hexlify(MUC))
+    def curve25519KeyGen(randomBytes):
+        sk = curve.generatePrivateKey
+        pk = curve.generatePublicKey(sk)
+        return {
+            'publicKey': pk,
+            'privateKey': sk,
+            'iv': bifrostBlake2b(get_random_bytes(keyBytes + ivBytes + keyBytes)[0:ivBytes]),
+            'salt': bifrostBlake2b(get_random_bytes(keyBytes+iv))
+        }
+
+    if not isFunction(cb):
+        return curve25519KeyGen(get_random_bytes(keyBytes+ivBytes+keyBytes))
+
+    randomBytes = get_random_bytes(keyBytes+ivBytes+keyBytes)
+    cb(curve25519KeyGen(randomBytes))
+
+def deriveKey(password,salt,kdfParams,cb):
+    if type(password) == 'undefined' or password == None or not salt:
+        raise Exception("Must provide password and salt to derive a key")
+
+    dkLen = kdfParams['dkLen']
+    N = kdfParams['n']
+    r = kdfParams['r']
+    p = kdfParams['p']
+
+
+    if not isFunction(cb):
+        return scrypt(password,salt,dkLen,N,r,p,num_keys=1)
+
+    cb(scrypt(password,salt,dkLen,N,r,p,num_keys=1))
+
+def marshal(derivedKey,keyObject,salt,iv,algo):
+    pass
+    
+
+
+
 
 class KeyManager():
 
@@ -73,8 +121,6 @@ class KeyManager():
     
 
 new = KeyManager({'password': 'pasz'})
-
-
 
 
 
