@@ -152,7 +152,7 @@ class KeyManager():
         except:
             raise Exception('A password must be provided.')
 
-        def initKeyStorage(keyStorage,password):
+        def initKeyStorage(self,keyStorage,password):
             self.pk = keyStorage['publicKeyId']
             self.isLocked = False
             self.password = password
@@ -161,10 +161,10 @@ class KeyManager():
             if self.pk:#check if public key exists
                 self.sk = recover(self.password,self.keyStorage,self.constants['scrypt'])
 
-        def generateKey(password):
+        def generateKey(self,password):
             initKeyStorage(dump(self.password,create(self.constants),self.constants),self.password)
 
-        def importFromFile(filePath,password):#TODO
+        def importFromFile(self,filePath,password):#TODO
             self.keyStorage = json.parse
 
         try:
@@ -179,7 +179,7 @@ class KeyManager():
             return curve.verifySignature(publicKey,message,signature)#returns 0 if verified
         cb(curve.verifySignature(publicKey,message,signature))
 
-    def getKeyStorage():
+    def getKeyStorage(self):
         if self.isLocked:
             raise Exception('Key manager is currently locked. Please unlock and try again.')
         
@@ -188,22 +188,22 @@ class KeyManager():
 
         return self.keyStorage
 
-    def lockKey():
+    def lockKey(self):
         self.isLocked = True 
 
-    def unlockKey(password):
+    def unlockKey(self,password):
         if not self.isLocked:
             raise Exception('The key is already unlocked')
         if password != self.password:
             raise Exception('Invalid password')
         self.isLocked = False
     
-    def sign(message):
+    def sign(self,message):
         if self.isLocked:
             raise Exception('The key is currently locked. Please unlock and try again.')
         return curve.calculateSignature(os.urandom(64),sk,message)
 
-    def exportToFile(_keyPath):
+    def exportToFile(self,_keyPath):
         try:
             keyPath = _keyPath
         except:
@@ -220,12 +220,12 @@ class KeyManager():
 
 
 
-testo = create(defaultOptions)
+keyman = KeyManager({'password':'password'})
 
-print(hexlify(testo['publicKey']))
-print(hexlify(testo['privateKey']))
-print(hexlify(testo['iv']))
-print(hexlify(testo['salt']))
+h = keyman.getKeyStorage()
+
+
+
 
 
 

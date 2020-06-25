@@ -152,3 +152,4 @@ class Requests():
         route = 'debug/'
         method = 'generators'
         return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+
