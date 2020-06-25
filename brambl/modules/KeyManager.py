@@ -1,4 +1,5 @@
 import os
+import datetime
 from Crypto.Hash import BLAKE2b
 from Crypto.Hash import keccak
 from Crypto.Random import get_random_bytes
@@ -51,22 +52,22 @@ def getMAC(derivedKey,ciphertext):
     keccak256.update(derivedKey[16:]+str2pybuf(ciphertext,'base58'))
     return keccak256.digest()
 
-def create(params,cb):
+def create(params,cb='notFunction'):
     keyBytes = params['keyBytes']
     ivBytes = params['ivBytes']
     
     def bifrostBlake2b(Buffer):
-        blake = BLAKE2b.new(32)
+        blake = BLAKE2b.new()
         return blake.update(Buffer).digest()
 
     def curve25519KeyGen(randomBytes):
-        sk = curve.generatePrivateKey
+        sk = curve.generatePrivateKey(get_random_bytes(32))
         pk = curve.generatePublicKey(sk)
         return {
             'publicKey': pk,
             'privateKey': sk,
             'iv': bifrostBlake2b(get_random_bytes(keyBytes + ivBytes + keyBytes)[0:ivBytes]),
-            'salt': bifrostBlake2b(get_random_bytes(keyBytes+iv))
+            'salt': bifrostBlake2b(get_random_bytes(keyBytes+ivBytes))
         }
 
     if not isFunction(cb):
@@ -75,7 +76,7 @@ def create(params,cb):
     randomBytes = get_random_bytes(keyBytes+ivBytes+keyBytes)
     cb(curve25519KeyGen(randomBytes))
 
-def deriveKey(password,salt,kdfParams,cb):
+def deriveKey(password,salt,kdfParams,cb='notFunction'):
     if type(password) == 'undefined' or password == None or not salt:
         raise Exception("Must provide password and salt to derive a key")
 
@@ -106,7 +107,7 @@ def marshal(derivedKey,keyObject,salt,iv,algo):
         }
     return keyStorage
 
-def dump(password,keyObject,options,cb):
+def dump(password,keyObject,options,cb='notFunction'):
     kdfParams = option['kdfParams'] or options['scrypt']
     iv = str2pybuf(keyObject['iv'])
     salt = str2pybuf(keyObject['salt'])
@@ -118,7 +119,7 @@ def dump(password,keyObject,options,cb):
     return cb(marshal(deriveKey(password,salt,kdfParams),{'privateKey': privateKey,'publicKey':publicKey},salt,iv,options['cipher']))
 
 
-def recover(password,keyStorage,kdfParams,cb):
+def recover(password,keyStorage,kdfParams,cb='notFunction'):
     
     def verifyAndDecrypt(derivedKey,iv,ciphertext,mac,algo):
         if getMAC(derivedKey,ciphertext) != mac:
@@ -137,10 +138,11 @@ def recover(password,keyStorage,kdfParams,cb):
     return cb(verifyAndDecrypt(deriveKey(password,salt,kdfParams),iv, ciphertext, mac, algo))
 
 def generateKeystoreFilename(publicKey):
-    pass
-    #TODO: I am unsure how to  implement the python javascripy key module
+    if type(publicKey) != type('string'):
+        raise Exception('PublicKey must be given as a string for the filename')
+    fileName = datetime.datetime.now().isoformat() + '-' + publicKey + '.json'
+    return fileName.replace(':','-')
     
- 
 class KeyManager():
 
     def __init__(self,params):
@@ -155,27 +157,79 @@ class KeyManager():
             self.isLocked = False
             self.password = password
             self.keyStorage = keyStorage
-            #add sk
-            #add recover if statement
 
+            if self.pk:#check if public key exists
+                self.sk = recover(self.password,self.keyStorage,self.constants['scrypt'])
+
+        def generateKey(password):
+            initKeyStorage(dump(self.password,create(self.constants),self.constants),self.password)
+
+        def importFromFile(filePath,password):#TODO
+            self.keyStorage = json.parse
 
         try:
             self.constants = params['constants']
         except:
             self.constants = defaultOptions
 
-    def verify(self,publicKey,message,signature,cb):
+        initKeyStorage({'publicKeyId':'','crypto': {} }, '')
+
+    def verify(self,publicKey,message,signature,cb='notFunction'):
         if  not isFunction(cb):
             return curve.verifySignature(publicKey,message,signature)#returns 0 if verified
         cb(curve.verifySignature(publicKey,message,signature))
 
+    def getKeyStorage():
+        if self.isLocked:
+            raise Exception('Key manager is currently locked. Please unlock and try again.')
+        
+        if not self.pk:
+            raise Exception('A key must be initialized before using this key manager')
+
+        return self.keyStorage
+
     def lockKey():
         self.isLocked = True 
+
+    def unlockKey(password):
+        if not self.isLocked:
+            raise Exception('The key is already unlocked')
+        if password != self.password:
+            raise Exception('Invalid password')
+        self.isLocked = False
     
     def sign(message):
         if self.isLocked:
             raise Exception('The key is currently locked. Please unlock and try again.')
         return curve.calculateSignature(os.urandom(64),sk,message)
+
+    def exportToFile(_keyPath):
+        try:
+            keyPath = _keyPath
+        except:
+            keyPath = 'keyfiles'
+
+        outfile = generateKeystoreFilename(self.pk)
+        json = json.dumps(self.getKeyStorage())
+        outpath = os.path.join(keyPath,outfile)
+
+        f = open(outpath, 'w')
+        f.write(json)
+        f.close()
+        return outpath
+
+
+
+testo = create(defaultOptions)
+
+print(hexlify(testo['publicKey']))
+print(hexlify(testo['privateKey']))
+print(hexlify(testo['iv']))
+print(hexlify(testo['salt']))
+
+
+
+
 
 
 
