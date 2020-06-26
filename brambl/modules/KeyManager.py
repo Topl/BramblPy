@@ -218,13 +218,6 @@ class KeyManager():
         f.close()
         return outpath
 
-key = KeyManager('password')
-h = key.getKeyStorage()
-print(h)
-sig = key.sign('this is a msg')
-print(sig)
-
-ver = key.verify(key.pk,'this is a msg',sig)
 
 
 
