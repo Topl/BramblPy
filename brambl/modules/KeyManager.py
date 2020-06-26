@@ -27,7 +27,7 @@ defaultOptions = {
 def isFunction(f):
     return callable(f)
 
-def str2pybuf(string,enc='base58'):
+def str2pybuf(string,enc='base58'):#works
     if type(string) == 'str':
         string2 = bytes(string)
 
@@ -35,24 +35,28 @@ def str2pybuf(string,enc='base58'):
         return base58.b58decode(string)
 
 
+
 def encrypt(plaintext,key,iv,algo):
+    iv = int(hexlify(iv).decode('utf-8'),16)
     if algo == 'aes-256-ctr':
         key = bytearray(key)
         aes = pyaes.AESModeOfOperationCTR(key,pyaes.Counter(iv))
         ciphertext = aes.encrypt(plaintext)
         return ciphertext
+
         
 def decrypt(ciphertext,key,iv,algo):
+    iv = int(hexlify(iv).decode('utf-8'),16)
     if algo == 'aes-256-ctr':
         aes = pyaes.AESModeOfOperationCTR(key,pyaes.Counter(iv))
-        return aes.decrypt(ciphertext).decode('utf-8')
+        return aes.decrypt(ciphertext)
 
 def getMAC(derivedKey,ciphertext):
     keccak256 = keccak.new(digest_bits=256)
-    keccak256.update(derivedKey[16:]+str2pybuf(ciphertext,'base58'))
+    keccak256.update(derivedKey[16:]+ciphertext)
     return keccak256.digest()
 
-def create(params,cb='notFunction'):
+def create(params):
     keyBytes = params['keyBytes']
     ivBytes = params['ivBytes']
     
@@ -60,21 +64,19 @@ def create(params,cb='notFunction'):
         blake = BLAKE2b.new()
         return blake.update(Buffer).digest()
 
-    def curve25519KeyGen(randomBytes):
-        sk = curve.generatePrivateKey(get_random_bytes(32))
+    def curve25519KeyGen(randomBytes): # works
+        randomBytes = bytes(bytearray(randomBytes)[0:32])
+        sk = curve.generatePrivateKey(randomBytes)
         pk = curve.generatePublicKey(sk)
         return {
             'publicKey': pk,
             'privateKey': sk,
-            'iv': bifrostBlake2b(get_random_bytes(keyBytes + ivBytes + keyBytes)[0:ivBytes]),
-            'salt': bifrostBlake2b(get_random_bytes(keyBytes+ivBytes))
+            'iv': bifrostBlake2b(bytes(bytearray(os.urandom(keyBytes + ivBytes + keyBytes))[0:ivBytes])),
+            'salt': bifrostBlake2b(os.urandom(keyBytes+ivBytes))
         }
+    return curve25519KeyGen(os.urandom(keyBytes+ivBytes+keyBytes))
 
-    if not isFunction(cb):
-        return curve25519KeyGen(get_random_bytes(keyBytes+ivBytes+keyBytes))
 
-    randomBytes = get_random_bytes(keyBytes+ivBytes+keyBytes)
-    cb(curve25519KeyGen(randomBytes))
 
 def deriveKey(password,salt,kdfParams,cb='notFunction'):
     if type(password) == 'undefined' or password == None or not salt:
@@ -85,17 +87,14 @@ def deriveKey(password,salt,kdfParams,cb='notFunction'):
     r = kdfParams['r']
     p = kdfParams['p']
 
+    return scrypt(password,salt,dkLen,N,r,p,num_keys=1)
 
-    if not isFunction(cb):
-        return scrypt(password,salt,dkLen,N,r,p,num_keys=1)
-
-    cb(scrypt(password,salt,dkLen,N,r,p,num_keys=1))
 
 def marshal(derivedKey,keyObject,salt,iv,algo):
     if algo == 'aes-256-ctr':
-        ciphertext = encrypt(keyObject['privateKey'],derivedKey,iv)
+        ciphertext = encrypt(keyObject['privateKey'],derivedKey,iv, 'aes-256-ctr')
         keyStorage = {
-            'publicKeyId': base58.b58encode(keyObject['privateKey']),
+            'publicKeyId': base58.b58encode(keyObject['publicKey']),
             'crypto': {
                 'cipher': algo,
                 'ciphertext': base58.b58encode(ciphertext),
@@ -107,17 +106,20 @@ def marshal(derivedKey,keyObject,salt,iv,algo):
         }
     return keyStorage
 
-def dump(password,keyObject,options,cb='notFunction'):
-    kdfParams = option['kdfParams'] or options['scrypt']
-    iv = str2pybuf(keyObject['iv'])
-    salt = str2pybuf(keyObject['salt'])
-    privateKey = str2pybuf(keyObject['privateKey'])
-    publicKey = str2pybuf(keyObject['publicKey'])
-    if not isFunction(cb):
-        return marshal(deriveKey(password,salt,kdfParams),{'privateKey': privateKey,'publicKey':publicKey},salt,iv,options['cipher'])
-    
-    return cb(marshal(deriveKey(password,salt,kdfParams),{'privateKey': privateKey,'publicKey':publicKey},salt,iv,options['cipher']))
+def dump(password,keyObject,options):
+    try:
+        kdfParams = options['kdfParams']
+    except:
+         kdfParams = options['scrypt']
 
+    iv = keyObject['iv']
+    salt = keyObject['salt']
+    privateKey = keyObject['privateKey']
+    publicKey = keyObject['publicKey']
+
+    return marshal(deriveKey(password,salt,kdfParams),{'privateKey': privateKey,'publicKey':publicKey},salt,iv,options['cipher'])
+    
+    
 
 def recover(password,keyStorage,kdfParams,cb='notFunction'):
     
@@ -128,15 +130,13 @@ def recover(password,keyStorage,kdfParams,cb='notFunction'):
 
     iv = str2pybuf(keyStorage['crypto']['cipherParams']['iv'])
     salt = str2pybuf(keyStorage['crypto']['kdfSalt'])
-    ciphertext = str2pybuf(keyStorage['crypto']['cipherText'])
+    ciphertext = str2pybuf(keyStorage['crypto']['ciphertext'])
     mac = str2pybuf(keyStorage['crypto']['mac'])
-    algo = str2pybuf(keyStorage['crypto']['cipher'])
+    algo = keyStorage['crypto']['cipher']
 
-    if not isFunction(cb):
-        return verifyAndDecrypt(deriveKey(password,salt,kdfParams),iv, ciphertext, mac, algo)
+    return verifyAndDecrypt(deriveKey(password,salt,kdfParams),iv, ciphertext, mac, algo)
 
-    return cb(verifyAndDecrypt(deriveKey(password,salt,kdfParams),iv, ciphertext, mac, algo))
-
+   
 def generateKeystoreFilename(publicKey):
     if type(publicKey) != type('string'):
         raise Exception('PublicKey must be given as a string for the filename')
@@ -145,14 +145,13 @@ def generateKeystoreFilename(publicKey):
     
 class KeyManager():
 
-    def __init__(self,params):
-        self.params = params
+    def __init__(self, password, **kwargs):
         try:
-            self.password = params['password']
+            self.password = password
         except:
             raise Exception('A password must be provided.')
 
-        def initKeyStorage(self,keyStorage,password):
+        def initKeyStorage(keyStorage,password):
             self.pk = keyStorage['publicKeyId']
             self.isLocked = False
             self.password = password
@@ -161,10 +160,10 @@ class KeyManager():
             if self.pk:#check if public key exists
                 self.sk = recover(self.password,self.keyStorage,self.constants['scrypt'])
 
-        def generateKey(self,password):
+        def generateKey(password):
             initKeyStorage(dump(self.password,create(self.constants),self.constants),self.password)
 
-        def importFromFile(self,filePath,password):#TODO
+        def importFromFile(filePath,password):#TODO
             self.keyStorage = json.parse
 
         try:
@@ -174,10 +173,11 @@ class KeyManager():
 
         initKeyStorage({'publicKeyId':'','crypto': {} }, '')
 
+        generateKey(self.password)
+
+
     def verify(self,publicKey,message,signature,cb='notFunction'):
-        if  not isFunction(cb):
-            return curve.verifySignature(publicKey,message,signature)#returns 0 if verified
-        cb(curve.verifySignature(publicKey,message,signature))
+        return curve.verifySignature(publicKey,message.encode('utf-8'),signature)#returns 0 if verified
 
     def getKeyStorage(self):
         if self.isLocked:
@@ -201,14 +201,14 @@ class KeyManager():
     def sign(self,message):
         if self.isLocked:
             raise Exception('The key is currently locked. Please unlock and try again.')
-        return curve.calculateSignature(os.urandom(64),sk,message)
+        return curve.calculateSignature(os.urandom(64),self.sk,message.encode('utf-8'))
 
     def exportToFile(self,_keyPath):
         try:
             keyPath = _keyPath
         except:
             keyPath = 'keyfiles'
-
+        #TODO change bytes objects to strings for export
         outfile = generateKeystoreFilename(self.pk)
         json = json.dumps(self.getKeyStorage())
         outpath = os.path.join(keyPath,outfile)
@@ -218,11 +218,17 @@ class KeyManager():
         f.close()
         return outpath
 
+key = KeyManager('password')
+h = key.getKeyStorage()
+print(h)
+sig = key.sign('this is a msg')
+print(sig)
+
+ver = key.verify(key.pk,'this is a msg',sig)
 
 
-keyman = KeyManager({'password':'password'})
 
-h = keyman.getKeyStorage()
+
 
 
 
