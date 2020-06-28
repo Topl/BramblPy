@@ -24,9 +24,6 @@ defaultOptions = {
 }
 
 
-def isFunction(f):
-    return callable(f)
-
 def str2pybuf(string,enc='base58'):#works
     if type(string) == 'str':
         string2 = bytes(string)
@@ -51,10 +48,12 @@ def decrypt(ciphertext,key,iv,algo):
         aes = pyaes.AESModeOfOperationCTR(key,pyaes.Counter(iv))
         return aes.decrypt(ciphertext)
 
+
 def getMAC(derivedKey,ciphertext):
     keccak256 = keccak.new(digest_bits=256)
     keccak256.update(derivedKey[16:]+ciphertext)
     return keccak256.digest()
+
 
 def create(params):
     keyBytes = params['keyBytes']
@@ -106,6 +105,7 @@ def marshal(derivedKey,keyObject,salt,iv,algo):
         }
     return keyStorage
 
+
 def dump(password,keyObject,options):
     try:
         kdfParams = options['kdfParams']
@@ -120,7 +120,6 @@ def dump(password,keyObject,options):
     return marshal(deriveKey(password,salt,kdfParams),{'privateKey': privateKey,'publicKey':publicKey},salt,iv,options['cipher'])
     
     
-
 def recover(password,keyStorage,kdfParams,cb='notFunction'):
     
     def verifyAndDecrypt(derivedKey,iv,ciphertext,mac,algo):
