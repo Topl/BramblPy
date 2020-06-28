@@ -147,21 +147,21 @@ class KeyManager():
 
     def __init__(self, password, **kwargs):
         try:
-            self.password = password
+            self.__password = password
         except:
             raise Exception('A password must be provided.')
 
         def initKeyStorage(keyStorage,password):
             self.pk = keyStorage['publicKeyId']
             self.isLocked = False
-            self.password = password
-            self.keyStorage = keyStorage
+            self.__password = password
+            self.__keyStorage = keyStorage
 
-            if self.pk:#check if public key exists
-                self.sk = recover(self.password,self.keyStorage,self.constants['scrypt'])
+            if self.pk: #check if public key exists
+                self.__sk = recover(self.__password, self.__keyStorage, self.constants['scrypt'])
 
         def generateKey(password):
-            initKeyStorage(dump(self.password,create(self.constants),self.constants),self.password)
+            initKeyStorage(dump(self.__password, create(self.constants), self.constants), self.__password)
 
         def importFromFile(filePath,password):#TODO
             self.keyStorage = json.parse
@@ -173,11 +173,12 @@ class KeyManager():
 
         initKeyStorage({'publicKeyId':'','crypto': {} }, '')
 
-        generateKey(self.password)
+        #TODO: add additional methods of generating the keyManager
+        generateKey(self.__password)
 
 
     def verify(self,publicKey,message,signature,cb='notFunction'):
-        return curve.verifySignature(publicKey,message.encode('utf-8'),signature)#returns 0 if verified
+        return curve.verifySignature(publicKey, message.encode('utf-8'), signature)#returns 0 if verified
 
     def getKeyStorage(self):
         if self.isLocked:
@@ -186,24 +187,24 @@ class KeyManager():
         if not self.pk:
             raise Exception('A key must be initialized before using this key manager')
 
-        return self.keyStorage
+        return self.__keyStorage
 
     def lockKey(self):
         self.isLocked = True 
 
-    def unlockKey(self,password):
+    def unlockKey(self, password):
         if not self.isLocked:
             raise Exception('The key is already unlocked')
-        if password != self.password:
+        if password != self.__password:
             raise Exception('Invalid password')
         self.isLocked = False
     
-    def sign(self,message):
+    def sign(self, message):
         if self.isLocked:
             raise Exception('The key is currently locked. Please unlock and try again.')
-        return curve.calculateSignature(os.urandom(64),self.sk,message.encode('utf-8'))
+        return curve.calculateSignature(os.urandom(64), self.__sk, message.encode('utf-8'))
 
-    def exportToFile(self,_keyPath):
+    def exportToFile(self, _keyPath):
         try:
             keyPath = _keyPath
         except:
