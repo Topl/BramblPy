@@ -32,7 +32,6 @@ def str2pybuf(string,enc='base58'):#works
         return base58.b58decode(string)
 
 
-
 def encrypt(plaintext,key,iv,algo):
     iv = int(hexlify(iv).decode('utf-8'),16)
     if algo == 'aes-256-ctr':
@@ -60,20 +59,21 @@ def create(params):
     ivBytes = params['ivBytes']
     
     def bifrostBlake2b(Buffer):
-        blake = BLAKE2b.new()
+        blake = BLAKE2b.new(digest_bits=256)
         return blake.update(Buffer).digest()
 
     def curve25519KeyGen(randomBytes): # works
-        randomBytes = bytes(bytearray(randomBytes)[0:32])
-        sk = curve.generatePrivateKey(randomBytes)
+        seed = bifrostBlake2b(randomBytes)
+        sk = curve.generatePrivateKey(seed)
         pk = curve.generatePublicKey(sk)
         return {
             'publicKey': pk,
             'privateKey': sk,
-            'iv': bifrostBlake2b(bytes(bytearray(os.urandom(keyBytes + ivBytes + keyBytes))[0:ivBytes])),
-            'salt': bifrostBlake2b(os.urandom(keyBytes+ivBytes))
+            'iv': bifrostBlake2b(get_random_bytes(keyBytes + ivBytes + keyBytes))[:ivBytes],
+            'salt': bifrostBlake2b(get_random_bytes(keyBytes + ivBytes))
         }
-    return curve25519KeyGen(os.urandom(keyBytes+ivBytes+keyBytes))
+
+    return curve25519KeyGen(get_random_bytes(keyBytes + ivBytes + keyBytes))
 
 
 
