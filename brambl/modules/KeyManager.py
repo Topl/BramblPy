@@ -77,7 +77,7 @@ def create(params):
 
 
 
-def deriveKey(password,salt,kdfParams,cb='notFunction'):
+def deriveKey(password,salt,kdfParams,cb='notFunction'):#creates a 44 byte key?
     if type(password) == 'undefined' or password == None or not salt:
         raise Exception("Must provide password and salt to derive a key")
 
@@ -85,13 +85,13 @@ def deriveKey(password,salt,kdfParams,cb='notFunction'):
     N = kdfParams['n']
     r = kdfParams['r']
     p = kdfParams['p']
-
     return scrypt(password,salt,dkLen,N,r,p,num_keys=1)
 
 
 def marshal(derivedKey,keyObject,salt,iv,algo):
     if algo == 'aes-256-ctr':
         ciphertext = encrypt(keyObject['privateKey'],derivedKey,iv, 'aes-256-ctr')
+
         keyStorage = {
             'publicKeyId': base58.b58encode(keyObject['publicKey']),
             'crypto': {
@@ -141,7 +141,22 @@ def generateKeystoreFilename(publicKey):
         raise Exception('PublicKey must be given as a string for the filename')
     fileName = datetime.datetime.now().isoformat() + '-' + publicKey + '.json'
     return fileName.replace(':','-')
-    
+
+
+def byte2String(keyStorage):
+    string = {'publicKeyId': keyStorage['publicKeyId'].decode('utf-8'),
+            'crypto': {
+            'cipher': keyStorage['crypto']['cipher'],
+            'ciphertext': keyStorage['crypto']['ciphertext'].decode('utf-8'),
+            'cipherParams': {'iv': keyStorage['crypto']['cipherParams']['iv'].decode('utf-8')},
+            'mac': keyStorage['crypto']['mac'].decode('utf-8'),
+            'kdf': keyStorage['crypto']['kdf'],
+            'kdfSalt': keyStorage['crypto']['kdfSalt'].decode('utf-8')
+            }
+    }
+    return string
+
+
 class KeyManager():
 
     def __init__(self, password, **kwargs):
@@ -176,8 +191,10 @@ class KeyManager():
         generateKey(self.__password)
 
 
-    def verify(self,publicKey,message,signature,cb='notFunction'):
-        return curve.verifySignature(publicKey, message.encode('utf-8'), signature)#returns 0 if verified
+    def verify(self,publicKey,message,signature):
+        if curve.verifySignature(base58.b58decode(publicKey), message.encode('utf-8'), signature) == 0:#retunrs -1 if not verified 0 if verified
+            return True
+        return 'not verfied'
 
     def getKeyStorage(self):
         if self.isLocked:
@@ -186,7 +203,7 @@ class KeyManager():
         if not self.pk:
             raise Exception('A key must be initialized before using this key manager')
 
-        return self.__keyStorage
+        return byte2String(self.__keyStorage)#WRAPO
 
     def lockKey(self):
         self.isLocked = True 

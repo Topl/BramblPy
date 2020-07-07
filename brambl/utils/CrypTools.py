@@ -10,12 +10,6 @@ import json
 import pyaes
 from binascii import hexlify
 
-
-#BLAKE2b Test
-obj = BLAKE2b.new(digest_bits=512)
-obj.update(b'Hello World')
-print(base58.b58encode(obj.digest()))
-
 #curve25519 Test
 def sigverify(pubKey,message, signature):
     verified = curve.verifySignature(pubKey,base58.b58encode(message),signature)
