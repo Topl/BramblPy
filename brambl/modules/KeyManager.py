@@ -1,4 +1,5 @@
 import os
+import sys
 import datetime
 from Crypto.Hash import BLAKE2b
 from Crypto.Hash import keccak
@@ -10,6 +11,10 @@ import json
 from binascii import hexlify
 import pyaes
 import jks
+
+
+
+
 
 defaultOptions = {
     'cipher': 'aes-256-ctr',
@@ -50,8 +55,11 @@ def decrypt(ciphertext,key,iv,algo):
 
 def getMAC(derivedKey,ciphertext):
     keccak256 = keccak.new(digest_bits=256)
-    keccak256.update(derivedKey[16:]+ciphertext)
+    keccak256.update(derivedKey[16:32] + ciphertext)
     return keccak256.digest()
+
+
+
 
 
 def create(params):
@@ -77,26 +85,26 @@ def create(params):
 
 
 
-def deriveKey(password,salt,kdfParams,cb='notFunction'):#creates a 44 byte key?
+def deriveKey(password,salt,kdfParams):#creates a 44 byte key?
     if type(password) == 'undefined' or password == None or not salt:
         raise Exception("Must provide password and salt to derive a key")
-
     dkLen = kdfParams['dkLen']
     N = kdfParams['n']
     r = kdfParams['r']
     p = kdfParams['p']
+
     return scrypt(password,salt,dkLen,N,r,p,num_keys=1)
+
 
 
 def marshal(derivedKey,keyObject,salt,iv,algo):
     if algo == 'aes-256-ctr':
         ciphertext = encrypt(keyObject['privateKey'],derivedKey,iv, 'aes-256-ctr')
-
         keyStorage = {
             'publicKeyId': base58.b58encode(keyObject['publicKey']),
             'crypto': {
                 'cipher': algo,
-                'ciphertext': base58.b58encode(ciphertext),
+                'cipherText': base58.b58encode(ciphertext),
                 'cipherParams': {'iv': base58.b58encode(iv)},
                 'mac': base58.b58encode(getMAC(derivedKey,ciphertext)),
                 'kdf': 'scrypt',
@@ -120,7 +128,7 @@ def dump(password,keyObject,options):
     return marshal(deriveKey(password,salt,kdfParams),{'privateKey': privateKey,'publicKey':publicKey},salt,iv,options['cipher'])
     
     
-def recover(password,keyStorage,kdfParams,cb='notFunction'):
+def recover(password,keyStorage,kdfParams):
     
     def verifyAndDecrypt(derivedKey,iv,ciphertext,mac,algo):
         if getMAC(derivedKey,ciphertext) != mac:
@@ -129,10 +137,10 @@ def recover(password,keyStorage,kdfParams,cb='notFunction'):
 
     iv = str2pybuf(keyStorage['crypto']['cipherParams']['iv'])
     salt = str2pybuf(keyStorage['crypto']['kdfSalt'])
-    ciphertext = str2pybuf(keyStorage['crypto']['ciphertext'])
+    ciphertext = str2pybuf(keyStorage['crypto']['cipherText'])
     mac = str2pybuf(keyStorage['crypto']['mac'])
     algo = keyStorage['crypto']['cipher']
-
+   
     return verifyAndDecrypt(deriveKey(password,salt,kdfParams),iv, ciphertext, mac, algo)
 
    
@@ -147,7 +155,7 @@ def byte2String(keyStorage):
     string = {'publicKeyId': keyStorage['publicKeyId'].decode('utf-8'),
             'crypto': {
             'cipher': keyStorage['crypto']['cipher'],
-            'ciphertext': keyStorage['crypto']['ciphertext'].decode('utf-8'),
+            'cipherText': keyStorage['crypto']['cipherText'].decode('utf-8'),
             'cipherParams': {'iv': keyStorage['crypto']['cipherParams']['iv'].decode('utf-8')},
             'mac': keyStorage['crypto']['mac'].decode('utf-8'),
             'kdf': keyStorage['crypto']['kdf'],
@@ -157,28 +165,45 @@ def byte2String(keyStorage):
     return string
 
 
+def string2Bytes(keyStorage):
+    Bytes = {'publicKeyId': keyStorage['publicKeyId'].encode('utf-8'),
+            'crypto': {
+            'cipher': keyStorage['crypto']['cipher'],
+            'cipherText': keyStorage['crypto']['cipherText'].encode('utf-8'),
+            'cipherParams': {'iv': keyStorage['crypto']['cipherParams']['iv'].encode('utf-8')},
+            'mac': keyStorage['crypto']['mac'].encode('utf-8'),
+            'kdf': keyStorage['crypto']['kdf'],
+            'kdfSalt': keyStorage['crypto']['kdfSalt'].encode('utf-8')
+            }
+    }
+    return Bytes
+
+
 class KeyManager():
 
-    def __init__(self, password, **kwargs):
+    def __init__(self, password, kwargs=''):
         try:
-            self.__password = password
+            self.password = password
         except:
             raise Exception('A password must be provided.')
-
+        
         def initKeyStorage(keyStorage,password):
             self.pk = keyStorage['publicKeyId']
             self.isLocked = False
-            self.__password = password
+            self.password = password
             self.__keyStorage = keyStorage
 
             if self.pk: #check if public key exists
-                self.__sk = recover(self.__password, self.__keyStorage, self.constants['scrypt'])
-
+                self.__sk = recover(password, self.__keyStorage, self.constants['scrypt'])
+        
         def generateKey(password):
-            initKeyStorage(dump(self.__password, create(self.constants), self.constants), self.__password)
+            initKeyStorage(dump(password, create(self.constants), self.constants),password)
 
         def importFromFile(filePath,password):#TODO
-            self.keyStorage = json.parse
+            f = open(filePath)
+            KeyStorage = json.loads(f.read())
+            
+            initKeyStorage(string2Bytes(KeyStorage),password)
 
         try:
             self.constants = params['constants']
@@ -187,8 +212,13 @@ class KeyManager():
 
         initKeyStorage({'publicKeyId':'','crypto': {} }, '')
 
-        #TODO: add additional methods of generating the keyManager
-        generateKey(self.__password)
+        if kwargs != '':
+            try:
+                importFromFile(kwargs['keyPath'],password)
+            except:
+                raise Exception('Error importing keyfile')
+        else:
+            generateKey(password)
 
 
     def verify(self,publicKey,message,signature):
@@ -202,7 +232,7 @@ class KeyManager():
         
         if not self.pk:
             raise Exception('A key must be initialized before using this key manager')
-
+        
         return byte2String(self.__keyStorage)#WRAPO
 
     def lockKey(self):
@@ -211,7 +241,7 @@ class KeyManager():
     def unlockKey(self, password):
         if not self.isLocked:
             raise Exception('The key is already unlocked')
-        if password != self.__password:
+        if password != self.password:
             raise Exception('Invalid password')
         self.isLocked = False
     
@@ -226,12 +256,12 @@ class KeyManager():
         except:
             keyPath = 'keyfiles'
         #TODO change bytes objects to strings for export
-        outfile = generateKeystoreFilename(self.pk)
-        json = json.dumps(self.getKeyStorage())
+        outfile = generateKeystoreFilename(self.pk.decode('utf-8'))
+        JSON = json.dumps(self.getKeyStorage())
         outpath = os.path.join(keyPath,outfile)
 
         f = open(outpath, 'w')
-        f.write(json)
+        f.write(JSON)
         f.close()
         return outpath
 
