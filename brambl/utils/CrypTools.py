@@ -6,7 +6,6 @@ from Crypto.Protocol.KDF import scrypt
 from Crypto.Random import get_random_bytes
 import axolotl_curve25519 as curve
 import base58
-import json
 import pyaes
 from binascii import hexlify
 

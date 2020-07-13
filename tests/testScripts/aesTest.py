@@ -3,7 +3,7 @@ import sys
 import pathlib
 path = os.getcwd() + '/brambl/utils/'
 sys.path.insert(1,path)
-import Crypto
+import CrypTools
 
 
 

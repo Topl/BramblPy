@@ -5,6 +5,7 @@ import os
 import sys
 url = "https://valhalla.torus.topl.co/" #temp name, make sure to change and clean
 
+
 '''
 General builder function for formatting API request
 
@@ -18,12 +19,12 @@ def BramblRequest(self,routeInfo, params): #obj is meant for the self of request
         "jsonrpc": "2.0",
         "id": routeInfo['id'],
         "method": routeInfo['method'],
-        "params": [params]#should already be a json object
+        "params": [params]
     }
     response = requests.request('POST',self.url+routeInfo['route'], json= body, allow_redirects = True ,headers = self.headers)
     if response.status_code != 200:
         raise Exception('A connection could not be established')
-        pirnt(response.status_code())
+        print(response.status_code())
     return response
 '''
 A class for sending requests to the Brambl layer interface of the given chain provider
@@ -33,23 +34,28 @@ A class for sending requests to the Brambl layer interface of the given chain pr
 '''
 class Requests():
     #constructor function
-    def __init__(self,url = 'http://localhost:9085', apiKey = 'topl_the_world!'):
+    def __init__(self,url = 'http://localhost:9085/', apiKey = 'topl_the_world!'):
         self.url = url
         self.apiKey = apiKey
         self.headers = {
             "Content-Type": "application/json",
              'x-api-key': self.apiKey
         }
+    def setUrl(self,url):
+        self.url = url
 
-
-    #temp showcase of request with params
-    def sendParamTest(self,params, ID = '1'):
-        route = 'debug/'
-        method = 'info'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
-        
+    def setApiKey(self,apiKey):
+        self.headers['x-api-key'] = apiKey    
+    
     def getBalancesByKey(self,params, ID = '1'):
-        pass
+        try:#TODO implement list check
+            params['publicKeys']
+        except:
+            raise Exception("A list of publicKeys must be specified")
+        
+        route = 'wallet/'
+        method = 'balances'
+        return BramblRequest(self, {'route':route,'method': method,'id':ID},params).text
 
     def listOpenKeyfiles(self, ID = '1'):
         params = {}
@@ -67,46 +73,334 @@ class Requests():
         return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def lockKeyfile(self,params, ID = '1'):
-        pass
+        try:
+            params['publicKey']
+        except:
+            raise Exception("A publicKey field must be specified")
+
+        try:
+            params['password']
+        except:
+            raise Exception("A password must be provided to encrypt the keyfile")
+
+        route = 'wallet/'
+        method = 'lockKeyfile'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def unlockKeyfile(self,params, ID = '1'):
-        pass
+        try:
+            params['publicKey']
+        except:
+            raise Exception("A publicKey field must be specified")
+
+        try:
+            params['password']
+        except:
+            raise Exception("A password must be provided to encrypt the keyfile")
+
+        route = 'wallet/'
+        method = 'unlockKeyfile'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def signTransaction(self,params, ID = '1'):
-        pass
+        try:
+            params['publicKey']
+        except:
+            raise Exception("A publicKey field must be specified")
+
+        try:
+            params['tx']
+        except:
+            raise Exception("A tx object must be specified")
+
+        route = 'wallet/'
+        method = 'signTx'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def broadcastTx(self,params, ID = '1'):
-        pass
+        try:
+            params['tx']
+        except:
+            raise Exception("A tx object must be specified")
+
+        route = 'wallet/'
+        method = 'broadcastTx'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def transferPolys(self,params, ID = '1'):
-        pass
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")
+
+        route = 'wallet/'
+        method = 'transferPolys'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def transferArbits(self,params, ID = '1'):
-        pass
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")
+
+        route = 'wallet/'
+        method = 'transferArbits'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def createAssets(self,params, ID = '1'):
-        pass
+        try:
+            params['issuer']
+        except:
+            raise Exception("An asset issuer must be specified")
+
+        try:
+            params['assetCode']
+        except:
+            raise Exception("An assetCode must be specified")
+        
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")
+
+        route = 'asset/'
+        method = 'createAssets'
+
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def createAssetsPrototype(self,params, ID = '1'):
-        pass
+        try:
+            params['issuer']
+        except:
+            raise Exception("An asset issuer must be specified")
+
+        try:
+            params['assetCode']
+        except:
+            raise Exception("An assetCode must be specified")
+        
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")
+
+        route = 'asset/'
+        method = 'createAssetsPrototype'
+
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+
 
     def transferAssets(self,params, ID = '1'):
-        pass
+        try:
+            params['issuer']
+        except:
+            raise Exception("An asset issuer must be specified")
+
+        try:
+            params['assetCode']
+        except:
+            raise Exception("An assetCode must be specified")
+        
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")
+
+        route = 'asset/'
+        method = 'transferAssets'
+
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+
+
 
     def transferAssetsPrototype(self,params, ID = '1'):
-        pass
+        try:
+            params['issuer']
+        except:
+            raise Exception("An asset issuer must be specified")
+
+        try:
+            params['assetCode']
+        except:
+            raise Exception("An assetCode must be specified")
+        
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['sender']
+        except:
+            raise Exception("A sender must be specified")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")
+
+        route = 'asset/'
+        method = 'transferAssetsPrototype'
+
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def transferTargetAssets(self,params, ID = '1'):
-        pass
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['assetId']
+        except:
+            raise Exception("An assetId is required for this request")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")
+
+        route = 'asset/'
+        method = 'transferTargetAssets'
+
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def transferTargetAssetsPrototype(self,params, ID = '1'):
-        pass
+        try:
+            params['recipient']
+        except:
+            raise Exception("A recipient must be specified")
+
+        try:
+            params['sender']
+        except:
+            raise Exception("A sender must be specified")
+
+        try:
+            params['assetId']
+        except:
+            raise Exception("An assetId is required for this request")
+
+        try:
+            params['amount']
+        except:
+            raise Exception("An amount must be specified")
+
+        try:
+            params['fee']
+        except:
+            raise Exception("A fee must be specified")
+
+        if params['fee'] != 0:
+            raise Exception("A fee must be specified")   
+
+        route = 'asset/'
+        method = 'transferTargetAssetsPrototype'     
+
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def getTransactionById(self,params, ID = '1'):
-        pass
+        try:
+            params['transactionId']
+        except:
+            raise Exception("A transactionId must be specified")
+
+        route = 'nodeView/'
+        method = 'transactionById'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        
+
 
     def getTransactionFromMempool(self,params, ID = '1'):
-        pass
+        try:
+            params['transactionId']
+        except:
+            raise Exception("A transactionId must be specified")
+
+        route = 'nodeView/'
+        method = 'transactionFromMempool'
+        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
 
     def getMempool(self, ID = '1'):
         params = {}
