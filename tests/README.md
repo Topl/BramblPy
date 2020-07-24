@@ -1,0 +1,1 @@
+Each unit test can be executed from the `unitTest.py` file through the **command line**. To run integration tests a local bifrost node must be running. They can be excuted through the `integrationTest.py` file. An *OK* is displayed if the tests conclude successfully.
