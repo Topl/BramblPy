@@ -202,7 +202,7 @@ class KeyManager():
             initKeyStorage(string2Bytes(KeyStorage),password)
 
         try:
-            self.constants = params['constants']
+            self.constants = kwargs['constants']
         except:
             self.constants = defaultOptions
 

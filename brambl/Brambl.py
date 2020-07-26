@@ -64,7 +64,7 @@ class Brambl():
             self.keyManager = self.keyManagerVar['instance']
         except:
             try:
-                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'],{'keyPath': self.keyManagerVar['keyPath'], 'constants': keyManagerVar['constants']})
+                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'],{'keyPath': self.keyManagerVar['keyPath'], 'constants': self.keyManagerVar['constants']})
             except:
                 self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'])
 

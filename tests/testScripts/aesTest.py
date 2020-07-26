@@ -16,7 +16,7 @@ textJS = bytes(bytearray.fromhex(textJS))
 keyJS = bytes(bytearray.fromhex(keyJS))
 ivJS = int(ivJS,16)
 
-jsETest = Crypto.Decipher(textJS,keyJS,ivJS)
+jsETest = CrypTools.Decipher(textJS,keyJS,ivJS)
 print(jsETest)
 
 
