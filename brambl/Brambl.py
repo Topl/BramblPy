@@ -46,31 +46,31 @@ class Brambl():
             self.keyManagerVar['password'] = params
 
         try:
-            self.requests = requestsVar['instance']
+            self.requests = self.requestsVar['instance']
         except:
             try:
-                self.requests = Requests.Requests(requestsVar['url'],requestsVar['apiKey'])
+                self.requests = Requests.Requests(self.requestsVar['url'],self.requestsVar['apiKey'])
             except:
                 self.requests = Requests.Requests()
 
 
         try:
-            keyManagerVar['password']
+            self.keyManagerVar['password']
         except:
             raise Exception('An encryption password is required to open a keyfile')
 
 
         try:
-            self.keyManager = keyManagerVar['instance']
+            self.keyManager = self.keyManagerVar['instance']
         except:
             try:
-                self.keyManager = KeyManager.KeyManager(keyManagerVar['password'],{'keyPath': keyManagerVar['keyPath'], 'constants': keyManagerVar['constants']})
+                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'],{'keyPath': self.keyManagerVar['keyPath'], 'constants': keyManagerVar['constants']})
             except:
-                self.keyManager = KeyManager.KeyManager(keyManagerVar['password'])
+                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'])
 
         self.utils = Hash
 
-    async def addSigToTx(prototypeTx, userKeys):
+    async def addSigToTx(self,prototypeTx, userKeys):
         def getSig(keys,txBytes):
             fromEntries = {}
             for key in keys:
@@ -86,12 +86,12 @@ class Brambl():
         #TODO add return statement
 
 
-    async def signAndBroadcast(prototypeTx):
+    async def signAndBroadcast(self, prototypeTx):
         formattedTx = self.addSigToTx(prototypeTx,self.keyManager)
         return self.requests.broadcastTx({'tx':formattedTx})
 
 
-    async def transaction(method,params):
+    async def transaction(self,method,params):
         if method not in validTxMethods:
             raise Exception('Invalid transaction method')
 
@@ -103,6 +103,6 @@ class Brambl():
             return await self.signAndBroadcast(self.requests.transferTargetAssetsPrototype(params))
 
 
-    async def pollTx(txId,options={ 'timeout': 90, 'interval': 3, 'maxFailedQueries': 10 }):
+    async def pollTx(self, txId,options={ 'timeout': 90, 'interval': 3, 'maxFailedQueries': 10 }):
         temp = polling.pollingTx(self.requests,txId,options)
         return temp.combined()
