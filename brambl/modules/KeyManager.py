@@ -45,7 +45,7 @@ def encrypt(plaintext,key,iv,algo):
         ciphertext = aes.encrypt(plaintext)
         return ciphertext
 
-        
+     
 def decrypt(ciphertext,key,iv,algo):
     iv = int(hexlify(iv).decode('utf-8'),16)
     if algo == 'aes-256-ctr':
@@ -57,9 +57,6 @@ def getMAC(derivedKey,ciphertext):
     keccak256 = keccak.new(digest_bits=256)
     keccak256.update(derivedKey[16:32] + ciphertext)
     return keccak256.digest()
-
-
-
 
 
 def create(params):
@@ -82,7 +79,6 @@ def create(params):
         }
 
     return curve25519KeyGen(get_random_bytes(keyBytes + ivBytes + keyBytes))
-
 
 
 def deriveKey(password,salt,kdfParams):#creates a 44 byte key?

@@ -103,6 +103,6 @@ class Brambl():
             return await self.signAndBroadcast(self.requests.transferTargetAssetsPrototype(params))
 
 
-   # async def pollTx(txId,options={ 'timeout': 90, 'interval': 3, 'maxFailedQueries': 10 }):
-      # opts = options
-      # return pollTx(self.requests,txId,opts) 
+    async def pollTx(txId,options={ 'timeout': 90, 'interval': 3, 'maxFailedQueries': 10 }):
+        temp = polling.pollingTx(self.requests,txId,options)
+        return temp.combined()
