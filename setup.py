@@ -9,7 +9,7 @@ setuptools.setup(
   author = 'Arjun Mehta',
   author_email="arjun.mehta1001@gmail.com",
     description="A Python API wrapper to communicate with the Topl blockchain.",
-    long_description=long_description,
+    long_description= longDescription,
     long_description_content_type="text/markdown",
     url="https://github.com/Topl/Brambl-Py",
     packages=setuptools.find_packages(),
