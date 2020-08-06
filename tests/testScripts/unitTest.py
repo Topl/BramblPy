@@ -1,16 +1,10 @@
-import os
-import sys
 import unittest
 import json
 
-path = os.getcwd() + '/brambl/modules/' #update path once directory rename is sorted
-sys.path.insert(1,path)
-import KeyManager
+from brambl.modules import KeyManager
+from brambl.utils import Hash
+from brambl.utils import CrypTools
 
-path = os.getcwd() + '/brambl/utils/' #update path once directory rename is sorted
-sys.path.insert(1,path)
-import Hash
-import CrypTools
 
 class TestBasicMethods(unittest.TestCase):
 

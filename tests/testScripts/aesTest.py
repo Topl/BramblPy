@@ -1,9 +1,4 @@
-import os
-import sys
-import pathlib
-path = os.getcwd() + '/brambl/utils/'
-sys.path.insert(1,path)
-import CrypTools
+from brambl.utils import CrypTools
 
 
 
