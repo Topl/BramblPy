@@ -162,7 +162,7 @@ class Brambl():
         for key in prototypeTxDic['formattedTx']:
             tempDic[key] =  prototypeTxDic['formattedTx'][key]
 
-        tempDic['signatures'] = genSig(keys,base58.b58decode(prototypeTxDic['messageToSign']))
+        tempDic['signatures'] = getSig(keys,base58.b58decode(prototypeTxDic['messageToSign']))
         return json.dumps(tempDic)
     
     
