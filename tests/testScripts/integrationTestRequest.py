@@ -1,11 +1,7 @@
 import unittest
-import os
-import sys
 import json
-import pathlib
-path = os.getcwd() + '/brambl/modules/' #update path once directory rename is sorted
-sys.path.insert(1,path)
-import Requests
+from brambl.modules import Requests
+
 
 class TestIntegrationRequests(unittest.TestCase):
     

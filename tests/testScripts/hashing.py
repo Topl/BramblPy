@@ -1,9 +1,4 @@
-import os
-import sys
-import pathlib
-path = os.getcwd() + '/brambl/utils/' #update path once directory rename is sorted
-sys.path.insert(1,path)
-import Hash
+from brambl.utils import Hash
 import canonicaljson
 
 
