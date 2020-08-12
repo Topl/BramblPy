@@ -1,0 +1,1248 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Brambl-Py’s documentation! &#8212; Brambl-Py 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-brambl.Brambl">
+<span id="welcome-to-brambl-py-s-documentation"></span><h1>Welcome to Brambl-Py’s documentation!<a class="headerlink" href="#module-brambl.Brambl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="brambl-py">
+<h2>Brambl.py<a class="headerlink" href="#brambl-py" title="Permalink to this headline">¶</a></h2>
+<p>The core module</p>
+<dl class="py class">
+<dt id="brambl.Brambl.Brambl">
+<em class="property">class </em><code class="sig-prename descclassname">brambl.Brambl.</code><code class="sig-name descname">Brambl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.Brambl.Brambl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each sub-module may be initialized in one of three ways</p>
+<p>1.Providing a separetly initialized Request and KeyManager instance. Each of these instances may be initialized using the
+static methods <cite>Requests</cite> or <cite>KeyManager</cite> available in the BramblJS class.</p>
+<p>2.Providing custom configuration parameters needed to create new instances of each sub-module with the specified parameters</p>
+<p>3.Providing minimal inputs (i.e. calling Brambl with only a string constructor arguement). This will create new instances of
+the sub-modules with default parameters. KeyManager will create a new keyfile and Requests will target a locally running
+instance of Bifrost.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – A password string or dictionary containing an instance of <cite>Requests</cite> and <cite>KeyManager</cite></p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'KeyManager'</strong><strong>]</strong> (<cite>KeyManager</cite> object) – KeyManager object (may be either an instance or config parameters)</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'KeyManager</strong><strong>]</strong><strong>[</strong><strong>'password'</strong><strong>]</strong> (<em>string</em>) – The password used to encrpt the keyfile</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'KeyManager'</strong><strong>]</strong><strong>[</strong><strong>'instance'</strong><strong>]</strong> (<cite>KeyManager</cite> instance) – A previously initialized instance of KeyManager</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'KeyManager'</strong><strong>]</strong><strong>[</strong><strong>'keyPath'</strong><strong>]</strong> (<em>string</em>) – Path to a keyfile</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'KeyManager'</strong><strong>]</strong><strong>[</strong><strong>'constansts'</strong><strong>]</strong> (<em>dictionary</em>) – Parameters for encrypting the user’s keyfile</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'Requests'</strong><strong>]</strong> (<cite>Requests</cite> object) – Request object (may be either an instance or config parameters)</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'Requests'</strong><strong>]</strong><strong>[</strong><strong>'url'</strong><strong>]</strong> (<em>string</em>) – The chain provider to send requests to</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'Requests'</strong><strong>]</strong><strong>[</strong><strong>'apikey'</strong><strong>]</strong> (<em>string</em>) – Api key for authorizing access to the chain provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>Brambl</cite> object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>instance of <cite>Brambl</cite></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="brambl.Brambl.Brambl.KeyManager">
+<code class="sig-name descname">KeyManager</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kwargs</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.Brambl.Brambl.KeyManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Methods for creating a separate KeyManager instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>password</strong> (<em>string</em>) – passwword for encrypting (decrypting) the keyfile</p></li>
+<li><p><strong>kwargs</strong> (<em>string</em><em> or </em><em>dictionary</em>) – Used for importing keyfiles, efault emptry string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>KeyManager</cite> object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>instance of <cite>KeyManager</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.Brambl.Brambl.Requests">
+<code class="sig-name descname">Requests</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">apiKey</span><span class="o">=</span><span class="default_value">'topl_the_world!'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.Brambl.Brambl.Requests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for creating a separate Requests instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>testURL</strong> (<em>string</em>) – Chain provider location, defaults to “<a class="reference external" href="http://localhost:9085/">http://localhost:9085/</a>”</p></li>
+<li><p><strong>apiKey</strong> (<em>string</em>) – Access key for authorizing requests to the client API, defaults to “topl_the_world!”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>Requests</cite> object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>instance of <cite>Requests</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.Brambl.Brambl.addSigToTx">
+<em class="property">async </em><code class="sig-name descname">addSigToTx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prototypeTx</span></em>, <em class="sig-param"><span class="n">userKeys</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.Brambl.Brambl.addSigToTx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a signature to a prototype transaction using the an unlocked key manager object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prototypeTx</strong> – An unsigned transaction JSON object</p></li>
+<li><p><strong>userKeys</strong> – A keyManager object containing the user’s key (may be a list)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>transaction object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.Brambl.Brambl.pollTx">
+<em class="property">async </em><code class="sig-name descname">pollTx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txId</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">{'interval': 3, 'maxFailedQueries': 10, 'timeout': 90}</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.Brambl.Brambl.pollTx" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to initiate polling of the chain provider for a specified transaction.
+This function begins by querying ‘getTransactionById’ which looks for confirmed transactions only.
+If the transaction is not confirmed, the mempool is checked using ‘getTransactionFromMemPool’ to
+ensure that the transaction is pending. The parameter ‘numFailedQueries’ specifies the number of consecutive
+failures (when resorting to querying the mempool) before ending the polling operation prematurely.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txId</strong> (<em>type description</em>) – The unique transaction ID to look for</p></li>
+<li><p><strong>options</strong> (<em>type description</em>) – Optional parameters in dictionary to control the polling behavior</p></li>
+<li><p><strong>options</strong><strong>[</strong><strong>'timeout'</strong><strong>]</strong> (<em>number</em>) – The timeout (in seconds) before the polling operation is stopped</p></li>
+<li><p><strong>options</strong><strong>[</strong><strong>'interval'</strong><strong>]</strong> (<em>number</em>) – The interval (in seconds) between attempts</p></li>
+<li><p><strong>options</strong><strong>[</strong><strong>'maxFailedQueries'</strong><strong>]</strong> (<em>number</em>) – The maximum number of consecutive failures (to find the unconfirmed transaction) before ending the poll execution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>polling request</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.Brambl.Brambl.signAndBroadcast">
+<em class="property">async </em><code class="sig-name descname">signAndBroadcast</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prototypeTx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.Brambl.Brambl.signAndBroadcast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to sign a prototype transaction and broadcast to a chain provider
+:param prototypeTx: An unsigned transaction JSON object
+:type prototypeTx: ?
+:return: broadcastTx Request
+:rtype: JSON</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.Brambl.Brambl.transaction">
+<em class="property">async </em><code class="sig-name descname">transaction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">method</span></em>, <em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.Brambl.Brambl.transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new transaction, then sign and broadcast</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>string</em>) – The chain resource method (string) to create a transaction for</p></li>
+<li><p><strong>params</strong> (<em>type description</em>) – parameters for chain request</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new transaction object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-brambl.modules.KeyManager"></span><div class="section" id="keymanager-py">
+<h2>KeyManager.py<a class="headerlink" href="#keymanager-py" title="Permalink to this headline">¶</a></h2>
+<p>Create, import, and export Topl Bifrost keys.
+Also allows for signing of transactions</p>
+<p>Based on the keythereum library from Jack Peterson
+<a class="reference external" href="https://github.com/Ethereumjs/keythereum">https://github.com/Ethereumjs/keythereum</a></p>
+<dl class="py class">
+<dt id="brambl.modules.KeyManager.KeyManager">
+<em class="property">class </em><code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">KeyManager</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">password</span></em>, <em class="sig-param"><span class="n">kwargs</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.KeyManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance of the Key management interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>password</strong> (<em>string</em>) – password for encrypting (decrypting) the keyfile</p></li>
+<li><p><strong>kwargs</strong> (<em>string</em>) – empty string or path to import keyfile</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>KeyManager</cite> object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>instance of <cite>KeyManager</cite></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="brambl.modules.KeyManager.KeyManager.exportToFile">
+<code class="sig-name descname">exportToFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_keyPath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.KeyManager.exportToFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export formatted JSON to keystore file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_keyPath</strong> (<em>string</em>) – Path to keystore folder (default: “keystore”).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON filename</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.KeyManager.KeyManager.getKeyStorage">
+<code class="sig-name descname">getKeyStorage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.KeyManager.getKeyStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter function to retrieve key storage in the Bifrost compatible format</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.KeyManager.KeyManager.lockKey">
+<code class="sig-name descname">lockKey</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.KeyManager.lockKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the key manager to locked so that the private key may not be decrypted</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.KeyManager.KeyManager.sign">
+<code class="sig-name descname">sign</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.KeyManager.sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the signature of a message using the provided private key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>byte string</em>) – Message to sign (utf-8 encoded)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>signature</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.KeyManager.KeyManager.unlockKey">
+<code class="sig-name descname">unlockKey</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">password</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.KeyManager.unlockKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlock the key manager to be used in transactions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>password</strong> (<em>string</em>) – encryption password for accessing the keystorage object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.KeyManager.KeyManager.verify">
+<code class="sig-name descname">verify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">publicKey</span></em>, <em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">signature</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.KeyManager.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether a private key was used to generate the signature for a message.
+This method is static so that it may be used without generating a keyfile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>publicKey</strong> (<em>byte string</em>) – A public key (if string, must be base-58 encoded)</p></li>
+<li><p><strong>message</strong> (<em>byte string</em>) – Message to sign (utf-8 encoded)</p></li>
+<li><p><strong>signature</strong> (<em>byte string</em>) – Signature to verify (if string, must be base-58 encoded)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>verification</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.byte2String">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">byte2String</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyStorage</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.byte2String" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts bytes types to string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keyStorage</strong> (<em>dictionary</em>) – keyStorage object</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary containing string versions of byte strings</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.create">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate random numbers for private key, initialization vector,
+and salt (for key derivation).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – Encryption options.</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'keyBytes'</strong><strong>]</strong> (<em>number</em>) – Private key size in bytes.</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'ivBytes'</strong><strong>]</strong> (<em>number</em>) – Initialization vector size in bytes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Keys, IV and salt.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.decrypt">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">decrypt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ciphertext</span></em>, <em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">iv</span></em>, <em class="sig-param"><span class="n">algo</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric private key decryption using secret (derived) key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ciphertext</strong> (<em>bytes</em>) – Data to be decrypted.</p></li>
+<li><p><strong>key</strong> (<em>string</em>) – A secret key.</p></li>
+<li><p><strong>iv</strong> (<em>number</em>) – Initialization vector</p></li>
+<li><p><strong>algo</strong> (<em>string</em>) – Encryption algorithm (aes-256-ctr is currently supported)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Decrypted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.deriveKey">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">deriveKey</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">password</span></em>, <em class="sig-param"><span class="n">salt</span></em>, <em class="sig-param"><span class="n">kdfParams</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.deriveKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derive secret key from password with key derivation function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>password</strong> (<em>string</em>) – User-supplied password.</p></li>
+<li><p><strong>salt</strong> (<em>number</em>) – Randomly generated salt.</p></li>
+<li><p><strong>kdfParams</strong> (<em>dictionary</em>) – key-derivation parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Secret key derived from password.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.dump">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">password</span></em>, <em class="sig-param"><span class="n">keyObject</span></em>, <em class="sig-param"><span class="n">options</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export private key to keystore secret-storage format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>password</strong> (<em>string</em>) – User-supplied password.</p></li>
+<li><p><strong>keyObject</strong> (<em>dictionary</em>) – Object containing the raw public / private keypair</p></li>
+<li><p><strong>options</strong> (<em>dictionary</em>) – encryption specifications to be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>keyStorage for use with exportToFile</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.encrypt">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">encrypt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">plaintext</span></em>, <em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">iv</span></em>, <em class="sig-param"><span class="n">algo</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric private key encryption using secret (derived) key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plaintext</strong> (<em>string</em>) – Data to be encrypted.</p></li>
+<li><p><strong>key</strong> (<em>string</em>) – A secret key</p></li>
+<li><p><strong>iv</strong> (<em>number</em>) – initialization vector</p></li>
+<li><p><strong>algo</strong> (<em>string</em>) – Encryption algorithm (aes-256-ctr is currently supported)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>encrypted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.generateKeystoreFilename">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">generateKeystoreFilename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">publicKey</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.generateKeystoreFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate filename for a keystore file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>publicKey</strong> (<em>string</em>) – Topl address</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Keystore filename</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.getMAC">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">getMAC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">derivedKey</span></em>, <em class="sig-param"><span class="n">ciphertext</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.getMAC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate message authentication code from secret (derived) key and
+encrypted text. The MAC is the keccak-256 hash of the byte array
+formed by concatenating the second 16 bytes of the derived key with
+the ciphertext key’s contents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>derivedKey</strong> (<em>string</em>) – Secret key derived from password</p></li>
+<li><p><strong>ciphertext</strong> (<em>bytes string</em>) – ciphertext Text encrypted with secret key.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Base58-encoded MAC</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.marshal">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">marshal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">derivedKey</span></em>, <em class="sig-param"><span class="n">keyObject</span></em>, <em class="sig-param"><span class="n">salt</span></em>, <em class="sig-param"><span class="n">iv</span></em>, <em class="sig-param"><span class="n">algo</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.marshal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assemble key data object in secret-storage format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>derivedKey</strong> (<em>string</em>) – Password-derived secret key.</p></li>
+<li><p><strong>keyObject</strong> (<em>dictionary</em>) – Object containing the raw public / private keypair</p></li>
+<li><p><strong>salt</strong> (<em>number</em>) – Randomly generated salt.</p></li>
+<li><p><strong>iv</strong> (<em>number</em>) – Initialization vector.</p></li>
+<li><p><strong>algo</strong> (<em>string</em>) – encryption algorithm to be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>key data object in secret-storage format</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.recover">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">recover</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">password</span></em>, <em class="sig-param"><span class="n">keyStorage</span></em>, <em class="sig-param"><span class="n">kdfParams</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.recover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recover plaintext private key from secret-storage key object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>password</strong> (<em>string</em>) – User-supplied password.</p></li>
+<li><p><strong>keyStorage</strong> (<em>dictionary</em>) – Keystore object</p></li>
+<li><p><strong>kdfParams</strong> (<em>dictionary</em>) – key-derivation parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Plaintext private key</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.str2pybuf">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">str2pybuf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em>, <em class="sig-param"><span class="n">enc</span><span class="o">=</span><span class="default_value">'base58'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.str2pybuf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string to a Buffer.  If encoding is not specified, bae58-encoding
+will be used if the input is valid base58.  If the input is valid base64 but
+not valid hex, base64 will be used.  Otherwise, utf8 will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> (<em>string</em>) – String to be converted.</p></li>
+<li><p><strong>enc</strong> (<em>string</em>) – Encoding of the input string (optional), defaults to base58.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An object containing the input data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.modules.KeyManager.string2Bytes">
+<code class="sig-prename descclassname">brambl.modules.KeyManager.</code><code class="sig-name descname">string2Bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyStorage</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.KeyManager.string2Bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts string types to bytes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keyStorage</strong> (<em>dictionary</em>) – keyStorage object</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary containing byte string versions of strings</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<span class="target" id="module-brambl.modules.Requests"></span><div class="section" id="requests-py">
+<h2>Requests.py<a class="headerlink" href="#requests-py" title="Permalink to this headline">¶</a></h2>
+<p>A Javascript API wrapper module for the Bifrost Protocol.
+Currently supports version 4.1 of Bifrost’s Brambl-Layer API
+Documentation for Brambl-layer is available at <a class="reference external" href="https://Requests.docs.topl.co">https://Requests.docs.topl.co</a></p>
+<dl class="py function">
+<dt id="brambl.modules.Requests.BramblRequest">
+<code class="sig-prename descclassname">brambl.modules.Requests.</code><code class="sig-name descname">BramblRequest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">routeInfo</span></em>, <em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.BramblRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>General builder function for formatting API request</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>routeInfo</strong> (<em>dictionary</em>) – object containing data neccesary for making requests</p></li>
+<li><p><strong>routeInfo</strong><strong>[</strong><strong>'route'</strong><strong>]</strong> (<em>string</em>) – specified request route</p></li>
+<li><p><strong>routeInfo</strong><strong>[</strong><strong>'method'</strong><strong>]</strong> (<em>string</em>) – request method used</p></li>
+<li><p><strong>routeInfo</strong><strong>[</strong><strong>'ID'</strong><strong>]</strong> (<em>string</em>) – request id</p></li>
+<li><p><strong>params</strong> (<em>dictionary</em>) – additional request parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON response from the node</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="brambl.modules.Requests.Requests">
+<em class="property">class </em><code class="sig-prename descclassname">brambl.modules.Requests.</code><code class="sig-name descname">Requests</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">'http://localhost:9085/'</span></em>, <em class="sig-param"><span class="n">apiKey</span><span class="o">=</span><span class="default_value">'topl_the_world!'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for sending requests to the Brambl layer interface of the given chain provider</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>string</em>) – Chain provider location, defaults to “<a class="reference external" href="http://localhost:9085/">http://localhost:9085/</a>”</p></li>
+<li><p><strong>apiKey</strong> (<em>string</em>) – Access key for authorizing requests to the client API, defaults to “topl_the_world!”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>Requests</cite> object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>instance of <cite>Requests</cite></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.blockGenerators">
+<code class="sig-name descname">blockGenerators</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.blockGenerators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the blockIds that each accessible key has forged</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.broadcastTx">
+<code class="sig-name descname">broadcastTx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.broadcastTx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Have the node sign a <cite>messageToSign</cite> raw transaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'tx'</strong><strong>]</strong> (<em>string</em>) – a JSON formatted transaction (must include signature(s))</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.calcDelay">
+<code class="sig-name descname">calcDelay</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.calcDelay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the average delay between blocks
+:param params: body parameters passed to the specified json-rpc method
+:param params[‘blockId’]: Unique identifier of a block
+:param params[‘numBlocks’]: Number of blocks to consider behind the specified block
+:param ID: identifying number for the json-rpc request, defaults to “1”
+:type params: dictionary
+:type params[‘blockId’]: string
+:type params[‘numBlocks’]: string
+:type ID: string
+:return: json-rpc response from the chain
+:rtype: JSON</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.chainInfo">
+<code class="sig-name descname">chainInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.chainInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the chain information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.createAssets">
+<code class="sig-name descname">createAssets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.createAssets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new asset on chain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'issuer'</strong><strong>]</strong> (<em>string</em>) – Public key of the asset issuer</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'assetCode'</strong><strong>]</strong> (<em>string</em>) – Identifier of the asset</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the transfer recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.createAssetsPrototype">
+<code class="sig-name descname">createAssetsPrototype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.createAssetsPrototype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new asset on chain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'issuer'</strong><strong>]</strong> (<em>string</em>) – Public key of the asset issuer</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'assetCode'</strong><strong>]</strong> (<em>string</em>) – Identifier of the asset</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the transfer recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.generateKeyfile">
+<code class="sig-name descname">generateKeyfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.generateKeyfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a new keyfile in the node keyfile directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'password'</strong><strong>]</strong> (<em>string</em>) – Password for encrypting the new keyfile</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.getBalancesByKey">
+<code class="sig-name descname">getBalancesByKey</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.getBalancesByKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the balances of a specified public key in the keyfiles directory of the node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.getBlockById">
+<code class="sig-name descname">getBlockById</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.getBlockById" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup a block from history by the provided id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'blockId'</strong><strong>]</strong> (<em>string</em>) – Unique identifier of the block to retrieve</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.getMempool">
+<code class="sig-name descname">getMempool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.getMempool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the balances of a specified public key in the keyfiles directory of the node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.getTransactionById">
+<code class="sig-name descname">getTransactionById</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.getTransactionById" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup a transaction from history by the provided id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'transactionId'</strong><strong>]</strong> (<em>string</em>) – Unique identifier of the transaction to retrieve</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.getTransactionFromMempool">
+<code class="sig-name descname">getTransactionFromMempool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.getTransactionFromMempool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup a transaction from the mempool by the provided id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'transactionId'</strong><strong>]</strong> (<em>string</em>) – Unique identifier of the transaction to retrieve</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.listOpenKeyfiles">
+<code class="sig-name descname">listOpenKeyfiles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.listOpenKeyfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of all open keyfiles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.lockKeyfile">
+<code class="sig-name descname">lockKeyfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.lockKeyfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock an open keyfile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'publicKey'</strong><strong>]</strong> (<em>string</em>) – Base58 encoded public key to get the balance of</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'password'</strong><strong>]</strong> (<em>string</em>) – Password used to encrypt the keyfile</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.myBlocks">
+<code class="sig-name descname">myBlocks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.myBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of blocks forged by keys held by this node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.signTransaction">
+<code class="sig-name descname">signTransaction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.signTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Have the node sign a JSON formatted prototype transaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'publicKey'</strong><strong>]</strong> (<em>string</em>) – Base58 encoded public key to get the balance of</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'tx'</strong><strong>]</strong> (<em>string</em>) – a JSON formatted prototype transaction</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.transferArbits">
+<code class="sig-name descname">transferArbits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.transferArbits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer Arbits to a specified public key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the transfer recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'sender'</strong><strong>]</strong> (<em>list</em><em> or </em><em>string</em>) – Array of public keys which you can use to restrict sending from</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'changeAddress'</strong><strong>]</strong> (<em>string</em>) – Public key you wish to send change back to</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.transferAssets">
+<code class="sig-name descname">transferAssets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.transferAssets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer an asset to a recipient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'issuer'</strong><strong>]</strong> (<em>string</em>) – Public key of the asset issuer</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'assetCode'</strong><strong>]</strong> (<em>string</em>) – Identifier of the asset</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the transfer recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'sender'</strong><strong>]</strong> (<em>list</em><em> or </em><em>string</em>) – Array of public keys which you can use to restrict sending from</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'changeAddress'</strong><strong>]</strong> (<em>string</em>) – Public key you wish to send change back to</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.transferAssetsPrototype">
+<code class="sig-name descname">transferAssetsPrototype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.transferAssetsPrototype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer an asset to a recipient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'issuer'</strong><strong>]</strong> (<em>string</em>) – Public key of the asset issuer</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'assetCode'</strong><strong>]</strong> (<em>string</em>) – Identifier of the asset</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the transfer recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'sender'</strong><strong>]</strong> (<em>list</em><em> or </em><em>string</em>) – Array of public keys which you can use to restrict sending from</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'changeAddress'</strong><strong>]</strong> (<em>string</em>) – Public key you wish to send change back to</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.transferPolys">
+<code class="sig-name descname">transferPolys</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.transferPolys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer Polys to a specified public key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the transfer recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'sender'</strong><strong>]</strong> (<em>list</em><em> or </em><em>string</em>) – Array of public keys which you can use to restrict sending from</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'changeAddress'</strong><strong>]</strong> (<em>string</em>) – Public key you wish to send change back to</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.transferTargetAssets">
+<code class="sig-name descname">transferTargetAssets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.transferTargetAssets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer a specific asset box to a recipient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the asset recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'assetId'</strong><strong>]</strong> (<em>string</em>) – BoxId of the asset to target</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.transferTargetAssetsPrototype">
+<code class="sig-name descname">transferTargetAssetsPrototype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.transferTargetAssetsPrototype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an unsigned targeted transfer transaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'recipient'</strong><strong>]</strong> (<em>string</em>) – Public key of the asset recipient</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'sender'</strong><strong>]</strong> (<em>list</em><em> or </em><em>string</em>) – Array of public keys of the asset senders</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'assetId'</strong><strong>]</strong> (<em>string</em>) – BoxId of the asset to target</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'amount'</strong><strong>]</strong> (<em>number</em>) – Amount of asset to send</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'fee'</strong><strong>]</strong> (<em>number</em>) – Fee to apply to the transaction</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'data'</strong><strong>]</strong> (<em>string</em>) – Data string which can be associated with this transaction (may be empty)</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brambl.modules.Requests.Requests.unlockKeyfile">
+<code class="sig-name descname">unlockKeyfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">ID</span><span class="o">=</span><span class="default_value">'1'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.modules.Requests.Requests.unlockKeyfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlock a keyfile in the node’s keyfile directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dictionary</em>) – body parameters passed to the specified json-rpc method</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'publicKey'</strong><strong>]</strong> (<em>string</em>) – Base58 encoded public key to get the balance of</p></li>
+<li><p><strong>params</strong><strong>[</strong><strong>'password'</strong><strong>]</strong> (<em>string</em>) – Password used to encrypt the keyfile</p></li>
+<li><p><strong>ID</strong> (<em>string</em>) – identifying number for the json-rpc request, defaults to “1”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json-rpc response from the chain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-brambl.utils.Hash"></span><div class="section" id="hash-py">
+<h2>Hash.py<a class="headerlink" href="#hash-py" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="brambl.utils.Hash.digestAndEncode">
+<code class="sig-prename descclassname">brambl.utils.Hash.</code><code class="sig-name descname">digestAndEncode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hash</span></em>, <em class="sig-param"><span class="n">encoding</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.utils.Hash.digestAndEncode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create hash digest and encode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hash</strong> (<em>object</em>) – Initialized Blake2b-256 hash function</p></li>
+<li><p><strong>encoding</strong> (<em>string</em>) – output encoding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Blake2b-256 hash digest</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Blake2b-256 hash</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.utils.Hash.file">
+<code class="sig-prename descclassname">brambl.utils.Hash.</code><code class="sig-name descname">file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filePath</span></em>, <em class="sig-param"><span class="n">encoding</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.utils.Hash.file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the file from disk and calculates the Blake2b-256</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>string</em>) – path to the input file</p></li>
+<li><p><strong>encoding</strong> (<em>string</em>) – output encoding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Blake2b-256 hash digest</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Blake2b-256 hash</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.utils.Hash.hashFunc">
+<code class="sig-prename descclassname">brambl.utils.Hash.</code><code class="sig-name descname">hashFunc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#brambl.utils.Hash.hashFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>standard FastCryptographicHash is Bifrost</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Initialized hash function</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Blake2b-256 hash</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brambl.utils.Hash.string">
+<code class="sig-prename descclassname">brambl.utils.Hash.</code><code class="sig-name descname">string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">encoding</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brambl.utils.Hash.string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the Blake2b-256 of a string input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>string</em>) – input string message to create the hash digest of</p></li>
+<li><p><strong>encoding</strong> (<em>string</em>) – output encoding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Blake2b-256 hash digest</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Blake2b-256 hash</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Brambl-Py</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Arjun Mehta.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
