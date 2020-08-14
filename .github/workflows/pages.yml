@@ -14,6 +14,7 @@ jobs:
     - name: Build and Deploy
       uses: JacksonMaxfield/github-pages-deploy-action-python@master
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BASE_BRANCH: master # The branch the action should deploy from.
         BRANCH: gh-pages # The branch the action should deploy to.
