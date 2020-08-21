@@ -2,7 +2,7 @@
 Requests.py
 ====================================
 
-A Javascript API wrapper module for the Bifrost Protocol.
+A Python API wrapper module for the Bifrost Protocol.
 Currently supports version 4.1 of Bifrost's Brambl-Layer API
 Documentation for Brambl-layer is available at https://Requests.docs.topl.co
 
