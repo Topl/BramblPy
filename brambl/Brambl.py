@@ -20,7 +20,8 @@ from .utils import Hash
 from .utils import CrypTools
 
 # Libraries
-from .lib import polling
+sys.path.insert(1,os.getcwd() + '/brambl/lib')
+import polling
 
 # Constants defininitions
 validTxMethods = ['createAssetsPrototype','transferAssetsPrototype','transferTargetAssetsPrototype']
