@@ -25,6 +25,7 @@ parts/
 sdist/
 var/
 wheels/
+build/*
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -143,3 +144,7 @@ cython_debug/
 
 #vscode
 .vscode/
+
+#PyPI
+*.pypirc
+

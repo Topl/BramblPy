@@ -20,7 +20,6 @@ import base58
 import json
 from binascii import hexlify
 import pyaes
-import jks
 
 
 

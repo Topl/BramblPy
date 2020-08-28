@@ -4,7 +4,7 @@ with open('README.md','r') as fh:
   longDescription = fh.read()
 
 setuptools.setup(
-  name = 'Brambl-Py',
+  name = 'brambl-py',
   version = '0.0.1',
   author = 'Arjun Mehta',
   author_email="arjun.mehta1001@gmail.com",
