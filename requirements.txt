@@ -29,7 +29,7 @@ numpy==1.18.5
 packaging==20.4
 pkginfo==1.5.0.1
 pluggy==0.13.1
-py==1.9.0
+py==1.10.0
 pyaes==1.6.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
