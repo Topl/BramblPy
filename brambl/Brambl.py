@@ -130,8 +130,7 @@ class Brambl():
         """
         return KeyManager.KeyManager(password,kwargs)
 
-
-    async def addSigToTx(self,prototypeTx, userKeys):
+    async def addSigToTx(self, prototypeTx, userKeys):
         """
         Add a signature to a prototype transaction using the an unlocked key manager object
 
@@ -143,12 +142,17 @@ class Brambl():
         :rtype: JSON
 
         """
+
         # function for generating a signature in the correct format
-        def getSig(keys,txBytes):
+        def getSig(keys, txBytes):
             fromEntries = {}
             for key in keys:
-                fromEntries[key.pk] = base58.b58encode(key.sign(txBytes))
+                prop_01 = bytes.fromhex("01")
+                prop = b''.join([prop_01, base58.b58decode(key.pk)])
+                sig = b''.join([prop_01, key.sign(base58.b58decode(key.sk)[0:32], txBytes)])
+                fromEntries[base58.b58encode(prop).decode('utf-8')] = base58.b58encode(sig).decode('utf-8')
             return fromEntries
+
         # incase a single given is given not as an array
         keys = []
         if type(userKeys) != type(['list']):
@@ -159,10 +163,10 @@ class Brambl():
         # add signatures of all given key files to the formatted transaction
         prototypeTxDic = json.loads(prototypeTx)
         tempDic = {}
-        for key in prototypeTxDic['formattedTx']:
-            tempDic[key] =  prototypeTxDic['formattedTx'][key]
+        for key in prototypeTxDic['result']['txId']:
+            tempDic[key] = prototypeTxDic['result']['txId'][key]
 
-        tempDic['signatures'] = getSig(keys,base58.b58decode(prototypeTxDic['messageToSign']))
+        tempDic['signatures'] = getSig(keys, base58.b58decode(prototypeTxDic['messageToSign']))
         return json.dumps(tempDic)
     
     
