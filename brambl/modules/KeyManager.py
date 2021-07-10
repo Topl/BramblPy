@@ -116,21 +116,20 @@ def decrypt(ciphertext,key,iv,algo):
 def getMAC(derivedKey,ciphertext):
     """
     Calculate message authentication code from secret (derived) key and
-    encrypted text. The MAC is the keccak-256 hash of the byte array
+    encrypted text. The MAC is the blake2b-256 hash of the byte array
     formed by concatenating the second 16 bytes of the derived key with
     the ciphertext key's contents.
 
     :param derivedKey: Secret key derived from password
     :param ciphertext: ciphertext Text encrypted with secret key.
-    :type derivedKey: string
+    :type derivedKey: bytes string
     :type ciphertext: bytes string
     :return: Base58-encoded MAC
-    :rtype: string
+    :rtype: bytes string
 
     """
-    keccak256 = keccak.new(digest_bits=256)
-    keccak256.update(derivedKey[16:32] + ciphertext)
-    return keccak256.digest()
+    blake = BLAKE2b.new(digest_bits=256)
+    return blake.update(derivedKey[16:32] + ciphertext).digest()
 
 
 def create(params):
