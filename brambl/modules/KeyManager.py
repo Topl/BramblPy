@@ -21,6 +21,7 @@ import json
 from binascii import hexlify
 import pyaes
 import jks
+from os import urandom
 
 
 
@@ -122,10 +123,10 @@ def getMAC(derivedKey,ciphertext):
 
     :param derivedKey: Secret key derived from password
     :param ciphertext: ciphertext Text encrypted with secret key.
-    :type derivedKey: bytes string
-    :type ciphertext: bytes string
+    :type derivedKey: bytes
+    :type ciphertext: bytes
     :return: Base58-encoded MAC
-    :rtype: bytes string
+    :rtype: bytes
 
     """
     blake = BLAKE2b.new(digest_bits=256)
@@ -368,7 +369,8 @@ class KeyManager():
             self.__keyStorage = keyStorage
 
             if self.pk: #check if public key exists
-                self.__sk = recover(password, self.__keyStorage, self.constants['scrypt'])
+                self.__sk = recover(password, self.__keyStorage, self.constants['scrypt'])[0:32]
+
         
         def generateKey(password):
             # this will create a new curve25519 key pair and dump to an encrypted format
@@ -461,14 +463,14 @@ class KeyManager():
         Generate the signature of a message using the provided private key
 
         :param message: Message to sign (utf-8 encoded)
-        :type message: byte string
+        :type message: bytes
         :return: signature
         :rtype: bytes
 
         """
         if self.isLocked:
             raise Exception('The key is currently locked. Please unlock and try again.')
-        return curve.calculateSignature(os.urandom(64), self.__sk, message.encode('utf-8'))
+        return curve.calculateSignature(urandom(64), self.__sk, message)
 
     
     def exportToFile(self, _keyPath):
