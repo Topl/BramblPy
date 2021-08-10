@@ -149,7 +149,7 @@ class Brambl():
             for key in keys:
                 prop_01 = bytes.fromhex("01")
                 prop = b''.join([prop_01, base58.b58decode(key.pk)])
-                sig = b''.join([prop_01, key.sign(base58.b58decode(key.sk)[0:32], txBytes)])
+                sig = b''.join([prop_01, key.sign(txBytes)])
                 fromEntries[base58.b58encode(prop).decode('utf-8')] = base58.b58encode(sig).decode('utf-8')
             return fromEntries
 
@@ -163,10 +163,10 @@ class Brambl():
         # add signatures of all given key files to the formatted transaction
         prototypeTxDic = json.loads(prototypeTx)
         tempDic = {}
-        for key in prototypeTxDic['result']['txId']:
-            tempDic[key] = prototypeTxDic['result']['txId'][key]
+        for key in prototypeTxDic['result']['rawTx']:
+            tempDic[key] = prototypeTxDic['result']['rawTx'][key]
 
-        tempDic['signatures'] = getSig(keys, base58.b58decode(prototypeTxDic['messageToSign']))
+        tempDic['signatures'] = getSig(keys, base58.b58decode(prototypeTxDic['result']['messageToSign']))
         return json.dumps(tempDic)
     
     
