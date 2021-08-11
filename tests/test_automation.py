@@ -22,7 +22,7 @@ def test_decrypt():
     assert KeyManager.decrypt(b'\x03~r\xa5',b'1111111111111111',bytes(b'iv'),'aes-256-ctr') == b'test'
 
 def test_getMAC():
-    assert KeyManager.getMAC(b'key',b'text') == b'\x95\x99\xd5\xe4\xe41!\x19l\xad\xfe\xae\xa3&\xe4oX\xd9\xdbt)\x9d\xec\xfdd\xbd;p\x03P\xcc\xd9'
+    assert KeyManager.getMAC(b'key',b'text') == b"\xb2\xcf#`B-2a\x0e\xd5\xe9L\xf4+iL\xe2EL\xcfJ\x90\xb9\x19'\xd5\x08\xd4\xdd\xf8!\n"
 
 def test_digestAndEncode():
     blakeHash = Hash.hashFunc()

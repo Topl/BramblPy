@@ -21,6 +21,7 @@ import json
 from binascii import hexlify
 import pyaes
 import jks
+from os import urandom
 
 
 
@@ -116,21 +117,20 @@ def decrypt(ciphertext,key,iv,algo):
 def getMAC(derivedKey,ciphertext):
     """
     Calculate message authentication code from secret (derived) key and
-    encrypted text. The MAC is the keccak-256 hash of the byte array
+    encrypted text. The MAC is the blake2b-256 hash of the byte array
     formed by concatenating the second 16 bytes of the derived key with
     the ciphertext key's contents.
 
     :param derivedKey: Secret key derived from password
     :param ciphertext: ciphertext Text encrypted with secret key.
-    :type derivedKey: string
-    :type ciphertext: bytes string
+    :type derivedKey: bytes
+    :type ciphertext: bytes
     :return: Base58-encoded MAC
-    :rtype: string
+    :rtype: bytes
 
     """
-    keccak256 = keccak.new(digest_bits=256)
-    keccak256.update(derivedKey[16:32] + ciphertext)
-    return keccak256.digest()
+    blake = BLAKE2b.new(digest_bits=256)
+    return blake.update(derivedKey[16:32] + ciphertext).digest()
 
 
 def create(params):
@@ -369,7 +369,8 @@ class KeyManager():
             self.__keyStorage = keyStorage
 
             if self.pk: #check if public key exists
-                self.__sk = recover(password, self.__keyStorage, self.constants['scrypt'])
+                self.__sk = recover(password, self.__keyStorage, self.constants['scrypt'])[0:32]
+
         
         def generateKey(password):
             # this will create a new curve25519 key pair and dump to an encrypted format
@@ -462,14 +463,14 @@ class KeyManager():
         Generate the signature of a message using the provided private key
 
         :param message: Message to sign (utf-8 encoded)
-        :type message: byte string
+        :type message: bytes
         :return: signature
         :rtype: bytes
 
         """
         if self.isLocked:
             raise Exception('The key is currently locked. Please unlock and try again.')
-        return curve.calculateSignature(os.urandom(64), self.__sk, message.encode('utf-8'))
+        return curve.calculateSignature(urandom(64), self.__sk, message)
 
     
     def exportToFile(self, _keyPath):
