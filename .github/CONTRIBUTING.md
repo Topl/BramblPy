@@ -66,7 +66,7 @@ help. Thanks for taking the time to contribute.
 otherwise you risk spending a lot of time working on something that the
 project's developers might not want to merge into the project.
 
-bip-topl follows the [GitFlow branching model](http://nvie.com/posts/a-successful-git-branching-model). The ```main``` branch always reflects a production-ready state while the latest development is taking place in the ```dev``` branch.
+BramblPy follows the [GitFlow branching model](http://nvie.com/posts/a-successful-git-branching-model). The ```main``` branch always reflects a production-ready state while the latest development is taking place in the ```dev``` branch.
 
 Each time you want to work on a fix or a new feature, create a new branch based on the ```dev``` branch: ```git checkout -b BRANCH_NAME dev```. Only pull requests to the ```dev``` branch will be merged.
 
