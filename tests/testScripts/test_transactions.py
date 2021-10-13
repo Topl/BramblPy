@@ -7,3 +7,4 @@ class BasicTransactionTests(unittest.TestCase):
         self.assertRaises(ValueError, validate_txId, "abc")
         self.assertRaises(TypeError, validate_txId, None)
         self.assertRaises(TypeError, validate_txId, [])
+        
