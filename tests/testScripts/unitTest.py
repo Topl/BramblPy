@@ -50,7 +50,7 @@ class TestBasicMethods(unittest.TestCase):
 class TestAddSigMethods(unittest.IsolatedAsyncioTestCase):
     @mock.patch('brambl.modules.KeyManager.urandom', side_effect=simple_urandom)
     async def test_addSigToTx(self, urandom_function):
-        key_manager_1 = KeyManager.KeyManager(password='test', kwargs={'keyPath': '../keyFile_1.json'})
+        key_manager_1 = KeyManager.KeyManager(password='test', kwargs={'keyPath': 'tests/keyFile_1.json'})
         prototypeTx = '''{
            "jsonrpc":"2.0",
            "id":"e7789f19-c540-4f04-b9ba-5e424d7172f6",
@@ -128,7 +128,7 @@ class TestAddSigMethods(unittest.IsolatedAsyncioTestCase):
         signatures = json.loads(tx)['signatures']
         self.assertEqual(signatures, {'VerBy9rzEeYCnFihJtefevmwHmx9iUnRrSbeVBWCmiFf':'8y4GPKUx7rYZnLEL6K58wq4k9qokP6axfqQWLXtAk8WBf4VJqwWjcXuMeTKygRfjNSg5FWaGAwhFGsoQ7A9hVYJu'})
 
-        key_manager_2 = KeyManager.KeyManager(password="test", kwargs={'keyPath': '../keyFile_2.json'})
+        key_manager_2 = KeyManager.KeyManager(password="test", kwargs={'keyPath': 'tests/keyFile_2.json'})
         key_manager_list = [key_manager_1, key_manager_2]
 
         tx_list = await Brambl.addSigToTx(self=self, prototypeTx=prototypeTx, userKeys=key_manager_list)

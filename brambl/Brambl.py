@@ -17,7 +17,7 @@ from .utils import Hash
 from .utils import CrypTools
 
 # Libraries
-from .lib import polling
+# from .lib import polling
 
 # Constants defininitions
 validTxMethods = ['createAssetsPrototype','transferAssetsPrototype','transferTargetAssetsPrototype']
@@ -206,27 +206,27 @@ class Brambl():
         elif method == 'transferTargetAssetsPrototype':
             return await self.signAndBroadcast(self.requests.transferTargetAssetsPrototype(params))
 
-    async def pollTx(self, txId,options={ 'timeout': 90, 'interval': 3, 'maxFailedQueries': 10 }):
-        """
-        A function to initiate polling of the chain provider for a specified transaction.
-        This function begins by querying 'getTransactionById' which looks for confirmed transactions only.
-        If the transaction is not confirmed, the mempool is checked using 'getTransactionFromMemPool' to
-        ensure that the transaction is pending. The parameter 'numFailedQueries' specifies the number of consecutive
-        failures (when resorting to querying the mempool) before ending the polling operation prematurely.
+    # async def pollTx(self, txId,options={ 'timeout': 90, 'interval': 3, 'maxFailedQueries': 10 }):
+    #     """
+    #     A function to initiate polling of the chain provider for a specified transaction.
+    #     This function begins by querying 'getTransactionById' which looks for confirmed transactions only.
+    #     If the transaction is not confirmed, the mempool is checked using 'getTransactionFromMemPool' to
+    #     ensure that the transaction is pending. The parameter 'numFailedQueries' specifies the number of consecutive
+    #     failures (when resorting to querying the mempool) before ending the polling operation prematurely.
         
-        :param txId: The unique transaction ID to look for
-        :param options: Optional parameters in dictionary to control the polling behavior
-        :param options['timeout']: The timeout (in seconds) before the polling operation is stopped
-        :param options['interval']: The interval (in seconds) between attempts
-        :param options['maxFailedQueries']: The maximum number of consecutive failures (to find the unconfirmed transaction) before ending the poll execution
-        :type txId: type description
-        :type options: type description
-        :type options['timeout']: number
-        :type options['interval']: number
-        :type options['maxFailedQueries']: number
-        :return: polling request
-        :rtype: JSON
+    #     :param txId: The unique transaction ID to look for
+    #     :param options: Optional parameters in dictionary to control the polling behavior
+    #     :param options['timeout']: The timeout (in seconds) before the polling operation is stopped
+    #     :param options['interval']: The interval (in seconds) between attempts
+    #     :param options['maxFailedQueries']: The maximum number of consecutive failures (to find the unconfirmed transaction) before ending the poll execution
+    #     :type txId: type description
+    #     :type options: type description
+    #     :type options['timeout']: number
+    #     :type options['interval']: number
+    #     :type options['maxFailedQueries']: number
+    #     :return: polling request
+    #     :rtype: JSON
 
-        """
-        temp = polling.pollingTx(self.requests,txId,options)
-        return temp.combined()
+    #     """
+    #     temp = polling.pollingTx(self.requests,txId,options)
+    #     return temp.combined()
