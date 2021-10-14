@@ -7,7 +7,7 @@ _MAXINT = 2 ** 64 - 1
 
 class Metadata(dict):
     """
-    Represents Cardano transaction metadata. Inherits from :class:`dict` but passes all keys
+    Represents Topl transaction metadata. Inherits from :class:`dict` but passes all keys
     and values through validity check.
 
     :param mapping:         a sequence of (key, value) pairs

@@ -3,7 +3,7 @@ import unittest
 from brambl.address import Address
 from brambl.consts import PropositionType
 from brambl.metadata import Metadata
-from brambl.transaction import Input
+from brambl.transaction import TransactionRequest
 
 from brambl.utils.validation import validate_txId
 
@@ -14,7 +14,7 @@ class BasicTransactionTests(unittest.TestCase):
         self.assertRaises(TypeError, validate_txId, [])
     
     def test_input(self):
-        inp = Input(
+        inp = TransactionRequest(
             fee = 100,
             propositionType = PropositionType.PUBLICKEYED25519,
             data = Metadata(),
@@ -32,7 +32,7 @@ class BasicTransactionTests(unittest.TestCase):
         self.assertEqual(inp.txType, "PolyTransaction")
     
     def test_inherited(self):
-        class CustomTxInput(Input):
+        class CustomTxInput(TransactionRequest):
             fee = Decimal("0.168801")
         
         tx = CustomTxInput
