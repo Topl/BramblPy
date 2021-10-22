@@ -4,9 +4,15 @@ Brambl.py
 The core module
 """
 #D Dependencies
+from functools import wraps
+from typing import Any, Dict
 import base58
 import asyncio
 import json
+
+from brambl.client.rpc import HTTPClient
+from brambl.utils.conversions import Base58Str, HexStr, Primitives, to_base58, to_bytes, to_hex, to_text
+from brambl.utils.encoding import to_json
 
 # Primary sub-modules
 from .modules import Requests
@@ -22,7 +28,7 @@ from .utils import CrypTools
 # Constants defininitions
 validTxMethods = ['createAssetsPrototype','transferAssetsPrototype','transferTargetAssetsPrototype']
 
-class Brambl():
+class Brambl:
     """
     Each sub-module may be initialized in one of three ways
 
@@ -206,27 +212,38 @@ class Brambl():
         elif method == 'transferTargetAssetsPrototype':
             return await self.signAndBroadcast(self.requests.transferTargetAssetsPrototype(params))
 
-    # async def pollTx(self, txId,options={ 'timeout': 90, 'interval': 3, 'maxFailedQueries': 10 }):
-    #     """
-    #     A function to initiate polling of the chain provider for a specified transaction.
-    #     This function begins by querying 'getTransactionById' which looks for confirmed transactions only.
-    #     If the transaction is not confirmed, the mempool is checked using 'getTransactionFromMemPool' to
-    #     ensure that the transaction is pending. The parameter 'numFailedQueries' specifies the number of consecutive
-    #     failures (when resorting to querying the mempool) before ending the polling operation prematurely.
-        
-    #     :param txId: The unique transaction ID to look for
-    #     :param options: Optional parameters in dictionary to control the polling behavior
-    #     :param options['timeout']: The timeout (in seconds) before the polling operation is stopped
-    #     :param options['interval']: The interval (in seconds) between attempts
-    #     :param options['maxFailedQueries']: The maximum number of consecutive failures (to find the unconfirmed transaction) before ending the poll execution
-    #     :type txId: type description
-    #     :type options: type description
-    #     :type options['timeout']: number
-    #     :type options['interval']: number
-    #     :type options['maxFailedQueries']: number
-    #     :return: polling request
-    #     :rtype: JSON
+     # Encoding and Decoding
+    @staticmethod
+    @wraps(to_bytes)
+    def toBytes(
+        primitive: Primitives = None, base58str: Base58Str = None, text: str = None
+    ) -> bytes:
+        return to_bytes(primitive, base58str, text)
 
-    #     """
-    #     temp = polling.pollingTx(self.requests,txId,options)
-    #     return temp.combined()
+    @staticmethod
+    @wraps(to_text)
+    def toText(
+        primitive: Primitives = None, base58str: Base58Str = None, text: str = None
+    ) -> str:
+        return to_text(primitive, base58str, text)
+    
+    @staticmethod
+    @wraps(to_hex)
+    def toHex(
+        primitive: Primitives = None, hexstr: HexStr = None, text: str = None
+    ) -> HexStr:
+        return to_hex(primitive, hexstr, text)
+    
+    @staticmethod
+    @wraps(to_base58)
+    def toHex(
+        primitive: Primitives = None, base58str: HexStr = None, text: str = None, hexstr: HexStr = None
+    ) -> Base58Str:
+        return to_base58(primitive, base58str, text, hexstr)
+
+    @staticmethod
+    @wraps(to_json)
+    def toJSON(obj: Dict[Any, Any]) -> str:
+        return to_json(obj)
+    
+
