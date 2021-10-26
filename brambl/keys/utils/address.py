@@ -1,6 +1,14 @@
-from base58 import b58decode
+from typing import NewType
+
+from base58 import b58decode, b58encode
 from brambl.consts import ADDRESS_LENGTH, PropositionType
-from brambl.utils.Hash import digestAndEncode, hashFunc
+from brambl.keys.utils.constants import curve25519, ed25519, thresholdCurve25519
+from brambl.typing.encoding import Base58Str
+from brambl.utils.Hash import hashFunc, digestAndEncode
+from brambl.utils.base58 import encode_base58
+
+NetworkId = NewType('NetworkId', int)
+
 
 class Address(object):
     """
@@ -14,59 +22,72 @@ class Address(object):
 
     def __init__(self, addr):
         self._address = addr
-    
+
     def __repr__(self):
         return str(self._address)
-    
+
     def __eq__(self, other):
         if isinstance(other, Address):
             return str(self) == str(other)
         elif isinstance(other, str):
             return str(self) == other
-        elif isinstance (other, bytes):
+        elif isinstance(other, bytes):
             return str(self).encode() == other
         return super(Address, self).__eq__(other)
-    
+
     def __hash__(self):
         return hash(str(self))
-    
+
     def __format__(self, spec):
         return format(str(self), spec)
+
 
 class PublicKeyCurve25519Address(Address):
     propositionType = PropositionType.PUBLICKEYCURVE25519
 
+
 class ThresholdCurve25519Address(Address):
     pass
+
 
 class PublicKeyEd25519Address(Address):
     propositionType = PropositionType.PUBLICKEYED25519
 
 
+VALID_PROPOSITION_TYPES = (curve25519, ed25519, thresholdCurve25519)
+
 VALID_NETWORKS = ('private', 'toplnet', 'valhalla')
+VALID_NETWORK_PREFIXES = (hex(1), hex(2), hex(3))
 PRIVATE_MAP = {'hex': hex(64), 'decimal': 64}
 TOPLNET_MAP = {'hex': hex(1), 'decimal': 1}
 VALHALLA_MAP = {'hex': hex(1), 'decimal': 16}
 NETWORKS_DEFAULT = {
     "private": PRIVATE_MAP,
     "toplnet": TOPLNET_MAP,
-    "valhalla": VALHALLA_MAP 
+    "valhalla": VALHALLA_MAP
 }
+PROPOSITIONS = {
+    curve25519: hex(1),
+    ed25519: hex(3),
+    thresholdCurve25519: hex(2)
+}
+
 
 def address(addr, networkPrefix: str):
     if isinstance(addr, Address):
-        return addr # already instantiated and should be of the proper class
+        return addr  # already instantiated and should be of the proper class
     elif isinstance(addr, (bytes, bytearray)):
         addr = addr.decode()
     elif not isinstance(addr, str):
         raise TypeError(
             "address() argument must be str, bytes, bytearray, or Address instance"
         )
-    #validation
-    if (validateAddressByNetwork(networkPrefix = networkPrefix, address= addr)):
+    # validation
+    if (validateAddressByNetwork(networkPrefix=networkPrefix, address=addr)):
         return PublicKeyEd25519Address(addr)
     else:
         raise ValueError("String {} is not a valid Topl address".format(addr))
+
 
 def validateAddressByNetwork(networkPrefix: str, address: str):
     """
@@ -79,9 +100,9 @@ def validateAddressByNetwork(networkPrefix: str, address: str):
     Result object with whether or not the operation was successful and whether or not the address is valid for a given network
     """
     if (not isValidNetwork(networkPrefix)):
-       raise ValueError(
-           "Invalid network provided"
-       )
+        raise ValueError(
+            "Invalid network provided"
+        )
     elif (address == ""):
         raise ValueError(
             "No Addresses provided"
@@ -113,22 +134,77 @@ def verify_checksum(address):
     :return return True if address checksum is correct  
     
     """
-    #print("address: " + str(address))
+    # print("address: " + str(address))
     if address is None:
         return None
     if (not isinstance(address, (bytes, bytearray))):
         return None
     msgBuffer = address[:34]
     checksum = address[34:]
-    #print("checksum: " + str(checksum))
+    # print("checksum: " + str(checksum))
     # hash message (bytes 0-33)
     computed_checksum = (hashFunc().update(msgBuffer).digest())[:4]
-    #print("computed_checksum" + str(computed_checksum))
+    # print("computed_checksum" + str(computed_checksum))
     # verify checksum bytes match
     return checksum == computed_checksum
+
 
 def isValidNetwork(networkPrefix: str):
     """
         Validates whether the network passed in is valid
     """
     return networkPrefix in VALID_NETWORKS
+
+
+def isValidNetworkPrefix(networkPrefix: NetworkId):
+    """
+        Validates whether the network prefix passed in is valid
+    """
+    return networkPrefix in VALID_NETWORK_PREFIXES
+
+
+def isValidProposition(propositionType: str):
+    """
+        Validates whether the proposition passed in is valid
+    """
+    return propositionType in VALID_PROPOSITION_TYPES
+
+
+def public_key_bytes_to_address(public_key_bytes: bytes, network_prefix: NetworkId, proposition_type: str) -> Address:
+    """
+        Converts the public key bytes to a Base58 encoded address given a networkPrefix and propositionType
+    """
+
+    # First, validate the propositionType
+    if not isValidProposition(proposition_type):
+        raise ValueError(
+            "Invalid propositionType provided"
+        )
+
+    # Second, validate the networkPrefix
+    if not isValidNetworkPrefix(network_prefix):
+        raise ValueError(
+            "Invalid networkType provided"
+        )
+
+    # Next, validate that the public key is 32 bytes
+    if len(public_key_bytes) != 32:
+        raise ValueError(
+            "Invalid public key length"
+        )
+
+    # Next, generate the hash of the public key
+    hash = hashFunc().update(public_key_bytes).digest()
+
+    # Next, add the network prefix and propositionType byte
+    hash.insert(0, PROPOSITIONS[proposition_type])
+    hash.insert(0, network_prefix)
+
+    # Next, generate the checksum
+    checksum = digestAndEncode(hash)[:4]
+
+    address_bytes = hash + checksum
+
+    address_with_checksum = encode_base58(address_bytes + checksum)
+
+    return Address(address_with_checksum)
