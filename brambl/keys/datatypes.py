@@ -6,8 +6,7 @@ from abc import (
     ABC
 )
 
-from nacl.bindings import crypto_sign_SEEDBYTES, crypto_sign_ed25519_sk_to_curve25519, crypto_sign_seed_keypair, \
-    crypto_sign_PUBLICKEYBYTES, crypto_sign_ed25519_pk_to_curve25519
+from nacl.bindings import crypto_sign_SEEDBYTES,  crypto_sign_seed_keypair, crypto_sign_PUBLICKEYBYTES
 from nacl.encoding import RawEncoder
 from nacl.utils import random
 from brambl.keys.utils.address import public_key_bytes_to_address, Address, NetworkId
@@ -17,7 +16,6 @@ from brambl.utils.Hash import digestAndEncode, hashFunc
 from brambl.utils.base58 import encode_base58
 from brambl.utils.encoding import big_endian_to_int, Base58Encoder
 from brambl.utils.types import is_bytes, is_string
-from brambl.utils.validation import validate_uncompressed_public_key_bytes
 
 if TYPE_CHECKING:
     from brambl.keys.backends.base import BaseECCBackend

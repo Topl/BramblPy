@@ -32,9 +32,18 @@ def ed25519_known_answers():
 
 
 class TestPrivateKey:
+
+    def test_initialize_with_generate(self):
+        PrivateKey.generate()
+
+    def test_wrong_length(self):
+        with pytest.raises(ValueError):
+            PrivateKey(b"")
+
     def test_bytes(self):
-        k = PrivateKey(b"\x00" * crypto_sign_SEEDBYTES)
-        assert k.to_bytes() == b"\x00" * crypto_sign_SEEDBYTES
+        seed = b"\x00" * crypto_sign_SEEDBYTES
+        k = PrivateKey(seed, encoder=RawEncoder)
+        assert k._seed == b"\x00" * crypto_sign_SEEDBYTES
 
     def test_equal_keys_are_equal(self):
         k1 = PrivateKey(b"\x00" * crypto_sign_SEEDBYTES)
@@ -78,7 +87,7 @@ class TestPrivateKey:
 
         assert signed == expected
         assert signed.message == message
-        assert signed.signature == signature
+        assert HexEncoder.encode(signed.signature.to_bytes()) == signature
 
 
 class TestPublicKey:
