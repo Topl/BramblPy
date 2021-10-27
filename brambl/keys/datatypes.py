@@ -6,7 +6,7 @@ from abc import (
     ABC
 )
 
-from nacl.bindings import crypto_sign_SEEDBYTES,  crypto_sign_seed_keypair, crypto_sign_PUBLICKEYBYTES
+from nacl.bindings import crypto_sign_SEEDBYTES, crypto_sign_seed_keypair, crypto_sign_PUBLICKEYBYTES
 from nacl.encoding import RawEncoder
 from nacl.utils import random
 from brambl.keys.utils.address import public_key_bytes_to_address, Address, NetworkId
@@ -168,7 +168,7 @@ class PrivateKey(BaseKey, LazyBackend):
 
     def sign_msg(self, message: bytes, encoder=Base58Encoder) -> 'BaseSignature':
         message_hash = encoder.encode(digestAndEncode(hashFunc().update(message)))
-        return self.sign_msg_hash(message_hash,encoder=encoder)
+        return self.sign_msg_hash(message_hash, encoder=encoder)
 
     def sign_msg_hash(self, message_hash: bytes, encoder=Base58Encoder) -> 'BaseSignature':
         return self.backend.ecc_sign(message_hash, self, encoder=encoder)
@@ -236,7 +236,6 @@ class PublicKey(BaseKey, LazyBackend):
                         encoder=Base58Encoder
                         ) -> bytes:
         return self.backend.ecc_verify(signature, self, message_hash, encoder)
-
 
 
 class BaseSignature(ByteString, ABC, LazyBackend):
