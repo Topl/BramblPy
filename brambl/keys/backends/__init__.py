@@ -4,6 +4,9 @@ from typing import Type
 from brambl.keys.backends.base import BaseECCBackend
 from brambl.keys.utils.moduleloading import import_string
 
+from .base import BaseECCBackend
+from .native import NativeECCBackend
+
 
 def get_default_backend_class() -> str:
     return 'brambl.keys.backends.native.main.NativeECCBackend'
