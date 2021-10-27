@@ -251,7 +251,8 @@ class BaseSignature(ByteString, ABC, LazyBackend):
                  encoder=Base58Encoder
                  ) -> None:
 
-        self._signature_bytes = encoder.decode(signature_bytes)
+        self._signature_bytes = signature_bytes
+        self.encoder = encoder
         super().__init__(backend=backend)
 
     @property
@@ -259,7 +260,7 @@ class BaseSignature(ByteString, ABC, LazyBackend):
         return self._signature_bytes
 
     def to_bytes(self) -> bytes:
-        return self._signature_bytes
+        return self.encoder.decode(self._signature_bytes)
 
     def __bytes__(self) -> bytes:
         return self.to_bytes()

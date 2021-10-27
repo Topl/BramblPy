@@ -57,3 +57,6 @@ def validate_private_key_bytes(value: Any) -> None:
     validate_bytes(value)
     validate_bytes_length(value, 64, "private key")
 
+
+def validate_message_hash(value: Any) -> None:
+    validate_bytes(value)

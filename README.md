@@ -10,7 +10,7 @@ Create an instance of Brambl-Py in your Python application by using:<br/>
 * from brambl import Brambl;<br/><br/>
 
 Create an instance of the Requests module in your Python application by using:<br/>
-* from brambl.modules import Requests
+* from brambl.modules import Requests~~~~
 
 Create an instance of the KeyManager module in your Python application by using:<br/>
 * from brambl.modules import KeyManager

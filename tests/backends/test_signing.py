@@ -5,12 +5,27 @@ from nacl.bindings import crypto_sign_SEEDBYTES, crypto_sign_PUBLICKEYBYTES
 from nacl.encoding import HexEncoder, RawEncoder
 from nacl.exceptions import BadSignatureError
 
+from brambl.keys.backends.native import NativeECCBackend
 from brambl.keys.datatypes import PrivateKey, PublicKey, BaseSignature
+from brambl.keys.main import KeyAPI
 from brambl.utils.Hash import digestAndEncode, hashFunc
 from tests.utils import read_crypto_test_vectors, assert_equal, assert_not_equal
 
 MSG = b'message'
 MSG_TO_SIGN = digestAndEncode(hashFunc().update(MSG))
+
+backends = [
+    NativeECCBackend(),
+]
+
+
+def backend_id_fn(backend):
+    return type(backend).__name__
+
+
+@pytest.fixture(params=backends, ids=backend_id_fn)
+def key_api(request):
+    return KeyAPI(backend=request.param)
 
 
 def ed25519_known_answers():
@@ -89,6 +104,17 @@ class TestPrivateKey:
         assert signed.message == message
         assert HexEncoder.encode(signed.signature.to_bytes()) == signature
 
+    @pytest.mark.parametrize(
+        ("seed", "_public_key", "message", "signature", "expected"),
+        ed25519_known_answers(),
+    )
+    def test_key_api_signing(self, key_api, seed, _public_key, message, signature, expected
+                             ):
+        private_key = key_api.PrivateKey(seed, encoder=HexEncoder)
+        signature = key_api.ecc_sign(message, private_key, encoder=HexEncoder)
+
+        assert (isinstance(key_api.ecc_verify(signature.message, signature.signature, private_key.public_key, encoder=HexEncoder), bytes))
+
 
 class TestPublicKey:
 
@@ -146,6 +172,16 @@ class TestPublicKey:
                 )
                 == message
         )
+
+    @pytest.mark.parametrize(
+        ("_seed", "public_key", "message", "signature", "signed"),
+        ed25519_known_answers(),
+    )
+    def test_key_api_ecc_verify(self, key_api, _seed, public_key, message, signature, signed):
+        signature = key_api.Signature(signature, encoder=HexEncoder)
+        public_key = key_api.PublicKey(public_key, encoder=HexEncoder)
+
+        assert (isinstance(key_api.ecc_verify(message, signature, public_key, encoder=HexEncoder), bytes))
 
     def test_invalid_signed_message(self):
         skey = PrivateKey.generate()
