@@ -104,3 +104,6 @@ watchdog==2.1.6
 wcwidth==0.2.5
 webencodings==0.5.1
 zipp==3.6.0
+
+brambl>=0.0.1
+setuptools>=58.2.0
