@@ -120,7 +120,7 @@ def validateAddressByNetwork(networkPrefix: str, address: str):
     # run validation on the address
     decodedAddress = b58decode(address)
 
-    # validation: base58 38 byte obj that matches the networkPrefix HexStr(hex value
+    # validation: base58 38 byte obj that matches the networkPrefix hex value
     if (len(decodedAddress) != ADDRESS_LENGTH):
         raise ValueError(
             "Invalid address for network '{}'".format(networkPrefix)
