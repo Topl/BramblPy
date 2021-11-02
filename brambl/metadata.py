@@ -7,7 +7,7 @@ _MAXINT = 2 ** 64 - 1
 
 class Metadata(dict):
     """
-    Represents Topl transaction metadata. Inherits from :class:`dict` but passes all ed25519
+    Represents Topl transaction metadata. Inherits from :class:`dict` but passes all keys
     and values through validity check.
 
     :param mapping:         a sequence of (key, value) pairs
@@ -35,7 +35,7 @@ class Metadata(dict):
         Raises :class:`KeyError` otherwise.
         """
         if not isinstance(key, int):
-            raise KeyError("Metadata ed25519 must be integers")
+            raise KeyError("Metadata keys must be integers")
         if key < 0:
             raise KeyError("Metadata key {:d} is negative".format(key))
         if key > _MAXINT:
@@ -167,7 +167,7 @@ class Metadata(dict):
 class ImmutableDict(dict):
     """
     A flavor of ``dict`` with all mutating methods blocked and hash generation added.
-    It can be used as mapping ed25519.
+    It can be used as mapping keys.
     """
 
     def __hash__(self):

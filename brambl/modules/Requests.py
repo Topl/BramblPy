@@ -256,7 +256,7 @@ class Requests():
         :param params['recipient']: Public key of the transfer recipient
         :param params['amount']: Amount of asset to send
         :param params['fee']: Fee to apply to the transaction
-        :param params['sender']: Array of public ed25519 which you can use to restrict sending from
+        :param params['sender']: Array of public keys which you can use to restrict sending from
         :param params['changeAddress']: Public key you wish to send change back to
         :param params['data']: Data string which can be associated with this transaction (may be empty)
         :param ID: identifying number for the json-rpc request, defaults to "1"
@@ -302,7 +302,7 @@ class Requests():
         :param params['recipient']: Public key of the transfer recipient
         :param params['amount']: Amount of asset to send
         :param params['fee']: Fee to apply to the transaction
-        :param params['sender']: Array of public ed25519 which you can use to restrict sending from
+        :param params['sender']: Array of public keys which you can use to restrict sending from
         :param params['changeAddress']: Public key you wish to send change back to
         :param params['data']: Data string which can be associated with this transaction (may be empty)
         :param ID: identifying number for the json-rpc request, defaults to "1"
@@ -464,7 +464,7 @@ class Requests():
         :param params['recipient']: Public key of the transfer recipient
         :param params['amount']: Amount of asset to send
         :param params['fee']: Fee to apply to the transaction
-        :param params['sender']: Array of public ed25519 which you can use to restrict sending from
+        :param params['sender']: Array of public keys which you can use to restrict sending from
         :param params['changeAddress']: Public key you wish to send change back to
         :param params['data']: Data string which can be associated with this transaction (may be empty)
         :param ID: identifying number for the json-rpc request, defaults to "1"
@@ -525,7 +525,7 @@ class Requests():
         :param params['recipient']: Public key of the transfer recipient
         :param params['amount']: Amount of asset to send
         :param params['fee']: Fee to apply to the transaction
-        :param params['sender']: Array of public ed25519 which you can use to restrict sending from
+        :param params['sender']: Array of public keys which you can use to restrict sending from
         :param params['changeAddress']: Public key you wish to send change back to
         :param params['data']: Data string which can be associated with this transaction (may be empty)
         :param ID: identifying number for the json-rpc request, defaults to "1"
@@ -637,7 +637,7 @@ class Requests():
 
         :param params: body parameters passed to the specified json-rpc method
         :param params['recipient']: Public key of the asset recipient
-        :param params['sender']: Array of public ed25519 of the asset senders
+        :param params['sender']: Array of public keys of the asset senders
         :param params['assetId']: BoxId of the asset to target
         :param params['amount']: Amount of asset to send
         :param params['fee']: Fee to apply to the transaction
@@ -819,7 +819,7 @@ class Requests():
 
     def myBlocks(self, ID = '1'):
         """
-        Return the number of blocks forged by ed25519 held by this node
+        Return the number of blocks forged by keys held by this node
 
         :param ID: identifying number for the json-rpc request, defaults to "1"
         :type ID: string
