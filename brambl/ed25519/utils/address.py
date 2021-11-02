@@ -1,11 +1,14 @@
+import json
 from typing import NewType
 
-from base58 import b58decode, b58encode
+from base58 import b58decode
+
 from brambl.consts import ADDRESS_LENGTH, PropositionType
 from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
-from brambl.typing.encoding import Base58Str
+from brambl.typing.encoding import HexStr
 from brambl.utils.Hash import hashFunc, digestAndEncode
 from brambl.utils.base58 import encode_base58
+from brambl.utils.hexadecimal import decode_hex
 
 NetworkId = NewType('NetworkId', int)
 
@@ -41,6 +44,10 @@ class Address(object):
     def __format__(self, spec):
         return format(str(self), spec)
 
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
+
 
 class PublicKeyCurve25519Address(Address):
     propositionType = PropositionType.PUBLICKEYCURVE25519
@@ -57,23 +64,23 @@ class PublicKeyEd25519Address(Address):
 VALID_PROPOSITION_TYPES = (curve25519, ed25519, thresholdCurve25519)
 
 VALID_NETWORKS = ('private', 'toplnet', 'valhalla')
-VALID_NETWORK_PREFIXES = (hex(1), hex(2), hex(3))
-PRIVATE_MAP = {'hex': hex(64), 'decimal': 64}
-TOPLNET_MAP = {'hex': hex(1), 'decimal': 1}
-VALHALLA_MAP = {'hex': hex(1), 'decimal': 16}
+VALID_NETWORK_PREFIXES = (HexStr("{0:#0{1}x}".format(1, 4)), HexStr(hex(16)), HexStr(hex(64)))
+PRIVATE_MAP = {'hex': HexStr(hex(64)), 'decimal': 64}
+TOPLNET_MAP = {'hex': HexStr("{0:#0{1}x}".format(1, 4)), 'decimal': 1}
+VALHALLA_MAP = {'hex': HexStr("{0:#0{1}x}".format(1, 4)), 'decimal': 16}
 NETWORKS_DEFAULT = {
     "private": PRIVATE_MAP,
     "toplnet": TOPLNET_MAP,
     "valhalla": VALHALLA_MAP
 }
 PROPOSITIONS = {
-    curve25519: hex(1),
-    ed25519: hex(3),
-    thresholdCurve25519: hex(2)
+    curve25519: HexStr("{0:#0{1}x}".format(1, 4)),
+    ed25519: HexStr("{0:#0{1}x}".format(3, 4)),
+    thresholdCurve25519: HexStr("{0:#0{1}x}".format(2, 4))
 }
 
 
-def address(addr, networkPrefix: str):
+def address(addr, network_prefix: str):
     if isinstance(addr, Address):
         return addr  # already instantiated and should be of the proper class
     elif isinstance(addr, (bytes, bytearray)):
@@ -83,13 +90,13 @@ def address(addr, networkPrefix: str):
             "address() argument must be str, bytes, bytearray, or Address instance"
         )
     # validation
-    if (validateAddressByNetwork(networkPrefix=networkPrefix, address=addr)):
+    if (validateAddressByNetwork(network_prefix=network_prefix, address=addr)):
         return PublicKeyEd25519Address(addr)
     else:
         raise ValueError("String {} is not a valid Topl address".format(addr))
 
 
-def validateAddressByNetwork(networkPrefix: str, address: str):
+def validateAddressByNetwork(network_prefix: str, address: str):
     """
        Checks if the address is valid by the following 4 steps:
     1. Verify that the address is not null.
@@ -99,7 +106,7 @@ def validateAddressByNetwork(networkPrefix: str, address: str):
     The first argument is the prefix to validate against and the second argument is the address to run the validation on.
     Result object with whether or not the operation was successful and whether or not the address is valid for a given network
     """
-    if (not isValidNetwork(networkPrefix)):
+    if (not isValidNetwork(network_prefix)):
         raise ValueError(
             "Invalid network provided"
         )
@@ -108,15 +115,15 @@ def validateAddressByNetwork(networkPrefix: str, address: str):
             "No Addresses provided"
         )
     # get the decimal of the network prefix. It should always be a valid network prefix due to the first conditional, but the language constraint requires us to check if it is null first.
-    networkDecimal = NETWORKS_DEFAULT[networkPrefix]['decimal']
+    networkDecimal = NETWORKS_DEFAULT[network_prefix]['decimal']
 
     # run validation on the address
     decodedAddress = b58decode(address)
 
-    # validation: base58 38 byte obj that matches the networkPrefix hex value
+    # validation: base58 38 byte obj that matches the network_prefix hex value
     if (len(decodedAddress) != ADDRESS_LENGTH):
         raise ValueError(
-            "Invalid address for network '{}'".format(networkPrefix)
+            "Invalid address for network '{}'".format(network_prefix)
 
         )
     elif (not verify_checksum(decodedAddress)):
@@ -149,18 +156,18 @@ def verify_checksum(address):
     return checksum == computed_checksum
 
 
-def isValidNetwork(networkPrefix: str):
+def isValidNetwork(network_prefix: str):
     """
         Validates whether the network passed in is valid
     """
-    return networkPrefix in VALID_NETWORKS
+    return network_prefix in VALID_NETWORKS
 
 
-def isValidNetworkPrefix(networkPrefix: NetworkId):
+def isValidNetworkPrefix(network_prefix: NetworkId):
     """
         Validates whether the network prefix passed in is valid
     """
-    return networkPrefix in VALID_NETWORK_PREFIXES
+    return HexStr(hex(network_prefix)) in VALID_NETWORK_PREFIXES
 
 
 def isValidProposition(propositionType: str):
@@ -172,7 +179,7 @@ def isValidProposition(propositionType: str):
 
 def public_key_bytes_to_address(public_key_bytes: bytes, network_prefix: NetworkId, proposition_type: str) -> Address:
     """
-        Converts the public key bytes to a Base58 encoded address given a networkPrefix and propositionType
+        Converts the public key bytes to a Base58 encoded address given a network_prefix and propositionType
     """
 
     # First, validate the propositionType
@@ -181,7 +188,7 @@ def public_key_bytes_to_address(public_key_bytes: bytes, network_prefix: Network
             "Invalid propositionType provided"
         )
 
-    # Second, validate the networkPrefix
+    # Second, validate the network_prefix
     if not isValidNetworkPrefix(network_prefix):
         raise ValueError(
             "Invalid networkType provided"
@@ -194,17 +201,17 @@ def public_key_bytes_to_address(public_key_bytes: bytes, network_prefix: Network
         )
 
     # Next, generate the hash of the public key
-    hash = hashFunc().update(public_key_bytes).digest()
+    public_key_hash = bytearray(hashFunc().update(public_key_bytes).digest())
 
     # Next, add the network prefix and propositionType byte
-    hash.insert(0, PROPOSITIONS[proposition_type])
-    hash.insert(0, network_prefix)
+    public_key_hash[0:0] = decode_hex(PROPOSITIONS[proposition_type])
+    public_key_hash[0:0] = network_prefix.to_bytes(1, "big")
 
     # Next, generate the checksum
-    checksum = digestAndEncode(hash)[:4]
+    checksum = digestAndEncode(hashFunc().update(public_key_hash))[0:4]
 
-    address_bytes = hash + checksum
+    address_bytes = public_key_hash + checksum
 
-    address_with_checksum = encode_base58(address_bytes + checksum)
+    address_with_checksum = encode_base58(address_bytes)
 
     return Address(address_with_checksum)
