@@ -4,7 +4,7 @@ from typing import NewType
 from base58 import b58decode
 
 from brambl.consts import ADDRESS_LENGTH, PropositionType
-from brambl.keys.utils.constants import curve25519, ed25519, thresholdCurve25519
+from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
 from brambl.typing.encoding import HexStr
 from brambl.utils.Hash import hashFunc, digestAndEncode
 from brambl.utils.base58 import encode_base58
@@ -80,7 +80,7 @@ PROPOSITIONS = {
 }
 
 
-def address(addr, networkPrefix: str):
+def address(addr, network_prefix: str):
     if isinstance(addr, Address):
         return addr  # already instantiated and should be of the proper class
     elif isinstance(addr, (bytes, bytearray)):
@@ -90,13 +90,13 @@ def address(addr, networkPrefix: str):
             "address() argument must be str, bytes, bytearray, or Address instance"
         )
     # validation
-    if (validateAddressByNetwork(networkPrefix=networkPrefix, address=addr)):
+    if (validateAddressByNetwork(network_prefix=network_prefix, address=addr)):
         return PublicKeyEd25519Address(addr)
     else:
         raise ValueError("String {} is not a valid Topl address".format(addr))
 
 
-def validateAddressByNetwork(networkPrefix: str, address: str):
+def validateAddressByNetwork(network_prefix: str, address: str):
     """
        Checks if the address is valid by the following 4 steps:
     1. Verify that the address is not null.
@@ -106,7 +106,7 @@ def validateAddressByNetwork(networkPrefix: str, address: str):
     The first argument is the prefix to validate against and the second argument is the address to run the validation on.
     Result object with whether or not the operation was successful and whether or not the address is valid for a given network
     """
-    if (not isValidNetwork(networkPrefix)):
+    if (not isValidNetwork(network_prefix)):
         raise ValueError(
             "Invalid network provided"
         )
@@ -115,15 +115,15 @@ def validateAddressByNetwork(networkPrefix: str, address: str):
             "No Addresses provided"
         )
     # get the decimal of the network prefix. It should always be a valid network prefix due to the first conditional, but the language constraint requires us to check if it is null first.
-    networkDecimal = NETWORKS_DEFAULT[networkPrefix]['decimal']
+    networkDecimal = NETWORKS_DEFAULT[network_prefix]['decimal']
 
     # run validation on the address
     decodedAddress = b58decode(address)
 
-    # validation: base58 38 byte obj that matches the networkPrefix hex value
+    # validation: base58 38 byte obj that matches the network_prefix hex value
     if (len(decodedAddress) != ADDRESS_LENGTH):
         raise ValueError(
-            "Invalid address for network '{}'".format(networkPrefix)
+            "Invalid address for network '{}'".format(network_prefix)
 
         )
     elif (not verify_checksum(decodedAddress)):
@@ -156,18 +156,18 @@ def verify_checksum(address):
     return checksum == computed_checksum
 
 
-def isValidNetwork(networkPrefix: str):
+def isValidNetwork(network_prefix: str):
     """
         Validates whether the network passed in is valid
     """
-    return networkPrefix in VALID_NETWORKS
+    return network_prefix in VALID_NETWORKS
 
 
-def isValidNetworkPrefix(networkPrefix: NetworkId):
+def isValidNetworkPrefix(network_prefix: NetworkId):
     """
         Validates whether the network prefix passed in is valid
     """
-    return HexStr(hex(networkPrefix)) in VALID_NETWORK_PREFIXES
+    return HexStr(hex(network_prefix)) in VALID_NETWORK_PREFIXES
 
 
 def isValidProposition(propositionType: str):
@@ -179,7 +179,7 @@ def isValidProposition(propositionType: str):
 
 def public_key_bytes_to_address(public_key_bytes: bytes, network_prefix: NetworkId, proposition_type: str) -> Address:
     """
-        Converts the public key bytes to a Base58 encoded address given a networkPrefix and propositionType
+        Converts the public key bytes to a Base58 encoded address given a network_prefix and propositionType
     """
 
     # First, validate the propositionType
@@ -188,7 +188,7 @@ def public_key_bytes_to_address(public_key_bytes: bytes, network_prefix: Network
             "Invalid propositionType provided"
         )
 
-    # Second, validate the networkPrefix
+    # Second, validate the network_prefix
     if not isValidNetworkPrefix(network_prefix):
         raise ValueError(
             "Invalid networkType provided"

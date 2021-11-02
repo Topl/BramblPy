@@ -10,8 +10,8 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Util import Counter
 from base58 import b58encode, b58decode
 
-from brambl.keys import keys
-from brambl.keys.utils.address import NetworkId
+from brambl.ed25519.utils.address import NetworkId
+from brambl.ed25519 import keys
 from brambl.utils.encoding import big_endian_to_int
 from brambl.utils.functional import to_dict
 from brambl.utils.types import is_string, is_dict
