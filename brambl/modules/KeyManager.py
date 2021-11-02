@@ -1,7 +1,7 @@
 """
 KeyManager.py
 ====================================
-Create, import, and export Topl Bifrost keys.
+Create, import, and export Topl Bifrost ed25519.
 Also allows for signing of transactions
 
 Based on the keythereum library from Jack Peterson

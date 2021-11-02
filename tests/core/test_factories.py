@@ -1,5 +1,5 @@
-from brambl.keys import keys
-from brambl.keys.tools.factories import PrivateKeyFactory, PublicKeyFactory
+from brambl.ed25519 import keys
+from brambl.ed25519.tools.factories import PrivateKeyFactory, PublicKeyFactory
 
 
 def test_private_key_factory():

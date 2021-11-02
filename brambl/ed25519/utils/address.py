@@ -2,7 +2,7 @@ from typing import NewType
 
 from base58 import b58decode, b58encode
 from brambl.consts import ADDRESS_LENGTH, PropositionType
-from brambl.keys.utils.constants import curve25519, ed25519, thresholdCurve25519
+from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
 from brambl.typing.encoding import Base58Str
 from brambl.utils.Hash import hashFunc, digestAndEncode
 from brambl.utils.base58 import encode_base58

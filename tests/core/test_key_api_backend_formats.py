@@ -1,12 +1,12 @@
 import pytest
 
-from brambl.keys import KeyAPI
-from brambl.keys.backends.native import NativeECCBackend
+from brambl.ed25519 import Ed25519CredentialAPI
+from brambl.ed25519.backends.native import NativeECCBackend
 
 
 @pytest.fixture(autouse=True)
 def native_backend_env_var(monkeypatch):
-    monkeypatch.setenv('ECC_BACKEND_CLASS', 'brambl.keys.backends.native.NativeECCBackend')
+    monkeypatch.setenv('ECC_BACKEND_CLASS', 'brambl.ed25519.backends.native.NativeECCBackend')
 
 
 @pytest.mark.parametrize(
@@ -15,10 +15,10 @@ def native_backend_env_var(monkeypatch):
             None,
             NativeECCBackend(),
             NativeECCBackend,
-            'brambl.keys.backends.NativeECCBackend',
-            'brambl.keys.backends.native.NativeECCBackend',
+            'brambl.ed25519.backends.NativeECCBackend',
+            'brambl.ed25519.backends.native.NativeECCBackend',
     ),
 )
 def test_supported_backend_formats(backend):
-    keys = KeyAPI(backend=backend)
+    keys = Ed25519CredentialAPI(backend=backend)
     assert isinstance(keys.backend, NativeECCBackend)

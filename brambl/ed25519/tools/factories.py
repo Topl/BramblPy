@@ -1,10 +1,10 @@
-from brambl.keys import keys
+from brambl.ed25519 import keys
 
 try:
     import factory
 except ImportError as err:
     raise ImportError(
-        "Use of `brambl.keys.tools.factories` requires the `factory-boy` package "
+        "Use of `brambl.ed25519.tools.factories` requires the `factory-boy` package "
         "which does not appear to be installed."
     ) from err
 

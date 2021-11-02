@@ -9,7 +9,7 @@ from abc import (
 from nacl.bindings import crypto_sign_SEEDBYTES, crypto_sign_seed_keypair, crypto_sign_PUBLICKEYBYTES
 from nacl.encoding import RawEncoder
 from nacl.utils import random
-from brambl.keys.utils.address import public_key_bytes_to_address, Address, NetworkId
+from brambl.ed25519.utils.address import public_key_bytes_to_address, Address, NetworkId
 
 # Must compare against version_info[0] and not version_info.major to please mypy.
 from brambl.utils.Hash import digestAndEncode, hashFunc
@@ -18,7 +18,7 @@ from brambl.utils.encoding import big_endian_to_int, Base58Encoder
 from brambl.utils.types import is_bytes, is_string
 
 if TYPE_CHECKING:
-    from brambl.keys.backends.base import BaseECCBackend
+    from brambl.ed25519.backends.base import BaseEd25519Backend
 
 if sys.version_info[0] == 2:
     ByteString = type(
@@ -32,47 +32,47 @@ else:
 
 class LazyBackend:
     def __init__(self,
-                 backend: 'Union[BaseECCBackend, Type[BaseECCBackend], str, None]' = None,
+                 backend: 'Union[BaseEd25519Backend, Type[BaseEd25519Backend], str, None]' = None,
                  ) -> None:
-        from brambl.keys.backends.base import BaseECCBackend
+        from brambl.ed25519.backends.base import BaseEd25519Backend
 
         if backend is None:
             pass
-        elif isinstance(backend, BaseECCBackend):
+        elif isinstance(backend, BaseEd25519Backend):
             pass
-        elif isinstance(backend, type) and issubclass(backend, BaseECCBackend):
+        elif isinstance(backend, type) and issubclass(backend, BaseEd25519Backend):
             backend = backend()
         elif is_string(backend):
             backend = self.get_backend(backend)
         else:
             raise ValueError(
                 "Unsupported format for ECC backend.  Must be an instance or "
-                "subclass of `keys.backends.BaseECCBackend` or a string of "
+                "subclass of `ed25519.backends.BaseEd25519Backend` or a string of "
                 "the dot-separated import path for the desired backend class"
             )
 
         self.backend = backend
 
-    _backend = None  # type: BaseECCBackend
+    _backend = None  # type: BaseEd25519Backend
 
     @property
-    def backend(self) -> 'BaseECCBackend':
+    def backend(self) -> 'BaseEd25519Backend':
         if self._backend is None:
             return self.get_backend()
         else:
             return self._backend
 
     @backend.setter
-    def backend(self, value: 'BaseECCBackend') -> None:
+    def backend(self, value: 'BaseEd25519Backend') -> None:
         self._backend = value
 
     @classmethod
-    def get_backend(cls, *args: Any, **kwargs: Any) -> 'BaseECCBackend':
-        from brambl.keys.backends import get_backend
+    def get_backend(cls, *args: Any, **kwargs: Any) -> 'BaseEd25519Backend':
+        from brambl.ed25519.backends import get_backend
         return get_backend(*args, **kwargs)
 
 
-class BaseKey(ByteString, collections.Hashable):
+class BaseEd25519Key(ByteString, collections.Hashable):
     _raw_key = None  # type: bytes
 
     def to_hex(self) -> str:
@@ -121,22 +121,22 @@ class BaseKey(ByteString, collections.Hashable):
             return self.to_hex()
 
 
-class PrivateKey(BaseKey, LazyBackend):
+class PrivateKey(BaseEd25519Key):
     """
         Private key for producing digital signatures using the Ed25519 algorithm.
 
-        Signing keys are produced from a 32-byte (256-bit) random seed value. This
-        value can be passed into the :class:`~brambl.keys.datatypes.PrivateKey` as a
+        Signing ed25519 are produced from a 32-byte (256-bit) random seed value. This
+        value can be passed into the :class:`~brambl.ed25519.datatypes.PrivateKey` as a
         :func:`bytes` whose length is 32.
 
         .. warning:: This **must** be protected and remain secret. Anyone who knows
-            the value of your :class:`~brambl.keys.datatypes.PrivateKey` or it's seed can
+            the value of your :class:`~brambl.ed25519.datatypes.PrivateKey` or it's seed can
             masquerade as you.
 
         :param seed: [:class:`bytes`] Random 32-byte value (i.e. private key)
         :param encoder: A class that is able to decode the seed
 
-        :ivar: public_key: [:class:`~brambl.keys.datatypes.PublicKey`] The verify
+        :ivar: public_key: [:class:`~brambl.ed25519.datatypes.PublicKey`] The verify
             (i.e. public) key that corresponds with this signing key.
         """
     public_key = None  # type: PublicKey
@@ -166,13 +166,6 @@ class PrivateKey(BaseKey, LazyBackend):
 
         super().__init__()
 
-    def sign_msg(self, message: bytes, encoder=Base58Encoder) -> 'BaseSignature':
-        message_hash = encoder.encode(digestAndEncode(hashFunc().update(message)))
-        return self.sign_msg_hash(message_hash, encoder=encoder)
-
-    def sign_msg_hash(self, message_hash: bytes, encoder=Base58Encoder) -> 'BaseSignature':
-        return self.backend.ecc_sign(message_hash, self, encoder=encoder)
-
     @classmethod
     def generate(cls, seed=random(crypto_sign_SEEDBYTES), encoder=RawEncoder):
         seed = encoder.decode(seed)
@@ -186,11 +179,10 @@ class PrivateKey(BaseKey, LazyBackend):
         )
 
 
-class PublicKey(BaseKey, LazyBackend):
+class PublicKey(BaseEd25519Key):
 
     def __init__(self,
                  key: bytes,
-                 backend: 'Union[BaseECCBackend, Type[BaseECCBackend], str, None]' = None,
                  encoder=RawEncoder
                  ) -> None:
         key = encoder.decode(key)
@@ -204,41 +196,13 @@ class PublicKey(BaseKey, LazyBackend):
             )
 
         self._raw_key = key
-        super().__init__(backend=backend)
+        super().__init__()
 
     def to_address(self, network_prefix: NetworkId, proposition_type: str) -> Address:
         return public_key_bytes_to_address(self.to_bytes(), network_prefix, proposition_type)
 
-    @classmethod
-    def from_private(cls,
-                     backend: 'BaseECCBackend' = None,
-                     ) -> 'BaseECCBackend':
-        if backend is None:
-            backend = cls.get_backend()
-        return backend.private_key_to_public_key()
 
-    def verify_msg(self,
-                   message: bytes,
-                   signature: 'Optional[BaseSignature]' = None,
-                   encoder=Base58Encoder
-                   ) -> bytes:
-        message_hash = encoder.encode(digestAndEncode(hashFunc().update(message)))
-        return self.verify_msg_hash(message_hash, signature, encoder)
-
-    def verify_signature(self,
-                         signature: 'BaseSignature',
-                         encoder=Base58Encoder) -> bytes:
-        return self.backend.ecc_verify(signature=signature, public_key=self, encoder=encoder)
-
-    def verify_msg_hash(self,
-                        message_hash: bytes,
-                        signature: 'Optional[BaseSignature]' = None,
-                        encoder=Base58Encoder
-                        ) -> bytes:
-        return self.backend.ecc_verify(signature, self, message_hash, encoder)
-
-
-class BaseSignature(ByteString, ABC, LazyBackend):
+class BaseSignature(ByteString, ABC):
     """
         A ByteString subclass that holds a message that has been signed by a
         :class:`SigningKey`.
@@ -246,13 +210,12 @@ class BaseSignature(ByteString, ABC, LazyBackend):
 
     def __init__(self,
                  signature_bytes: bytes = None,
-                 backend: 'Union[BaseECCBackend, Type[BaseECCBackend], str, None]' = None,
                  encoder=Base58Encoder
                  ) -> None:
 
         self._signature_bytes = signature_bytes
         self.encoder = encoder
-        super().__init__(backend=backend)
+        super().__init__()
 
     @property
     def signature_bytes(self) -> Optional[bytes]:
@@ -318,6 +281,9 @@ class SignedMessage(bytes):
     A bytes subclass that holds a messaged that has been signed by a
     :class:`PrivateKey`.
     """
+
+    _signature = None
+    _message = None
 
     @classmethod
     def from_parts(cls, signature, message, combined):

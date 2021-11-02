@@ -3,18 +3,18 @@ from typing import Optional  # noqa: F401
 
 from nacl.bindings import crypto_sign, crypto_sign_BYTES, crypto_sign_open, crypto_scalarmult_base
 
-from brambl.keys.backends import BaseECCBackend
-from brambl.keys.datatypes import BaseSignature, PublicKey, BaseKey, PrivateKey, SignedMessage
+from brambl.ed25519.backends import BaseEd25519Backend
+from brambl.ed25519.datatypes import BaseSignature, PublicKey, BaseEd25519Key, PrivateKey, SignedMessage
 from brambl.utils.encoding import Base58Encoder
 
 
-class NativeECCBackend(BaseECCBackend, ABC, BaseKey):
+class NativeECCBackend(BaseEd25519Backend, ABC, BaseEd25519Key):
     def ecc_sign(self,
-                 msg_hash: bytes,
+                 message: bytes,
                  private_key: PrivateKey,
                  encoder=Base58Encoder,
                  ) -> SignedMessage:
-        raw_signed = crypto_sign(msg_hash, private_key.to_bytes())
+        raw_signed = crypto_sign(message, private_key.to_bytes())
         signature = encoder.encode(raw_signed[:crypto_sign_BYTES])
 
         signature = BaseSignature(signature_bytes=signature, encoder=encoder)
@@ -24,16 +24,16 @@ class NativeECCBackend(BaseECCBackend, ABC, BaseKey):
         return SignedMessage.from_parts(signature, message, signed)
 
     def ecc_verify(self, signature: BaseSignature,
-                   public_key: PublicKey, msg_hash: Optional[bytes] = None, encoder=Base58Encoder) -> bytes:
+                   public_key: PublicKey, message: bytes, encoder=Base58Encoder) -> bytes:
         """
         Verifies the signature of a signed message, returning the message
         if it has not been tampered with else raising
-        :class:`~brambl.keys.BadSignature`.
+        :class:`~brambl.ed25519.BadSignature`.
 
-        :param msg_hash: [:class:`bytes`] Either the original message or a
+        :param message: [:class:`bytes`] Either the original message or a
             signature and message concatenated together.
         :param signature: [:class:`bytes`] If an unsigned message is given for
-            msg_hash then the detached signature must be provided.
+            message then the detached signature must be provided.
         :rtype: :class:`bytes`
         """
         if signature is not None:
@@ -45,10 +45,10 @@ class NativeECCBackend(BaseECCBackend, ABC, BaseKey):
                     % crypto_sign_BYTES,
                 )
 
-            smessage = signature.to_bytes() + encoder.decode(msg_hash)
+            smessage = signature.to_bytes() + encoder.decode(message)
         else:
             # Decode the signed message
-            smessage = encoder.decode(msg_hash)
+            smessage = encoder.decode(message)
 
         return crypto_sign_open(smessage, public_key.to_bytes())
 
