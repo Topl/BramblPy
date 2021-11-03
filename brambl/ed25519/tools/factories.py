@@ -19,9 +19,9 @@ def _mk_random_bytes(num_bytes: int) -> bytes:
         return secrets.token_bytes(num_bytes)
 
 
-class PrivateKeyFactory(factory.Factory):  # type: ignore
+class SigningKeyFactory(factory.Factory):  # type: ignore
     class Meta:
-        model = keys.PrivateKey
+        model = keys.SigningKey
 
     seed = factory.LazyFunction(lambda: _mk_random_bytes(32))
 
@@ -30,4 +30,4 @@ class PublicKeyFactory(factory.Factory):  # type: ignore
     class Meta:
         model = keys.PublicKey
 
-    key = factory.LazyFunction(lambda: PrivateKeyFactory().public_key.to_bytes())
+    key = factory.LazyFunction(lambda: SigningKeyFactory().public_key.to_bytes())

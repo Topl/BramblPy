@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import Optional
 
-from brambl.ed25519.datatypes import PrivateKey, BaseSignature, PublicKey
+from brambl.ed25519.datatypes import SigningKey, BaseSignature, PublicKey
 from brambl.utils.encoding import Base58Encoder
 
 
 class BaseEd25519Backend(object):
     def ecc_sign(self,
                    message: bytes,
-                   private_key: PrivateKey,
+                   private_key: SigningKey,
                    encoder=Base58Encoder,
                  ) -> BaseSignature:
         raise NotImplementedError()
@@ -23,5 +23,5 @@ class BaseEd25519Backend(object):
         raise NotImplementedError()
 
     def private_key_to_public_key(self,
-                                  private_key: PrivateKey) -> PublicKey:
+                                  private_key: SigningKey) -> PublicKey:
         raise NotImplementedError()

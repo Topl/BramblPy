@@ -16,6 +16,7 @@ from brambl.utils.Hash import digestAndEncode, hashFunc
 from brambl.utils.base58 import encode_base58
 from brambl.utils.encoding import big_endian_to_int, Base58Encoder
 from brambl.utils.types import is_bytes, is_string
+from brambl.utils.validation import validate_private_key_bytes
 
 if TYPE_CHECKING:
     from brambl.ed25519.backends.base import BaseEd25519Backend
@@ -121,16 +122,16 @@ class BaseEd25519Key(ByteString, collections.Hashable):
             return self.to_hex()
 
 
-class PrivateKey(BaseEd25519Key):
+class SigningKey(BaseEd25519Key, LazyBackend):
     """
         Private key for producing digital signatures using the Ed25519 algorithm.
 
         Signing ed25519 are produced from a 32-byte (256-bit) random seed value. This
-        value can be passed into the :class:`~brambl.ed25519.datatypes.PrivateKey` as a
+        value can be passed into the :class:`~brambl.ed25519.datatypes.SigningKey` as a
         :func:`bytes` whose length is 32.
 
         .. warning:: This **must** be protected and remain secret. Anyone who knows
-            the value of your :class:`~brambl.ed25519.datatypes.PrivateKey` or it's seed can
+            the value of your :class:`~brambl.ed25519.datatypes.SigningKey` or it's seed can
             masquerade as you.
 
         :param seed: [:class:`bytes`] Random 32-byte value (i.e. private key)
@@ -140,15 +141,17 @@ class PrivateKey(BaseEd25519Key):
             (i.e. public) key that corresponds with this signing key.
         """
     public_key = None  # type: PublicKey
+    _raw_key = None  # type: bytes
 
     def __init__(self,
-                 seed: bytes,
+                 seed: bytes = None,
+                 backend: 'Union[BaseEd25519Backend, Type[BaseEd25519Backend], str, None]' = None,
                  encoder=RawEncoder
                  ) -> None:
         seed = encoder.decode(seed)
         if not isinstance(seed, bytes):
             raise TypeError(
-                "PrivateKey must be created from a 32 byte seed"
+                "SigningKey must be created from a 32 byte seed"
             )
 
             # Verify that our seed is the proper size
@@ -161,20 +164,21 @@ class PrivateKey(BaseEd25519Key):
         public_key, secret_key = crypto_sign_seed_keypair(seed)
 
         self._seed = seed
+
         self._raw_key = secret_key
         self.public_key = PublicKey(public_key)
 
-        super().__init__()
+        super().__init__(backend=backend)
 
     @classmethod
     def generate(cls, seed=random(crypto_sign_SEEDBYTES), encoder=RawEncoder):
         seed = encoder.decode(seed)
         if not isinstance(seed, bytes):
             raise TypeError(
-                "PrivateKey must be created from a 32 byte seed"
+                "SigningKey must be created from a 32 byte seed"
             )
         return cls(
-            seed,
+            seed=seed,
             encoder=encoder
         )
 
@@ -279,15 +283,16 @@ class BaseSignature(ByteString, ABC):
 class SignedMessage(bytes):
     """
     A bytes subclass that holds a messaged that has been signed by a
-    :class:`PrivateKey`.
+    :class:`SigningKey`.
     """
 
     _signature = None
     _message = None
 
     @classmethod
-    def from_parts(cls, signature, message, combined):
-        obj = cls(combined)
+    def from_parts(cls, signature, message, combined, encoder=Base58Encoder):
+        decoded = encoder.decode(combined)
+        obj = cls(decoded)
         obj._signature = signature
         obj._message = message
         return obj

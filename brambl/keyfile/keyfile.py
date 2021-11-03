@@ -129,7 +129,7 @@ def _create_keyfile_json(private_key, password, kdf, network_prefix: NetworkId, 
     ciphertext = encrypt_aes_ctr(private_key, encrypt_key, iv)
     mac = get_mac(derived_key, ciphertext)
 
-    address = keys.PrivateKey(private_key).public_key.to_address(network_prefix, proposition_type)
+    address = keys.SigningKey(private_key).public_key.to_address(network_prefix, proposition_type)
 
     return {
         'address': str(address),
