@@ -7,8 +7,6 @@ class LocalCredential(BaseCredential):
     r"""
     A collection of convenience methods to sign and encrypt, with an embedded private key.
 
-    :var bytes key: the 32-byte private key data
-
     .. code-block:: python
 
         >>> my_local_credential.address # doctest: +SKIP
@@ -23,17 +21,18 @@ class LocalCredential(BaseCredential):
         >>> bytes(my_local_credential) # doctest: +SKIP
         b"\\x01\\x23..."
     """
+
     def __init__(self, key, credential_manager, network_prefix: NetworkId, proposition_type: str):
         """
         Initialize a new account with the the given private key.
 
         :param brambl.ed25519.datatypes.SigningKey key: to prefill in private key execution
-        :param ~brambl.ed25519.Ed25519API credential_api: the key-unaware management API
+        :param ~brambl.ed25519.Ed25519API credential_manager: the key-unaware management API
         """
         self._public_api = credential_manager
 
-        self._address = credential_manager._keys.private_key_to_public_key(key).to_address(network_prefix,
-                        proposition_type)
+        self._address = credential_manager.keys.private_key_to_public_key(key).to_address(network_prefix,
+                                                                                          proposition_type)
 
         self._private_key = key
         self._public_key = key.public_key.to_bytes()
