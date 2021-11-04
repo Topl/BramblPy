@@ -3,12 +3,12 @@ from typing import NewType
 
 from base58 import b58decode
 
+from brambl.base58 import encode_base58
 from brambl.consts import ADDRESS_LENGTH, PropositionType
 from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
 from brambl.typing.encoding import HexStr
 from brambl.utils.Hash import hashFunc, digestAndEncode
-from brambl.utils.base58 import encode_base58
-from brambl.utils.hexadecimal import decode_hex
+from brambl.utils.hex import decode_hex
 
 NetworkId = NewType('NetworkId', int)
 
@@ -67,7 +67,7 @@ VALID_NETWORKS = ('private', 'toplnet', 'valhalla')
 VALID_NETWORK_PREFIXES = (HexStr("{0:#0{1}x}".format(1, 4)), HexStr(hex(16)), HexStr(hex(64)))
 PRIVATE_MAP = {'hex': HexStr(hex(64)), 'decimal': 64}
 TOPLNET_MAP = {'hex': HexStr("{0:#0{1}x}".format(1, 4)), 'decimal': 1}
-VALHALLA_MAP = {'hex': HexStr("{0:#0{1}x}".format(1, 4)), 'decimal': 16}
+VALHALLA_MAP = {'hex': HexStr("{0:#0{1}x}".format(16, 4)), 'decimal': 16}
 NETWORKS_DEFAULT = {
     "private": PRIVATE_MAP,
     "toplnet": TOPLNET_MAP,
@@ -96,7 +96,7 @@ def address(addr, network_prefix: str):
         raise ValueError("String {} is not a valid Topl address".format(addr))
 
 
-def validateAddressByNetwork(network_prefix: str, address: str):
+def validateAddressByNetwork(network_prefix: str, address_to_validate: str):
     """
        Checks if the address is valid by the following 4 steps:
     1. Verify that the address is not null.
@@ -106,27 +106,25 @@ def validateAddressByNetwork(network_prefix: str, address: str):
     The first argument is the prefix to validate against and the second argument is the address to run the validation on.
     Result object with whether or not the operation was successful and whether or not the address is valid for a given network
     """
-    if (not isValidNetwork(network_prefix)):
+    if not isValidNetwork(network_prefix):
         raise ValueError(
             "Invalid network provided"
         )
-    elif (address == ""):
+    elif address_to_validate == "":
         raise ValueError(
             "No Addresses provided"
         )
-    # get the decimal of the network prefix. It should always be a valid network prefix due to the first conditional, but the language constraint requires us to check if it is null first.
-    networkDecimal = NETWORKS_DEFAULT[network_prefix]['decimal']
 
     # run validation on the address
-    decodedAddress = b58decode(address)
+    decoded_address = b58decode(address_to_validate)
 
     # validation: base58 38 byte obj that matches the network_prefix hex value
-    if (len(decodedAddress) != ADDRESS_LENGTH):
+    if len(decoded_address) != ADDRESS_LENGTH:
         raise ValueError(
             "Invalid address for network '{}'".format(network_prefix)
 
         )
-    elif (not verify_checksum(decodedAddress)):
+    elif not verify_checksum(decoded_address):
         raise ValueError(
             'Supplied address has invalid checksum'
         )

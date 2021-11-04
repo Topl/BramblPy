@@ -1,6 +1,6 @@
 import pytest
 
-from brambl.ed25519 import Ed25519CredentialAPI
+from brambl.ed25519 import Ed25519API
 from brambl.ed25519.backends.native import NativeECCBackend
 
 
@@ -20,5 +20,5 @@ def native_backend_env_var(monkeypatch):
     ),
 )
 def test_supported_backend_formats(backend):
-    keys = Ed25519CredentialAPI(backend=backend)
+    keys = Ed25519API(backend=backend)
     assert isinstance(keys.backend, NativeECCBackend)

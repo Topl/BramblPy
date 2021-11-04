@@ -1,16 +1,7 @@
 import json
-from typing import Any, Dict, Iterable, Optional, Type, Union, AnyStr
+from typing import Any, Dict, Iterable, Optional, Type
 
-from base58 import b58decode
-
-from brambl.types import is_list_like
-from brambl.utils.base58 import encode_base58
-from brambl.utils.conversions import Base58Str
-
-
-def int_to_big_endian(value: int) -> bytes:
-    return value.to_bytes((value.bit_length() + 7) // 8 or 1, "big")
-
+from brambl.utils.types import is_list_like
 
 class FriendlyJsonSerde:
     """
@@ -74,21 +65,11 @@ class BramblJsonEncoder(json.JSONEncoder):
 
 
 def to_json(obj: Dict[Any, Any]) -> str:
-    '''
+    """
     Convert a complex object (like a transaction object) to a JSON string
-    '''
+    """
     return FriendlyJsonSerde().json_encode(obj, cls=BramblJsonEncoder)
 
 
 def big_endian_to_int(value: bytes) -> int:
     return int.from_bytes(value, "big")
-
-
-class Base58Encoder:
-    @staticmethod
-    def encode(data: AnyStr) -> Base58Str:
-        return encode_base58(data)
-
-    @staticmethod
-    def decode(data: Union[str, bytes]) -> bytes:
-        return b58decode(data)

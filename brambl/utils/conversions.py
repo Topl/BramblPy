@@ -1,16 +1,13 @@
-from typing import NewType, Union, Callable
+from typing import Union, Callable
 
-from base58 import b58decode, b58encode
-from brambl.utils.base58 import encode_base58
-
-from brambl.types import is_boolean, is_integer, is_string
+from brambl.base58 import encode_base58
+from brambl.encoding import int_to_big_endian
+from brambl.typing.encoding import HexStr, Base58Str
 from brambl.utils.decorators import validate_conversion_arguments, T
-from brambl.utils.encoding import int_to_big_endian
-from brambl.utils.hex import add_0x_prefix, decode_hex, encode_hex
+from brambl.utils.hex import add_0x_prefix, encode_hex, decode_hex
+from brambl.utils.types import is_boolean, is_string, is_integer
 
 Primitives = Union[bytes, int, bool]
-Base58Str = NewType('Base58Str', str)
-HexStr = NewType('HexStr', str)
 
 
 @validate_conversion_arguments
@@ -108,14 +105,15 @@ def text_if_str(
     """
     Convert to a type, assuming that strings can be only latin1 text (not a base58str).
 
-    :param to_type function: takes the arguments (primitive, base58str=base58str, text=text),
+    :param to_type: takes the arguments (primitive, base58str=base58str, text=text),
         eg~ to_bytes, to_text, to_base58, to_int, etc
-    :param text_or_primitive bytes, str, int: value to convert
+    :param text_or_primitive: bytes, str, int - value to convert
     """
     if isinstance(text_or_primitive, str):
         return to_type(text=text_or_primitive)
     else:
         return to_type(text_or_primitive)
+
 
 @validate_conversion_arguments
 def to_bytes(
@@ -127,12 +125,15 @@ def to_bytes(
         return bytes(primitive)
     elif isinstance(primitive, bytes):
         return primitive
-    elif is_integer(primitive):
-        return to_bytes(base58str=b58encode(primitive))
-    elif base58str is not None:
-        return b58decode(base58str)
+    elif isinstance(primitive, int):
+        # Note that this int check must come after the bool check, because
+        #   isinstance(True, int) is True
+        if primitive < 0:
+            raise ValueError(f"Cannot convert negative integer {primitive} to bytes")
+        else:
+            return to_bytes(hexstr=HexStr(hex(primitive)))
     elif hexstr is not None:
-        if len(hexstr) % 2:
+        if len(hexstr) % 2 == 1:
             # type check ignored here because casting an Optional arg to str is not possible
             hexstr = "0x0" + remove_0x_prefix(hexstr)  # type: ignore
         return decode_hex(hexstr)

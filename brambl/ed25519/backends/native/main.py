@@ -3,15 +3,15 @@ from typing import Optional  # noqa: F401
 
 from nacl.bindings import crypto_sign, crypto_sign_BYTES, crypto_sign_open, crypto_scalarmult_base
 
+from brambl.base58.encoding import Base58Encoder
 from brambl.ed25519.backends import BaseEd25519Backend
-from brambl.ed25519.datatypes import BaseSignature, PublicKey, BaseEd25519Key, PrivateKey, SignedMessage
-from brambl.utils.encoding import Base58Encoder
+from brambl.ed25519.datatypes import BaseSignature, PublicKey, BaseEd25519Key, SigningKey, SignedMessage
 
 
 class NativeECCBackend(BaseEd25519Backend, ABC, BaseEd25519Key):
     def ecc_sign(self,
                  message: bytes,
-                 private_key: PrivateKey,
+                 private_key: SigningKey,
                  encoder=Base58Encoder,
                  ) -> SignedMessage:
         raw_signed = crypto_sign(message, private_key.to_bytes())
@@ -21,7 +21,7 @@ class NativeECCBackend(BaseEd25519Backend, ABC, BaseEd25519Key):
 
         message = encoder.encode(raw_signed[crypto_sign_BYTES:])
         signed = encoder.encode(raw_signed)
-        return SignedMessage.from_parts(signature, message, signed)
+        return SignedMessage.from_parts(signature, message, signed, encoder)
 
     def ecc_verify(self, signature: BaseSignature,
                    public_key: PublicKey, message: bytes, encoder=Base58Encoder) -> bytes:
@@ -52,7 +52,7 @@ class NativeECCBackend(BaseEd25519Backend, ABC, BaseEd25519Key):
 
         return crypto_sign_open(smessage, public_key.to_bytes())
 
-    def private_key_to_public_key(self, private_key: PrivateKey) -> PublicKey:
+    def private_key_to_public_key(self, private_key: SigningKey) -> PublicKey:
         public_key_bytes = crypto_scalarmult_base(private_key.to_bytes())
-        public_key = PublicKey(public_key_bytes, backend=self)
+        public_key = PublicKey(public_key_bytes)
         return public_key

@@ -1,11 +1,9 @@
 import binascii
 import re
-from typing import AnyStr
+from typing import AnyStr, Any
 
-from dotenv import Any
-from brambl.types import is_string, is_text
-from brambl.utils.conversions import HexStr
-
+from brambl.typing.encoding import HexStr
+from brambl.utils.types import is_text, is_string
 
 _HEX_REGEXP = re.compile("(0x)?[0-9a-f]*", re.IGNORECASE | re.ASCII)
 
