@@ -6,10 +6,6 @@ from brambl.base58 import encode_base58
 from brambl.typing.encoding import Base58Str
 
 
-def big_endian_to_int(value: bytes) -> int:
-    return int.from_bytes(value, "big")
-
-
 class Base58Encoder:
     @staticmethod
     def encode(data: AnyStr) -> Base58Str:
