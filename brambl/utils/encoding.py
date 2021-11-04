@@ -1,6 +1,10 @@
 import json
 from typing import Any, Dict, Iterable, Optional, Type
 
+from hexbytes import HexBytes
+
+from brambl.datastructures import AttributeDict
+from brambl.typing.encoding import HexStr
 from brambl.utils.types import is_list_like
 
 class FriendlyJsonSerde:
@@ -61,6 +65,10 @@ class FriendlyJsonSerde:
 
 class BramblJsonEncoder(json.JSONEncoder):
     def default(self, obj: Any) -> Dict[Any, Any]:
+        if isinstance(obj, AttributeDict):
+            return {k: v for k, v in obj.items()}
+        if isinstance(obj, HexBytes):
+            return HexStr(obj.hex())
         return json.JSONEncoder.default(self, obj)
 
 

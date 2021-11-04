@@ -13,12 +13,14 @@ def _has_one_val(*args: T, **kwargs: T) -> bool:
     not_nones = list(filter(lambda val: val is not None, vals))
     return len(not_nones) == 1
 
+
 def _assert_one_val(*args: T, **kwargs: T) -> None:
     if not _has_one_val(*args, **kwargs):
         raise TypeError(
             "Exactly one of the passed values can be specified. "
             "Instead, values were: %r, %r" % (args, kwargs)
         )
+
 
 def _hexstr_or_base58_or_text_kwarg_is_text_type(**kwargs: T) -> bool:
     value = kwargs["hexstr"] if "hexstr" in kwargs else kwargs["text"] if "text" in kwargs else kwargs['base58str']

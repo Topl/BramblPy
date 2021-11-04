@@ -4,7 +4,7 @@ from brambl.base58 import encode_base58
 from brambl.encoding import int_to_big_endian
 from brambl.typing.encoding import HexStr, Base58Str
 from brambl.utils.decorators import validate_conversion_arguments, T
-from brambl.utils.hex import add_0x_prefix, encode_hex, decode_hex
+from brambl.utils.hex import add_0x_prefix, encode_hex, decode_hex, remove_0x_prefix
 from brambl.utils.types import is_boolean, is_string, is_integer
 
 Primitives = Union[bytes, int, bool]
@@ -81,9 +81,9 @@ def to_base58(
 
 @validate_conversion_arguments
 def to_text(
-        primitive: Primitives = None, base58str: Base58Str = None, text: str = None, hexstr=HexStr
+        primitive: Primitives = None, base58str: Base58Str = None, text: str = None, hexstr: HexStr = None
 ) -> str:
-    if Base58Str is not None:
+    if base58str is not None:
         return to_bytes(base58str=base58str).decode("utf-8")
     elif hexstr is not None:
         return to_bytes(hexstr=hexstr).decode("utf-8")
@@ -117,7 +117,7 @@ def text_if_str(
 
 @validate_conversion_arguments
 def to_bytes(
-        primitive: Primitives = None, hexstr: HexStr = None, text: str = None, base58str: Base58Str = None
+        primitive: Primitives = None, hexstr: HexStr = None, text: str = None
 ) -> bytes:
     if is_boolean(primitive):
         return b"\x01" if primitive else b"\x00"
@@ -133,7 +133,7 @@ def to_bytes(
         else:
             return to_bytes(hexstr=HexStr(hex(primitive)))
     elif hexstr is not None:
-        if len(hexstr) % 2 == 1:
+        if len(hexstr) % 2:
             # type check ignored here because casting an Optional arg to str is not possible
             hexstr = "0x0" + remove_0x_prefix(hexstr)  # type: ignore
         return decode_hex(hexstr)

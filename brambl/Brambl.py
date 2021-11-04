@@ -4,7 +4,7 @@ from typing import Dict, Any
 
 import base58
 
-from brambl.modules import Requests, KeyManager
+from brambl.modules import Requests
 
 from brambl.typing.encoding import Base58Str, HexStr
 from brambl.utils import Hash
@@ -78,22 +78,6 @@ class Brambl:
                 self.requests = Requests.Requests(self.requestsVar['url'], self.requestsVar['api_key'])
             except:
                 self.requests = Requests.Requests()
-
-        # Setup KeyManager object
-        try:
-            self.keyManagerVar['password']
-        except:
-            raise Exception('An encryption password is required to open a keyfile')
-
-        try:
-            self.keyManager = self.keyManagerVar['instance']
-        except:
-            try:
-                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'],
-                                                        {'keyPath': self.keyManagerVar['keyPath'],
-                                                         'constants': self.keyManagerVar['constants']})
-            except:
-                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'])
         # Import utilities
         self.utils = Hash
 
@@ -109,20 +93,6 @@ class Brambl:
         :rtype: instance of `Requests`
         """
         return Requests.Requests(test_url, api_key)
-
-    def KeyManager(password, kwargs=''):
-        """ 
-        Methods for creating a separate KeyManager instance
-
-        :param password: passwword for encrypting (decrypting) the keyfile
-        :param kwargs: Used for importing keyfiles, efault emptry string
-        :type password: string
-        :type kwargs: string or dictionary
-        :return: `KeyManager` object
-        :rtype: instance of `KeyManager`
-
-        """
-        return KeyManager.KeyManager(password, kwargs)
 
     async def addSigToTx(self, prototypeTx, userKeys):
         """
@@ -202,16 +172,16 @@ class Brambl:
     @staticmethod
     @wraps(to_bytes)
     def toBytes(
-            primitive: Primitives = None, base58str: Base58Str = None, text: str = None
+            primitive: Primitives = None, hexstr: HexStr = None, text: str = None
     ) -> bytes:
-        return to_bytes(primitive, base58str, text)
+        return to_bytes(primitive, hexstr, text)
 
     @staticmethod
     @wraps(to_text)
     def toText(
-            primitive: Primitives = None, base58str: Base58Str = None, text: str = None
+            primitive: Primitives = None, hexstr: HexStr = None, text: str = None
     ) -> str:
-        return to_text(primitive, base58str, text)
+        return to_text(primitive=primitive, hexstr=hexstr, text=text)
 
     @staticmethod
     @wraps(to_hex)
@@ -219,13 +189,6 @@ class Brambl:
             primitive: Primitives = None, hexstr: HexStr = None, text: str = None
     ) -> HexStr:
         return to_hex(primitive, hexstr, text)
-
-    @staticmethod
-    @wraps(to_base58)
-    def toHex(
-            primitive: Primitives = None, base58str: HexStr = None, text: str = None, hexstr: HexStr = None
-    ) -> Base58Str:
-        return to_base58(primitive, base58str, text, hexstr)
 
     @staticmethod
     @wraps(to_json)
