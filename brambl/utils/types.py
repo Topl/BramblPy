@@ -20,3 +20,6 @@ def is_dict(obj: Any) -> bool:
 
 def is_text(value: Any) -> bool:
     return isinstance(value, text_types)
+
+def is_boolean(value: Any) -> bool:
+    return isinstance(value, bool)

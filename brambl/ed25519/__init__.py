@@ -13,6 +13,6 @@ if sys.version_info.major < 3:
 
 
 from .main import (  # noqa: F401
-    Ed25519CredentialAPI,
+    Ed25519API,
     lazy_key_api as keys,
 )

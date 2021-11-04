@@ -24,7 +24,7 @@ class BaseCredential(ABC):
         pass
 
     @abstractmethod
-    def generate_proof_for_message(self, signable_message: bytes):
+    def _generate_proof_for_message(self, signable_message: bytes):
         """
         Sign the Bifrost message.
 
@@ -37,7 +37,7 @@ class BaseCredential(ABC):
         pass
 
     @abstractmethod
-    def generate_proof_for_transaction(self, transaction_dict):
+    def _generate_proof_for_transaction(self, transaction_dict):
         """
         Sign a transaction dict.
 
