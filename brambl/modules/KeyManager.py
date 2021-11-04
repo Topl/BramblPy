@@ -432,7 +432,7 @@ class KeyManager():
         if not self.pk:
             raise Exception('A key must be initialized before using this key manager')
         
-        return byte2String(self.__keyStorage)#WRAPO
+        return byte2String(self.__keyStorage)
 
 
     def lockKey(self):

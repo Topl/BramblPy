@@ -1,8 +1,10 @@
-from typing import NewType, Union
+from typing import NewType, Union, Callable
 
 from base58 import b58decode, b58encode
+from brambl.utils.base58 import encode_base58
+
 from brambl.types import is_boolean, is_integer, is_string
-from brambl.utils.decorators import validate_conversion_arguments
+from brambl.utils.decorators import validate_conversion_arguments, T
 from brambl.utils.encoding import int_to_big_endian
 from brambl.utils.hex import add_0x_prefix, decode_hex, encode_hex
 
@@ -10,9 +12,10 @@ Primitives = Union[bytes, int, bool]
 Base58Str = NewType('Base58Str', str)
 HexStr = NewType('HexStr', str)
 
+
 @validate_conversion_arguments
 def to_hex(
-    primitive: Primitives = None, hexstr: HexStr = None, text: str = None
+        primitive: Primitives = None, hexstr: HexStr = None, text: str = None
 ) -> HexStr:
     """
     Auto converts any supported value into its hex representation.
@@ -42,9 +45,10 @@ def to_hex(
         "or int.".format(repr(type(primitive)))
     )
 
+
 @validate_conversion_arguments
 def to_base58(
-    primitive: Primitives = None, base58str: Base58Str = None, text: str = None, hexstr: HexStr = None
+        primitive: Primitives = None, base58str: Base58Str = None, text: str = None, hexstr: HexStr = None
 ) -> Base58Str:
     """
     Auto converts any supported value into its hex representation.
@@ -53,16 +57,16 @@ def to_base58(
         return Base58Str(base58str.lower())
 
     if hexstr is not None:
-        return Base58Str(b58encode(decode_hex(hexstr)))
+        return Base58Str(encode_base58(decode_hex(hexstr)))
 
     if text is not None:
-        return Base58Str(b58encode(text.encode("utf-8")))
+        return Base58Str(encode_base58(text.encode("utf-8")))
 
     if is_boolean(primitive):
         return Base58Str("1") if primitive else Base58Str("0")
 
     if isinstance(primitive, (bytes, bytearray)):
-        return Base58Str(b58encode(primitive))
+        return Base58Str(encode_base58(primitive))
     elif is_string(primitive):
         raise TypeError(
             "Unsupported type: The primitive argument must be one of: bytes,"
@@ -70,7 +74,7 @@ def to_base58(
         )
 
     if is_integer(primitive):
-        return Base58Str(b58encode(hex(primitive)))
+        return Base58Str(encode_base58(hex(primitive)))
 
     raise TypeError(
         "Unsupported type: '{0}'.  Must be one of: bool, str, bytes, bytearray"
@@ -80,7 +84,7 @@ def to_base58(
 
 @validate_conversion_arguments
 def to_text(
-    primitive: Primitives = None, base58str: Base58Str = None, text: str = None, hexstr = HexStr
+        primitive: Primitives = None, base58str: Base58Str = None, text: str = None, hexstr=HexStr
 ) -> str:
     if Base58Str is not None:
         return to_bytes(base58str=base58str).decode("utf-8")
@@ -97,10 +101,25 @@ def to_text(
         return to_text(byte_encoding)
     raise TypeError("Expected an int, bytes, bytearray or hexstr.")
 
+
+def text_if_str(
+        to_type: Callable[..., T], text_or_primitive: Union[bytes, int, str]
+) -> T:
+    """
+    Convert to a type, assuming that strings can be only latin1 text (not a base58str).
+
+    :param to_type function: takes the arguments (primitive, base58str=base58str, text=text),
+        eg~ to_bytes, to_text, to_base58, to_int, etc
+    :param text_or_primitive bytes, str, int: value to convert
+    """
+    if isinstance(text_or_primitive, str):
+        return to_type(text=text_or_primitive)
+    else:
+        return to_type(text_or_primitive)
+
 @validate_conversion_arguments
 def to_bytes(
-    primitive: Primitives = None, base58str: Base58Str = None, text: str = None,
-    hexstr: HexStr = None
+        primitive: Primitives = None, hexstr: HexStr = None, text: str = None, base58str: Base58Str = None
 ) -> bytes:
     if is_boolean(primitive):
         return b"\x01" if primitive else b"\x00"

@@ -9,6 +9,7 @@ import base64
 import base58
 from binascii import hexlify
 
+
 def hashFunc():
     """
     standard FastCryptographicHash is Bifrost
@@ -19,7 +20,8 @@ def hashFunc():
     """
     return BLAKE2b.new(digest_bits=256)
 
-def digestAndEncode(hash,encoding):#switch statement does not exist
+
+def digestAndEncode(hash, encoding=None):  # switch statement does not exist
     """
     Create hash digest and encode
 
@@ -41,7 +43,7 @@ def digestAndEncode(hash,encoding):#switch statement does not exist
         return hash.digest()
 
 
-def string(message,encoding):
+def string(message, encoding):
     """
     Calculates the Blake2b-256 of a string input
 
@@ -55,10 +57,10 @@ def string(message,encoding):
     """
     msg = (message).encode('utf-8')
     hash = hashFunc().update(msg)
-    return (digestAndEncode(hash,encoding)).decode('utf-8')
+    return (digestAndEncode(hash, encoding)).decode('utf-8')
 
 
-def file(filePath,encoding):
+def file(filePath, encoding):
     """
     Reads the file from disk and calculates the Blake2b-256
 
@@ -70,19 +72,11 @@ def file(filePath,encoding):
     :rtype: Blake2b-256 hash
 
     """
-    BLOCK_SIZE = 65536    #64kb
+    BLOCK_SIZE = 65536  # 64kb
     hash = hashFunc()
-    with open(filePath,'rb') as f:
+    with open(filePath, 'rb') as f:
         fb = f.read(BLOCK_SIZE)
         while len(fb) > 0:
             hash.update(fb)
             fb = f.read(BLOCK_SIZE)
-    return digestAndEncode(hash,encoding).decode('utf-8')
-
-
-
-
-
-
-
-
+    return digestAndEncode(hash, encoding).decode('utf-8')

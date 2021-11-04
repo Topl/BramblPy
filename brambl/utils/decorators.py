@@ -1,12 +1,12 @@
 import functools
 import itertools
-from typing import Callable, TypeVar
 
-from dotenv import Any
+from typing import Callable, Any, Type, TypeVar
 
-from brambl.types import is_text
+from brambl.utils.types import is_text
 
 T = TypeVar("T")
+
 
 def _has_one_val(*args: T, **kwargs: T) -> bool:
     vals = itertools.chain(args, kwargs.values())
@@ -20,32 +20,33 @@ def _assert_one_val(*args: T, **kwargs: T) -> None:
             "Instead, values were: %r, %r" % (args, kwargs)
         )
 
-def _base58str_or_text_kwarg_is_text_type(**kwargs: T) -> bool:
-    value = kwargs["base58str"] if "base58str" in kwargs else kwargs["text"]
+def _hexstr_or_base58_or_text_kwarg_is_text_type(**kwargs: T) -> bool:
+    value = kwargs["hexstr"] if "hexstr" in kwargs else kwargs["text"] if "text" in kwargs else kwargs['base58str']
     return is_text(value)
 
 
-def _assert_hexstr_or_text_kwarg_is_text_type(**kwargs: T) -> None:
-    if not _base58str_or_text_kwarg_is_text_type(**kwargs):
+def _assert_hexstr_or_base58_or_text_kwarg_is_text_type(**kwargs: T) -> None:
+    if not _hexstr_or_base58_or_text_kwarg_is_text_type(**kwargs):
         raise TypeError(
-            "Arguments passed as base58str or text must be of text type. "
+            "Arguments passed as hexstr or text must be of text type. "
             "Instead, value was: %r" % (repr(next(iter(list(kwargs.values())))))
         )
 
 
 def _validate_supported_kwarg(kwargs: Any) -> None:
-    if next(iter(kwargs)) not in ["primitive", "hexstr", "text"]:
+    if next(iter(kwargs)) not in ["primitive", "hexstr", "text", "base58str"]:
         raise TypeError(
-            "Kwarg must be 'primitive', 'hexstr', or 'text'. "
+            "Kwarg must be 'primitive', 'hexstr', 'base58str', or 'text'. "
             "Instead, kwarg was: %r" % (next(iter(kwargs)))
         )
+
 
 def validate_conversion_arguments(to_wrap: Callable[..., T]) -> Callable[..., T]:
     """
     Validates arguments for conversion functions.
     - Only a single argument is present
-    - Kwarg must be 'primitive' 'base58str' or 'text'
-    - If it is 'hexstr' or 'text' that it is a text type
+    - Kwarg must be 'primitive' 'base58str' 'hexstr' or 'text'
+    - If it is 'base58str' 'hexstr' or 'text' that it is a text type
     """
 
     @functools.wraps(to_wrap)
@@ -55,7 +56,22 @@ def validate_conversion_arguments(to_wrap: Callable[..., T]) -> Callable[..., T]
             _validate_supported_kwarg(kwargs)
 
         if len(args) == 0 and "primitive" not in kwargs:
-            _assert_hexstr_or_text_kwarg_is_text_type(**kwargs)
+            _assert_hexstr_or_base58_or_text_kwarg_is_text_type(**kwargs)
         return to_wrap(*args, **kwargs)
 
     return wrapper
+
+
+class combomethod(object):
+    def __init__(self, method: Callable[..., Any]) -> None:
+        self.method = method
+
+    def __get__(self, obj: T = None, objtype: Type[T] = None) -> Callable[..., Any]:
+        @functools.wraps(self.method)
+        def _wrapper(*args: Any, **kwargs: Any) -> Any:
+            if obj is not None:
+                return self.method(obj, *args, **kwargs)
+            else:
+                return self.method(objtype, *args, **kwargs)
+
+        return _wrapper
