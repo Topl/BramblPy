@@ -1,21 +1,23 @@
 import collections
 import numbers
-from typing import Any, Callable, Literal, NewType, Optional, TypedDict, Union
+from typing import Any, Callable, Literal, NewType, Optional, TypedDict, Union, TypeVar
 
 from brambl.datastructures import NamedElementOnion
 
+TReturn = TypeVar("TReturn")
 RPCEndpoint = NewType("RPCEndpoint", str)
-
 
 bytes_types = (bytes, bytearray)
 integer_types = (int,)
 text_types = (str,)
 string_types = (bytes, str, bytearray)
 
+
 class RPCError(TypedDict):
     code: int
     message: str
     data: Optional[str]
+
 
 class RPCResponse(TypedDict, total=False):
     error: Union[RPCError]
@@ -23,10 +25,12 @@ class RPCResponse(TypedDict, total=False):
     jsonrpc: Literal["2.0"]
     result: Any
 
+
 Middleware = Callable[[Callable[[RPCEndpoint, Any], RPCResponse], "Brambl"], Any]
 MiddlewareOnion = NamedElementOnion[str, Middleware]
 
 URI = NewType('URI', str)
+
 
 def is_integer(value: Any) -> bool:
     return isinstance(value, integer_types) and not isinstance(value, bool)

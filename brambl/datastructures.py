@@ -1,10 +1,12 @@
 from collections import OrderedDict
 from reprlib import recursive_repr
-from typing import Any, Callable, Dict, Hashable, Iterator, List, Mapping, Optional, Sequence, Type, TypeVar, Union, cast
+from typing import Any, Callable, Dict, Hashable, Iterator, List, Mapping, Optional, Sequence, Type, TypeVar, Union, \
+    cast
 
 T = TypeVar("T")
 TKey = TypeVar("TKey", bound=Hashable)
 TValue = TypeVar("TValue")
+
 
 class NamedElementOnion(Mapping[TKey, TValue]):
     """
@@ -13,7 +15,7 @@ class NamedElementOnion(Mapping[TKey, TValue]):
     """
 
     def __init__(
-        self, init_elements: Sequence[Any], valid_element: Callable[..., bool] = callable
+            self, init_elements: Sequence[Any], valid_element: Callable[..., bool] = callable
     ) -> None:
         self._queue: 'OrderedDict[Any, Any]' = OrderedDict()
         for element in reversed(init_elements):
@@ -126,6 +128,7 @@ class NamedElementOnion(Mapping[TKey, TValue]):
             elements = list(elements)
         return iter(elements)
 
+
 class ReadableAttributeDict(Mapping[TKey, TValue]):
     """
     The read attributes for the AttributeDict types
@@ -171,6 +174,7 @@ class ReadableAttributeDict(Mapping[TKey, TValue]):
     @classmethod
     def recursive(cls, value: TValue) -> 'ReadableAttributeDict[TKey, TValue]':
         return recursive_repr(cls._apply_if_mapping, value)
+
 
 class AttributeDict(ReadableAttributeDict[TKey, TValue], Hashable):
     """

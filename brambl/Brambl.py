@@ -1,45 +1,34 @@
-"""
-Brambl.py
-====================================
-The core module
-"""
-#D Dependencies
-from functools import wraps
-from typing import Any, Dict
-import base58
-import asyncio
 import json
+from functools import wraps
+from typing import Dict, Any
 
-from brambl.client.rpc import HTTPClient
-from brambl.utils.conversions import Base58Str, HexStr, Primitives, to_base58, to_bytes, to_hex, to_text
+import base58
+
+from brambl.modules import Requests, KeyManager
+
+from brambl.typing.encoding import Base58Str, HexStr
+from brambl.utils import Hash
+
+from brambl.utils.conversions import to_bytes, Primitives, to_text, to_hex, to_base58
 from brambl.utils.encoding import to_json
 
-# Primary sub-modules
-from .modules import Requests
-from .modules import KeyManager
+# Constants definitions
+validTxMethods = ['createAssetsPrototype', 'transferAssetsPrototype', 'transferTargetAssetsPrototype']
 
-# Utilities
-from .utils import Hash
-from .utils import CrypTools
-
-# Libraries
-# from .lib import polling
-
-# Constants defininitions
-validTxMethods = ['createAssetsPrototype','transferAssetsPrototype','transferTargetAssetsPrototype']
 
 class Brambl:
     """
     Each sub-module may be initialized in one of three ways
 
-    1.Providing a separetly initialized Request and KeyManager instance. Each of these instances may be initialized using the 
-    static methods `Requests` or `KeyManager` available in the BramblJS class.
+    1.Providing a separetly initialized Request and KeyManager instance. Each of these instances may be initialized 
+    using the static methods `Requests` or `KeyManager` available in the BramblJS class.
 
-    2.Providing custom configuration parameters needed to create new instances of each sub-module with the specified parameters
+    2.Providing custom configuration parameters needed to create new instances of each sub-module with the specified 
+    parameters
 
-    3.Providing minimal inputs (i.e. calling Brambl with only a string constructor arguement). This will create new instances of
-    the sub-modules with default parameters. KeyManager will create a new keyfile and Requests will target a locally running
-    instance of Bifrost.
+    3.Providing minimal inputs (i.e. calling Brambl with only a string constructor arguement). This will create new 
+    instances of the sub-modules with default parameters. KeyManager will create a new keyfile and Requests will target
+     a locally running instance of Bifrost.
 
     :param params: A password string or dictionary containing an instance of `Requests` and `KeyManager`
     :param params['KeyManager']: KeyManager object (may be either an instance or config parameters)
@@ -49,7 +38,7 @@ class Brambl:
     :param params['KeyManager']['constansts']: Parameters for encrypting the user's keyfile
     :param params['Requests']: Request object (may be either an instance or config parameters)
     :param params['Requests']['url']: The chain provider to send requests to
-    :param params['Requests']['apikey']: Api key for authorizing access to the chain provider.
+    :param params['Requests']['api_key']: Api key for authorizing access to the chain provider.
     :type params: dictionary
     :type params['KeyManager']: `KeyManager` object
     :type params['KeyManager]['password']: string
@@ -58,11 +47,12 @@ class Brambl:
     :type params['KeyManager']['constansts']: dictionary
     :type params['Requests']: `Requests` object
     :type params['Requests']['url']: string
-    :type params['Requests']['apikey']: string
+    :type params['Requests']['api_key']: string
     :return: `Brambl` object
     :rtype: instance of `Brambl`
     
     """
+
     def __init__(self, params):
         # default values for the constructor arguement
         try:
@@ -85,7 +75,7 @@ class Brambl:
             self.requests = self.requestsVar['instance']
         except:
             try:
-                self.requests = Requests.Requests(self.requestsVar['url'],self.requestsVar['apiKey'])
+                self.requests = Requests.Requests(self.requestsVar['url'], self.requestsVar['api_key'])
             except:
                 self.requests = Requests.Requests()
 
@@ -95,34 +85,32 @@ class Brambl:
         except:
             raise Exception('An encryption password is required to open a keyfile')
 
-
         try:
             self.keyManager = self.keyManagerVar['instance']
         except:
             try:
-                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'],{'keyPath': self.keyManagerVar['keyPath'], 'constants': self.keyManagerVar['constants']})
+                self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'],
+                                                        {'keyPath': self.keyManagerVar['keyPath'],
+                                                         'constants': self.keyManagerVar['constants']})
             except:
                 self.keyManager = KeyManager.KeyManager(self.keyManagerVar['password'])
         # Import utilities
         self.utils = Hash
-    
-    def Requests(testURL="http://localhost:9085/", apiKey="topl_the_world!"):
+
+    def Requests(test_url="http://localhost:9085/", api_key="topl_the_world!"):
         """
         Method for creating a separate Requests instance
 
-        :param testURL: Chain provider location, defaults to "http://localhost:9085/" 
-        :param apiKey: Access key for authorizing requests to the client API, defaults to "topl_the_world!"
-        :type testURL: string
-        :type apiKey: string
+        :param test_url: Chain provider location, defaults to "http://localhost:9085/" 
+        :param api_key: Access key for authorizing requests to the client API, defaults to "topl_the_world!"
+        :type test_url: string
+        :type api_key: string
         :return: `Requests` object
         :rtype: instance of `Requests`
         """
-        return Requests.Requests(testURL,apiKey)
-        
+        return Requests.Requests(test_url, api_key)
 
-
-    
-    def KeyManager(password,kwargs=''):
+    def KeyManager(password, kwargs=''):
         """ 
         Methods for creating a separate KeyManager instance
 
@@ -134,7 +122,7 @@ class Brambl:
         :rtype: instance of `KeyManager`
 
         """
-        return KeyManager.KeyManager(password,kwargs)
+        return KeyManager.KeyManager(password, kwargs)
 
     async def addSigToTx(self, prototypeTx, userKeys):
         """
@@ -150,32 +138,31 @@ class Brambl:
         """
 
         # function for generating a signature in the correct format
-        def getSig(keys, txBytes):
-            fromEntries = {}
-            for key in keys:
+        def getSig(ks, tx_bytes):
+            from_entries = {}
+            for k in ks:
                 prop_01 = bytes.fromhex("01")
-                prop = b''.join([prop_01, base58.b58decode(key.pk)])
-                sig = b''.join([prop_01, key.sign(txBytes)])
-                fromEntries[base58.b58encode(prop).decode('utf-8')] = base58.b58encode(sig).decode('utf-8')
-            return fromEntries
+                prop = b''.join([prop_01, base58.b58decode(k.pk)])
+                sig = b''.join([prop_01, k.sign(tx_bytes)])
+                from_entries[base58.b58encode(prop).decode('utf-8')] = base58.b58encode(sig).decode('utf-8')
+            return from_entries
 
         # incase a single given is given not as an array
         keys = []
-        if type(userKeys) != type(['list']):
+        if isinstance(userKeys, list):
             keys.append(userKeys)
         else:
             keys = userKeys
 
         # add signatures of all given key files to the formatted transaction
-        prototypeTxDic = json.loads(prototypeTx)
-        tempDic = {}
-        for key in prototypeTxDic['result']['rawTx']:
-            tempDic[key] = prototypeTxDic['result']['rawTx'][key]
+        prototype_tx_dic = json.loads(prototypeTx)
+        temp_dic = {}
+        for key in prototype_tx_dic['result']['rawTx']:
+            temp_dic[key] = prototype_tx_dic['result']['rawTx'][key]
 
-        tempDic['signatures'] = getSig(keys, base58.b58decode(prototypeTxDic['result']['messageToSign']))
-        return json.dumps(tempDic)
-    
-    
+        temp_dic['signatures'] = getSig(keys, base58.b58decode(prototype_tx_dic['result']['messageToSign']))
+        return json.dumps(temp_dic)
+
     async def signAndBroadcast(self, prototypeTx):
         """
         Used to sign a prototype transaction and broadcast to a chain provider
@@ -185,12 +172,11 @@ class Brambl:
         :rtype: JSON 
 
         """
-        #may return dictionary?
-        formattedTx = self.addSigToTx(prototypeTx,self.keyManager)
-        return self.requests.broadcastTx({'tx':formattedTx})
+        # may return dictionary?
+        formatted_tx = self.addSigToTx(prototypeTx, self.keyManager)
+        return self.requests.broadcastTx({'tx': formatted_tx})
 
-    
-    async def transaction(self,method,params):
+    async def transaction(self, method, params):
         """
         Create a new transaction, then sign and broadcast
 
@@ -212,32 +198,32 @@ class Brambl:
         elif method == 'transferTargetAssetsPrototype':
             return await self.signAndBroadcast(self.requests.transferTargetAssetsPrototype(params))
 
-     # Encoding and Decoding
+    # Encoding and Decoding
     @staticmethod
     @wraps(to_bytes)
     def toBytes(
-        primitive: Primitives = None, base58str: Base58Str = None, text: str = None
+            primitive: Primitives = None, base58str: Base58Str = None, text: str = None
     ) -> bytes:
         return to_bytes(primitive, base58str, text)
 
     @staticmethod
     @wraps(to_text)
     def toText(
-        primitive: Primitives = None, base58str: Base58Str = None, text: str = None
+            primitive: Primitives = None, base58str: Base58Str = None, text: str = None
     ) -> str:
         return to_text(primitive, base58str, text)
-    
+
     @staticmethod
     @wraps(to_hex)
     def toHex(
-        primitive: Primitives = None, hexstr: HexStr = None, text: str = None
+            primitive: Primitives = None, hexstr: HexStr = None, text: str = None
     ) -> HexStr:
         return to_hex(primitive, hexstr, text)
-    
+
     @staticmethod
     @wraps(to_base58)
     def toHex(
-        primitive: Primitives = None, base58str: HexStr = None, text: str = None, hexstr: HexStr = None
+            primitive: Primitives = None, base58str: HexStr = None, text: str = None, hexstr: HexStr = None
     ) -> Base58Str:
         return to_base58(primitive, base58str, text, hexstr)
 
@@ -245,5 +231,3 @@ class Brambl:
     @wraps(to_json)
     def toJSON(obj: Dict[Any, Any]) -> str:
         return to_json(obj)
-    
-
