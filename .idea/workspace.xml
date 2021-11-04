@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8faea198-b39d-4acb-8c17-6dd864ac57ce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/BramblPy.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/base58/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/base58/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/base58/encoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/base58/encoding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/client/rpc.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/client/rpc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/ed25519/datatypes.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/ed25519/datatypes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/ed25519/utils/address.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/ed25519/utils/address.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/middleware/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/middleware/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/modules/Requests.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/modules/Requests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/utils/conversions.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/utils/conversions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/utils/encoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/utils/encoding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brambl/utils/hex.py" beforeDir="false" afterPath="$PROJECT_DIR$/brambl/utils/hex.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/core/client/test_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/core/client/test_client.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1zVNyMAPWmB9ksfZ2NqEbL2uj9s" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/brambl/base58" />
+      <recent name="$PROJECT_DIR$/brambl" />
+      <recent name="$PROJECT_DIR$/brambl/credentials" />
+      <recent name="$PROJECT_DIR$/brambl/credentials/ecc/backends/native" />
+      <recent name="$PROJECT_DIR$/brambl/credentials/implementations" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python tests.pytest for test_client.test_isConnected_connected">
+    <configuration name="Run Test Backends" type="tests" factoryName="py.test">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/home_dev/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;-k&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/backends/test_backends.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test Address" type="tests" factoryName="Unittests">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/home_dev/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_pattern" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/testScripts/test_address.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test Credential Manager" type="tests" factoryName="py.test">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/home_dev/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;-k&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/core/test_ed25519_credential_manager.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test Factories" type="tests" factoryName="py.test">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/home_dev/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/core/test_factories.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test Keyfile Creation" type="tests" factoryName="py.test">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/home_dev/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;-k&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/keyfile/test_keyfile_creation.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test Keyfile Loading" type="tests" factoryName="py.test">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/home_dev/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;-k&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/keyfile/test_keyfile_loading.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test Loading From File" type="tests" factoryName="py.test">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/home_dev/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;-k&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/keyfile/test_loading_from_file.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_client.test_isConnected_connected" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/core/client" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_client.test_isConnected_connected&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_ed25519_credential_manager.test_brambl_key_manager_from_key_diverge" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/core" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_ed25519_credential_manager.test_brambl_key_manager_from_key_diverge&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_ed25519_credential_manager.test_sign_message" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/core" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_ed25519_credential_manager.test_sign_message&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_key_api_backend_formats.test_supported_backend_formats" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/core" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_key_api_backend_formats.test_supported_backend_formats&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_method_class.test_method_accepts_callable_for_selector" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="BramblPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/core" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_method_class.test_method_accepts_callable_for_selector&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python tests.Run Test Backends" />
+      <item itemvalue="Python tests.Test Factories" />
+      <item itemvalue="Python tests.Test Keyfile Creation" />
+      <item itemvalue="Python tests.Test Keyfile Loading" />
+      <item itemvalue="Python tests.Test Loading From File" />
+      <item itemvalue="Python tests.Test Address" />
+      <item itemvalue="Python tests.Test Credential Manager" />
+      <item itemvalue="Python tests.pytest for test_ed25519_credential_manager.test_brambl_key_manager_from_key_diverge" />
+      <item itemvalue="Python tests.pytest for test_ed25519_credential_manager.test_sign_message" />
+      <item itemvalue="Python tests.pytest for test_key_api_backend_formats.test_supported_backend_formats" />
+      <item itemvalue="Python tests.pytest for test_method_class.test_method_accepts_callable_for_selector" />
+      <item itemvalue="Python tests.pytest for test_client.test_isConnected_connected" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.pytest for test_client.test_isConnected_connected" />
+        <item itemvalue="Python tests.pytest for test_method_class.test_method_accepts_callable_for_selector" />
+        <item itemvalue="Python tests.pytest for test_key_api_backend_formats.test_supported_backend_formats" />
+        <item itemvalue="Python tests.pytest for test_ed25519_credential_manager.test_sign_message" />
+        <item itemvalue="Python tests.pytest for test_ed25519_credential_manager.test_brambl_key_manager_from_key_diverge" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8faea198-b39d-4acb-8c17-6dd864ac57ce" name="Changes" comment="" />
+      <created>1634229553669</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1634229553669</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tests/testScripts/test_simplemodels.py</url>
+          <line>52</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/brambl/datastructures.py</url>
+          <line>19</line>
+          <option name="timeStamp" value="243" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
