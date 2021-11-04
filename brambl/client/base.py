@@ -1,10 +1,14 @@
-from typing import Any, Callable, Sequence, Tuple, cast
+from typing import Any, Callable, Sequence, Tuple, cast, TYPE_CHECKING
 
 from importlib_metadata import itertools
 from brambl import Brambl
+from brambl.middleware import combine_middlewares
 from brambl.types import Middleware, MiddlewareOnion, RPCEndpoint, RPCResponse
 from brambl.utils.conversions import to_text
 from brambl.utils.encoding import FriendlyJsonSerde
+
+if TYPE_CHECKING:
+    from brambl import Brambl
 
 
 class BaseClient:
