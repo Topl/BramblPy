@@ -1,8 +1,11 @@
 import binascii
-from typing import AnyStr
+import re
+from typing import AnyStr, Any
 
 from brambl.typing.encoding import HexStr
 from brambl.utils.types import is_text, is_string
+
+_HEX_REGEXP = re.compile("(0x)?[0-9a-f]*", re.IGNORECASE | re.ASCII)
 
 
 def decode_hex(value: str) -> bytes:
@@ -12,12 +15,6 @@ def decode_hex(value: str) -> bytes:
     # unhexlify will only accept bytes type someday
     ascii_hex = non_prefixed.encode("ascii")
     return binascii.unhexlify(ascii_hex)
-
-
-def add_0x_prefix(value: HexStr) -> HexStr:
-    if is_0x_prefixed(value):
-        return value
-    return HexStr("0x" + value)
 
 
 def encode_hex(value: AnyStr) -> HexStr:
@@ -44,3 +41,25 @@ def remove_0x_prefix(value: HexStr) -> HexStr:
     if is_0x_prefixed(value):
         return HexStr(value[2:])
     return value
+
+
+def add_0x_prefix(value: HexStr) -> HexStr:
+    if is_0x_prefixed(value):
+        return value
+    return HexStr("0x" + value)
+
+
+def is_hexstr(value: Any) -> bool:
+    if not is_text(value) or not value:
+        return False
+    return _HEX_REGEXP.fullmatch(value) is not None
+
+
+def is_hex(value: Any) -> bool:
+    if not is_text(value):
+        raise TypeError(
+            "is_hex requires text typed arguments. Got: {0}".format(repr(value))
+        )
+    if not value:
+        return False
+    return _HEX_REGEXP.fullmatch(value) is not None

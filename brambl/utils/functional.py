@@ -1,5 +1,6 @@
 import functools
-from typing import Callable, TypeVar
+from collections import Iterable, Mapping
+from typing import Callable, TypeVar, Union, Tuple, Dict
 
 T = TypeVar("T")
 
@@ -19,6 +20,10 @@ def apply_to_return_value(
     return outer
 
 
+TVal = TypeVar("TVal")
+TKey = TypeVar("TKey")
+
 to_dict = apply_to_return_value(
     dict
-)  # type: Callable[[Callable[..., Iterable[Union[Mapping[TKey, TVal], Tuple[TKey, TVal]]]]], Callable[..., Dict[TKey, TVal]]]
+)
+# type: Callable[[Callable[..., Iterable[Union[Mapping[TKey, TVal], Tuple[TKey, TVal]]]]], Callable[..., Dict[TKey, TVal]]]

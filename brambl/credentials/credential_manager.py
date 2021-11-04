@@ -5,7 +5,6 @@ Create, import, and export Topl Bifrost keys.
 Also allows for signing of transactions
 
 """
-import binascii
 import json
 # Dependencies
 import os
@@ -13,6 +12,7 @@ import os
 from Crypto.Hash import BLAKE2b
 from hexbytes import HexBytes
 
+from brambl.base58.encoding import Base58Encoder
 from brambl.credentials.datastructures import Ed25519Proof
 from brambl.credentials.local import LocalCredential
 from brambl.ed25519 import keys, Ed25519API
@@ -24,7 +24,6 @@ from brambl.typing.encoding import Base58Str
 from brambl.utils.conversions import to_bytes
 from brambl.utils.curried import text_if_str
 from brambl.utils.decorators import combomethod
-from brambl.utils.encoding import Base58Encoder
 from brambl.utils.exceptions import ValidationError
 from brambl.utils.types import is_dict
 

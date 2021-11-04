@@ -3,12 +3,12 @@ from typing import NewType
 
 from base58 import b58decode
 
+from brambl.base58 import encode_base58
 from brambl.consts import ADDRESS_LENGTH, PropositionType
 from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
 from brambl.typing.encoding import HexStr
 from brambl.utils.Hash import hashFunc, digestAndEncode
-from brambl.utils.base58 import encode_base58
-from brambl.utils.hexadecimal import decode_hex
+from brambl.utils.hex import decode_hex
 
 NetworkId = NewType('NetworkId', int)
 

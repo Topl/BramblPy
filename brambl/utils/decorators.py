@@ -1,5 +1,6 @@
 import functools
 import itertools
+
 from typing import Callable, Any, Type, TypeVar
 
 from brambl.utils.types import is_text

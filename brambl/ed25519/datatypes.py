@@ -9,14 +9,15 @@ from abc import (
 from nacl.bindings import crypto_sign_SEEDBYTES, crypto_sign_seed_keypair, crypto_sign_PUBLICKEYBYTES
 from nacl.encoding import RawEncoder
 from nacl.utils import random
+
+from brambl.base58 import encode_base58
+from brambl.base58.encoding import Base58Encoder
 from brambl.ed25519.utils.address import public_key_bytes_to_address, Address, NetworkId
 
 # Must compare against version_info[0] and not version_info.major to please mypy.
+from brambl.encoding import big_endian_to_int
 from brambl.utils.Hash import digestAndEncode, hashFunc
-from brambl.utils.base58 import encode_base58
-from brambl.utils.encoding import big_endian_to_int, Base58Encoder
 from brambl.utils.types import is_bytes, is_string
-from brambl.utils.validation import validate_private_key_bytes
 
 if TYPE_CHECKING:
     from brambl.ed25519.backends.base import BaseEd25519Backend

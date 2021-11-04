@@ -16,4 +16,3 @@ def encode_base58(value: AnyStr) -> Base58Str:
 
     binary_base58 = b58encode(latin1_bytes)
     return Base58Str(binary_base58.decode("latin-1"))
-

@@ -1,6 +1,6 @@
+from brambl.base58.encoding import Base58Encoder
 from brambl.credentials.base import BaseCredential
 from brambl.ed25519.utils.address import NetworkId
-from brambl.utils.encoding import Base58Encoder
 
 
 class LocalCredential(BaseCredential):
@@ -31,7 +31,7 @@ class LocalCredential(BaseCredential):
         """
         self._public_api = credential_manager
 
-        self._address = credential_manager.keys.private_key_to_public_key(key).to_address(network_prefix,
+        self._address = credential_manager._keys.private_key_to_public_key(key).to_address(network_prefix,
                                                                                           proposition_type)
 
         self._private_key = key

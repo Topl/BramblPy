@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
+from brambl.base58.encoding import Base58Encoder
 from brambl.ed25519.datatypes import SigningKey, BaseSignature, PublicKey
-from brambl.utils.encoding import Base58Encoder
 
 
 class BaseEd25519Backend(object):

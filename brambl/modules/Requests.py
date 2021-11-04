@@ -7,16 +7,17 @@ Currently supports version 4.1 of Bifrost's Brambl-Layer API
 Documentation for Brambl-layer is available at https://Requests.docs.topl.co
 
 """
-# Dependencies
-import json
-from base58 import b58decode
-import requests
-import asyncio
 import os
-import sys
+# Dependencies
+from typing import Any
+
+import requests
+import requests_cache
+
+from brambl.types import URI
 
 
-def BramblRequest(self,routeInfo, params): #obj is meant for the self of request,rename method
+def BramblRequest(self, routeInfo, params):  # obj is meant for the self of request,rename method
     """
     General builder function for formatting API request
 
@@ -40,17 +41,19 @@ def BramblRequest(self,routeInfo, params): #obj is meant for the self of request
         "method": routeInfo['method'],
         "params": params
     }
-    response = requests.request('POST',self.url+routeInfo['route'], json= body, allow_redirects = True ,headers = self.headers)
+    response = requests.request('POST', self.url + routeInfo['route'], json=body, allow_redirects=True,
+                                headers=self.headers)
     if response.status_code != 200:
         raise Exception('A connection could not be established')
         print(response.status_code())
     return response
 
+
 class Requests():
     """
-    A class for sending requests to the Brambl layer interface of the given chain provider
+    A class for sending requests to the Brambl layer interface of the given chain client
 
-    :param url: Chain provider location, defaults to "http://localhost:9085/"
+    :param url: Chain client location, defaults to "http://localhost:9085/"
     :param apiKey: Access key for authorizing requests to the client API, defaults to "topl_the_world!"
     :type url: string
     :type apiKey: string
@@ -58,25 +61,28 @@ class Requests():
     :rtype: instance of `Requests`
 
     """
-    #constructor function
-    def __init__(self,url = 'http://localhost:9085/', apiKey = 'topl_the_world!'):
+
+    # constructor function
+    def __init__(self, url='http://localhost:9085/', apiKey='topl_the_world!'):
         self.url = url
         self.apiKey = apiKey
         self.headers = {
             "Content-Type": "application/json",
-             'x-api-key': self.apiKey
+            'x-api-key': self.apiKey
         }
-    #Allow setting a different url than the default from which to create and accet RPC connections
-    def setUrl(self,url):
+
+    # Allow setting a different url than the default from which to create and accet RPC connections
+    def setUrl(self, url):
         self.url = url
 
-    def setApiKey(self,apiKey):
-        self.headers['x-api-key'] = apiKey    
+    def setApiKey(self, apiKey):
+        self.headers['x-api-key'] = apiKey
+
     #
     # Wallet Api Routes
     #
 
-    def getBalancesByKey(self,params, ID = '1'):
+    def getBalancesByKey(self, params, ID='1'):
         """
         Get the balances of a specified public key in the keyfiles directory of the node
 
@@ -92,12 +98,12 @@ class Requests():
             params['publicKeys']
         except:
             raise Exception("A list of publicKeys must be specified")
-        
+
         route = 'wallet/'
         method = 'balances'
-        return BramblRequest(self, {'route':route,'method': method,'id':ID},params).text
-  
-    def listOpenKeyfiles(self, ID = '1'):
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
+
+    def listOpenKeyfiles(self, ID='1'):
         """
         Get a list of all open keyfiles
 
@@ -110,10 +116,9 @@ class Requests():
         params = {}
         route = 'wallet/'
         method = 'listOpenKeyfiles'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-
-    def generateKeyfile(self,params, ID = '1'):
+    def generateKeyfile(self, params, ID='1'):
         """
         Generate a new keyfile in the node keyfile directory
 
@@ -133,9 +138,9 @@ class Requests():
             raise Exception('A password must be provided to encrypt the keyfile')
         route = 'wallet/'
         method = 'generateKeyfile'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def lockKeyfile(self,params, ID = '1'):
+    def lockKeyfile(self, params, ID='1'):
         """
         Lock an open keyfile
 
@@ -163,9 +168,9 @@ class Requests():
 
         route = 'wallet/'
         method = 'lockKeyfile'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def unlockKeyfile(self,params, ID = '1'):
+    def unlockKeyfile(self, params, ID='1'):
         """
         Unlock a keyfile in the node's keyfile directory
 
@@ -193,9 +198,9 @@ class Requests():
 
         route = 'wallet/'
         method = 'unlockKeyfile'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def signTransaction(self,params, ID = '1'):
+    def signTransaction(self, params, ID='1'):
         """
         Have the node sign a JSON formatted prototype transaction
 
@@ -223,9 +228,9 @@ class Requests():
 
         route = 'wallet/'
         method = 'signTx'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def broadcastTx(self,params, ID = '1'):
+    def broadcastTx(self, params, ID='1'):
         """
         Have the node sign a `messageToSign` raw transaction
 
@@ -246,9 +251,9 @@ class Requests():
 
         route = 'wallet/'
         method = 'broadcastTx'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def transferPolys(self,params, ID = '1'):
+    def transferPolys(self, params, ID='1'):
         """
         Transfer Polys to a specified public key.
 
@@ -292,9 +297,9 @@ class Requests():
 
         route = 'wallet/'
         method = 'transferPolys'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def transferArbits(self,params, ID = '1'):
+    def transferArbits(self, params, ID='1'):
         """
         Transfer Arbits to a specified public key.
 
@@ -337,10 +342,11 @@ class Requests():
 
         route = 'wallet/'
         method = 'transferArbits'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
-    #Asset Api Routes
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def createAssets(self,params, ID = '1'):
+    # Asset Api Routes
+
+    def createAssets(self, params, ID='1'):
         """
         Create a new asset on chain
 
@@ -373,7 +379,7 @@ class Requests():
             params['assetCode']
         except:
             raise Exception("An assetCode must be specified")
-        
+
         try:
             params['recipient']
         except:
@@ -395,9 +401,9 @@ class Requests():
         route = 'asset/'
         method = 'createAssets'
 
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def createAssetsPrototype(self,params, ID = '1'):
+    def createAssetsPrototype(self, params, ID='1'):
         """
         Create a new asset on chain
 
@@ -430,7 +436,7 @@ class Requests():
             params['assetCode']
         except:
             raise Exception("An assetCode must be specified")
-        
+
         try:
             params['recipient']
         except:
@@ -452,9 +458,9 @@ class Requests():
         route = 'asset/'
         method = 'createAssetsPrototype'
 
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def transferAssets(self,params, ID = '1'):
+    def transferAssets(self, params, ID='1'):
         """
         Transfer an asset to a recipient
 
@@ -491,7 +497,7 @@ class Requests():
             params['assetCode']
         except:
             raise Exception("An assetCode must be specified")
-        
+
         try:
             params['recipient']
         except:
@@ -513,9 +519,9 @@ class Requests():
         route = 'asset/'
         method = 'transferAssets'
 
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def transferAssetsPrototype(self,params, ID = '1'):
+    def transferAssetsPrototype(self, params, ID='1'):
         """
         Transfer an asset to a recipient
 
@@ -552,7 +558,7 @@ class Requests():
             params['assetCode']
         except:
             raise Exception("An assetCode must be specified")
-        
+
         try:
             params['recipient']
         except:
@@ -579,9 +585,9 @@ class Requests():
         route = 'asset/'
         method = 'transferAssetsPrototype'
 
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def transferTargetAssets(self,params, ID = '1'):
+    def transferTargetAssets(self, params, ID='1'):
         """
         Transfer a specific asset box to a recipient
 
@@ -629,9 +635,9 @@ class Requests():
         route = 'asset/'
         method = 'transferTargetAssets'
 
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def transferTargetAssetsPrototype(self,params, ID = '1'):
+    def transferTargetAssetsPrototype(self, params, ID='1'):
         """
         Get an unsigned targeted transfer transaction
 
@@ -681,16 +687,16 @@ class Requests():
             raise Exception("A fee must be specified")
 
         if params['fee'] != 0:
-            raise Exception("A fee must be specified")   
+            raise Exception("A fee must be specified")
 
         route = 'asset/'
-        method = 'transferTargetAssetsPrototype'     
+        method = 'transferTargetAssetsPrototype'
 
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    #NodeView Api Routes
- 
-    def getTransactionById(self,params, ID = '1'):
+    # NodeView Api Routes
+
+    def getTransactionById(self, params, ID='1'):
         """
         Lookup a transaction from history by the provided id
 
@@ -711,9 +717,9 @@ class Requests():
 
         route = 'nodeView/'
         method = 'transactionById'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
-        
-    def getTransactionFromMempool(self,params, ID = '1'):
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
+
+    def getTransactionFromMempool(self, params, ID='1'):
         """
         Lookup a transaction from the mempool by the provided id
 
@@ -735,9 +741,9 @@ class Requests():
 
         route = 'nodeView/'
         method = 'transactionFromMempool'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def getMempool(self, ID = '1'):
+    def getMempool(self, ID='1'):
         """
         Get the balances of a specified public key in the keyfiles directory of the node
 
@@ -750,9 +756,9 @@ class Requests():
         params = {}
         route = 'nodeView/'
         method = 'mempool'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def getBlockById(self, params, ID = '1'):
+    def getBlockById(self, params, ID='1'):
         """
         Lookup a block from history by the provided id
 
@@ -773,11 +779,11 @@ class Requests():
         route = 'nodeView/'
         method = 'blockById'
         Id = '1'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    #Debug Api Routes
+    # Debug Api Routes
 
-    def chainInfo(self, ID = '1'):
+    def chainInfo(self, ID='1'):
         """
         Return the chain information
 
@@ -790,9 +796,9 @@ class Requests():
         params = {}
         route = 'debug/'
         method = 'info'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def calcDelay(self,params, ID = '1'):
+    def calcDelay(self, params, ID='1'):
         """
         Get the average delay between blocks
         :param params: body parameters passed to the specified json-rpc method
@@ -815,9 +821,9 @@ class Requests():
             raise Exception('A number of blocks must be specified')
         route = 'debug/'
         method = 'delay'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def myBlocks(self, ID = '1'):
+    def myBlocks(self, ID='1'):
         """
         Return the number of blocks forged by keys held by this node
 
@@ -830,9 +836,9 @@ class Requests():
         params = {}
         route = 'debug/'
         method = 'myBlocks'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
 
-    def blockGenerators(self, ID = '1'):
+    def blockGenerators(self, ID='1'):
         """
         Return the blockIds that each accessible key has forged
 
@@ -845,4 +851,22 @@ class Requests():
         params = {}
         route = 'debug/'
         method = 'generators'
-        return BramblRequest(self,{'route':route,'method': method,'id':ID},params).text
+        return BramblRequest(self, {'route': route, 'method': method, 'id': ID}, params).text
+
+
+def get_default_http_endpoint() -> URI:
+    return URI(os.environ.get('BRAMBL_HTTP_CLIENT_URI', 'http://localhost:9085'))
+
+
+def _get_session() -> requests_cache.CachedSession:
+    return requests_cache.CachedSession('request_cache')
+
+
+def make_post_request(endpoint_uri: URI, data: str, *args: Any, **kwargs: Any) -> bytes:
+    kwargs.setdefault('timeout', 10)
+    session = _get_session()
+    # https://github.com/python/mypy/issues/2582
+    response = session.post(endpoint_uri, data=data, *args, **kwargs)  # type: ignore
+    response.raise_for_status()
+
+    return response.content

@@ -1,12 +1,12 @@
 from typing import Type
 
+from brambl.base58.encoding import Base58Encoder
 from brambl.ed25519.datatypes import LazyBackend, PublicKey, SigningKey, BaseSignature, SignedMessage
+from brambl.utils.exceptions import ValidationError
+from brambl.utils.validation import validate_message
 
 # These must be aliased due to a scoping issue in mypy
 # https://github.com/python/mypy/issues/1775
-from brambl.utils.encoding import Base58Encoder
-from brambl.utils.exceptions import ValidationError
-from brambl.utils.validation import validate_message
 
 _PublicKey = PublicKey
 _SigningKey = SigningKey
