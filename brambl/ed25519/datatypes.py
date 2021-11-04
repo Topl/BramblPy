@@ -11,13 +11,13 @@ from nacl.encoding import RawEncoder
 from nacl.utils import random
 
 from brambl.base58 import encode_base58
+from brambl.base58.encoding import Base58Encoder
 from brambl.ed25519.utils.address import public_key_bytes_to_address, Address, NetworkId
 
 # Must compare against version_info[0] and not version_info.major to please mypy.
 from brambl.encoding import big_endian_to_int
 from brambl.utils.Hash import digestAndEncode, hashFunc
 from brambl.utils.types import is_bytes, is_string
-from build.lib.brambl.utils.encoding import Base58Encoder
 
 if TYPE_CHECKING:
     from brambl.ed25519.backends.base import BaseEd25519Backend
