@@ -1,9 +1,10 @@
 from typing import Callable, Any, TYPE_CHECKING
 
+from brambl.utils.types import is_dict
 from toolz import assoc
 
 from brambl.datastructures import AttributeDict
-from brambl.types import RPCEndpoint, RPCResponse, is_dict
+from brambl.types import RPCEndpoint, RPCResponse
 
 if TYPE_CHECKING:
     from brambl import Brambl

@@ -1,7 +1,8 @@
 from typing import Union, Callable
 
 from brambl.base58 import encode_base58
-from brambl.encoding import int_to_big_endian
+from brambl.base58.encoding import Base58Encoder
+from brambl.encoding import int_to_big_endian, big_endian_to_int
 from brambl.typing.encoding import HexStr, Base58Str
 from brambl.utils.decorators import validate_conversion_arguments, T
 from brambl.utils.hex import add_0x_prefix, encode_hex, decode_hex, remove_0x_prefix
@@ -12,13 +13,16 @@ Primitives = Union[bytes, int, bool]
 
 @validate_conversion_arguments
 def to_hex(
-        primitive: Primitives = None, hexstr: HexStr = None, text: str = None
+        primitive: Primitives = None, hexstr: HexStr = None, text: str = None, base58str: Base58Str = None
 ) -> HexStr:
     """
     Auto converts any supported value into its hex representation.
     """
     if hexstr is not None:
         return add_0x_prefix(HexStr(hexstr.lower()))
+
+    if base58str is not None:
+        return encode_hex(Base58Encoder.decode(base58str))
 
     if text is not None:
         return encode_hex(text.encode("utf-8"))
@@ -42,6 +46,36 @@ def to_hex(
         "or int.".format(repr(type(primitive)))
     )
 
+@validate_conversion_arguments
+def to_int(
+    primitive: Primitives = None, hexstr: HexStr = None, text: str = None
+) -> int:
+    """
+    Converts value to its integer representation.
+    Values are converted this way:
+
+     * primitive:
+
+       * bytes, bytearrays: big-endian integer
+       * bool: True => 1, False => 0
+     * hexstr: interpret hex as integer
+     * text: interpret as string of digits, like '12' => 12
+    """
+    if hexstr is not None:
+        return int(hexstr, 16)
+    elif text is not None:
+        return int(text)
+    elif isinstance(primitive, (bytes, bytearray)):
+        return big_endian_to_int(primitive)
+    elif isinstance(primitive, str):
+        raise TypeError("Pass in strings with keyword hexstr or text")
+    elif isinstance(primitive, (int, bool)):
+        return int(primitive)
+    else:
+        raise TypeError(
+            "Invalid type.  Expected one of int/bool/str/bytes/bytearray.  Got "
+            "{0}".format(type(primitive))
+        )
 
 @validate_conversion_arguments
 def to_base58(
