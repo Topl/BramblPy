@@ -2,6 +2,8 @@ from functools import wraps
 from typing import Dict, Any
 
 from brambl.client.rpc import HTTPClient
+from brambl.ed25519.utils.address import validateAddressByNetwork
+from brambl.requests import BifrostRequest
 from brambl.typing.encoding import HexStr, Base58Str
 from brambl.utils.conversions import to_bytes, Primitives, to_text, to_hex, to_int, to_base58
 from brambl.utils.encoding import to_json
@@ -16,7 +18,10 @@ class Brambl:
     HttpClient = HTTPClient
 
     # Request Manager
-    RequestManager = DefaultRequestManager
+    manager = DefaultRequestManager
+
+    #requests
+    requests = BifrostRequest
 
     # Encoding and Decoding
     @staticmethod
@@ -58,3 +63,9 @@ class Brambl:
     @wraps(to_json)
     def toJSON(obj: Dict[Any, Any]) -> str:
         return to_json(obj)
+
+    # Address Utility
+    @staticmethod
+    @wraps(validateAddressByNetwork)
+    def isAddress(value: str, network_prefix: str) -> bool:
+        return validateAddressByNetwork(network_prefix, address_to_validate=value)

@@ -148,7 +148,7 @@ class Ed25519CredentialManager(object):
 
                 :param private_key: The raw private key
                 :type private_key: hex str, bytes, int or :class:`brambl.ed25519.datatypes.SigningKey`
-                :param str password: The password which you will need to unlock the account in your client
+                :param str password: The password which you will need to unlock the address in your client
                 :param network_prefix: The network on which your credential will be used
                 :param str kdf: The key derivation function to use when encrypting your private key
                 :param int iterations: The work factor for the key derivation function

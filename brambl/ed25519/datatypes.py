@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 if sys.version_info[0] == 2:
     ByteString = type(
         'BaseString',
-        (collections.abc.Sequence, basestring),  # noqa: F821
+        (Sequence, basestring),  # noqa: F821
         {},
     )  # type: Any
 else:
