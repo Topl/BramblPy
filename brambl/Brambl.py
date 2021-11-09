@@ -1,16 +1,26 @@
 from functools import wraps
-from typing import Dict, Any
+from typing import Dict, Any, Optional, Sequence
 
+from brambl.client.base import BaseClient
 from brambl.client.rpc import HTTPClient
 from brambl.ed25519.utils.address import validateAddressByNetwork
 from brambl.requests import BifrostRequest
+from brambl.types import MiddlewareOnion
 from brambl.typing.encoding import HexStr, Base58Str
 from brambl.utils.conversions import to_bytes, Primitives, to_text, to_hex, to_int, to_base58
 from brambl.utils.encoding import to_json
 from brambl.manager import RequestManager as DefaultRequestManager
 
 # Constants definitions
+from brambl.utils.module import attach_modules
+
 validTxMethods = ['createAssetsPrototype', 'transferAssetsPrototype', 'transferTargetAssetsPrototype']
+
+
+def get_default_modules() -> Dict[str, Sequence[Any]]:
+    return {
+        "requests": (BifrostRequest,)
+    }
 
 
 class Brambl:
@@ -18,10 +28,7 @@ class Brambl:
     HttpClient = HTTPClient
 
     # Request Manager
-    manager = DefaultRequestManager
-
-    #requests
-    requests = BifrostRequest
+    RequestManager = DefaultRequestManager
 
     # Encoding and Decoding
     @staticmethod
@@ -69,3 +76,19 @@ class Brambl:
     @wraps(validateAddressByNetwork)
     def isAddress(value: str, network_prefix: str) -> bool:
         return validateAddressByNetwork(network_prefix, address_to_validate=value)
+
+    def __init__(self,
+                 client: Optional[BaseClient] = None,
+                 middlewares: Optional[Sequence[Any]] = None,
+                 modules: Optional[Dict[str, Sequence[Any]]] = None
+                 ) -> None:
+        self.manager = self.RequestManager(self, client, middlewares)
+
+        if modules is None:
+            modules = get_default_modules()
+
+        attach_modules(self, modules)
+
+    @property
+    def middleware_onion(self) -> MiddlewareOnion:
+        return self.manager.middleware_onion

@@ -26,3 +26,9 @@ class TimeExhausted(Exception):
     Raised when a method has not retrieved the desired result within a specified timeout.
     """
     pass
+
+class BlockNotFound(Exception):
+    """
+    Raised when the block id used to lookup a block in a jsonrpc call cannot be found.
+    """
+    pass

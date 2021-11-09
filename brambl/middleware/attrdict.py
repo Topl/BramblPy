@@ -23,7 +23,16 @@ def attrdict_middleware(
         if 'result' in response:
             result = response['result']
             if is_dict(result) and not isinstance(result, AttributeDict):
-                return assoc(response, 'result', AttributeDict.recursive(result))
+                if 'rawTx' in result:
+                    rawTx = result['rawTx']
+                    result = assoc(
+                        result, 'rawTx', AttributeDict.recursive(rawTx))
+                if 'messageToSign' in result:
+                    messageToSign = result['messageToSign']
+                    result = assoc(
+                        result, 'messageToSign', str(messageToSign)
+                    )
+                return result
             else:
                 return response
         else:

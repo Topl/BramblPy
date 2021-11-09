@@ -42,9 +42,9 @@ def retrieve_async_method_call_fn(
 class Module:
     is_async = False
 
-    def __init__(self, web3: "Brambl") -> None:
+    def __init__(self, brambl: "Brambl") -> None:
         if self.is_async:
-            self.retrieve_caller_fn = retrieve_async_method_call_fn(web3, self)
+            self.retrieve_caller_fn = retrieve_async_method_call_fn(brambl, self)
         else:
-            self.retrieve_caller_fn = retrieve_blocking_method_call_fn(web3, self)
-        self.web3 = web3
+            self.retrieve_caller_fn = retrieve_blocking_method_call_fn(brambl, self)
+        self.brambl = brambl

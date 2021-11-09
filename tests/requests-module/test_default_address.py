@@ -1,61 +1,38 @@
-import pytest
+from brambl.types import PolyRawTxParams
 
 
-def test_uses_default_address_when_set(brambl, extra_addresses,
-                                       wait_for_transaction):
-    brambl.requests.default_address = extra_addresses[2]
-    assert brambl.requests.default_address == extra_addresses[2]
+def test_uses_default_address_when_set(brambl, default_address,
+                                       extra_addresses):
+    brambl.requests.default_address = default_address.address
+    assert brambl.requests.default_address == default_address.address
+
+    transaction: PolyRawTxParams = {
+        "propositionType": "PublicKeyEd25519",
+        "data": "Unit Test 1",
+        "recipients": [[str(extra_addresses[1].address), "0"]],
+        "fee": "100",
+        "boxSelectionAlgorithm": "All"
+    }
+
+    txn = brambl.requests.send_raw_poly_transaction(transaction)
+    assert txn['rawTx']['from'][0][0] == default_address.address
 
 
-def test_uses_defaultAccount_when_set_with_warning(web3, extra_addresses,
-                                                   wait_for_transaction):
-    with pytest.warns(DeprecationWarning):
-        web3.eth.defaultAccount = extra_addresses[2]
+def test_uses_given_from_address_when_provided(brambl, default_address,
+                                               extra_addresses):
+    brambl.requests.default_address = extra_addresses[2].address
+    assert brambl.requests.default_address == extra_addresses[2].address
 
-    with pytest.warns(DeprecationWarning):
-        assert web3.eth.defaultAccount == extra_addresses[2]
+    transaction: PolyRawTxParams = {
+        "propositionType": "PublicKeyEd25519",
+        "data": "Unit Test 1",
+        "recipients": [[str(extra_addresses[1].address), "0"]],
+        "fee": "100",
+        "boxSelectionAlgorithm": "All",
+        "sender": [str(default_address.address)]
+    }
 
-    txn_hash = web3.eth.send_transaction({
-        "to": extra_addresses[1],
-        "value": 1234,
-    })
-
-    wait_for_transaction(web3, txn_hash)
-
-    txn = web3.eth.get_transaction(txn_hash)
-    assert txn['from'] == extra_addresses[2]
-
-
-def test_uses_given_from_address_when_provided(web3, extra_addresses,
-                                               wait_for_transaction):
-    web3.eth.default_address = extra_addresses[2]
-    txn_hash = web3.eth.send_transaction({
-        "from": extra_addresses[5],
-        "to": extra_addresses[1],
-        "value": 1234,
-    })
-
-    wait_for_transaction(web3, txn_hash)
-
-    txn = web3.eth.get_transaction(txn_hash)
-    assert txn['from'] == extra_addresses[5]
+    txn = brambl.requests.send_raw_poly_transaction(transaction)
+    assert txn['rawTx']['from'][0][0] == str(default_address.address)
 
 
-def test_uses_given_from_address_when_provided_with_warning(web3, extra_addresses,
-                                                            wait_for_transaction):
-    with pytest.warns(DeprecationWarning):
-        web3.eth.defaultAccount = extra_addresses[2]
-
-    with pytest.warns(DeprecationWarning):
-        assert web3.eth.defaultAccount == extra_addresses[2]
-
-    txn_hash = web3.eth.send_transaction({
-        "from": extra_addresses[5],
-        "to": extra_addresses[1],
-        "value": 1234,
-    })
-
-    wait_for_transaction(web3, txn_hash)
-
-    txn = web3.eth.get_transaction(txn_hash)
-    assert txn['from'] == extra_addresses[5]

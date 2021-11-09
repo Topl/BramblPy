@@ -203,8 +203,10 @@ class PublicKey(BaseEd25519Key):
         self._raw_key = key
         super().__init__()
 
-    def to_address(self, network_prefix: NetworkId, proposition_type: str) -> Address:
-        return public_key_bytes_to_address(self.to_bytes(), network_prefix, proposition_type)
+    def to_address(self, network_prefix: NetworkId, proposition_type: str) -> \
+            Address:
+        return public_key_bytes_to_address(self.to_bytes(), network_prefix,
+                                           proposition_type)
 
 
 class BaseSignature(ByteString, ABC):

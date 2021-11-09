@@ -12,8 +12,10 @@ from brambl.ed25519.utils.address import Address, validateAddressByNetwork
 from brambl.exceptions import TimeExhausted
 from brambl.method import Method, default_root_munger
 from brambl.module import Module
-from brambl.types import URI, BlockIdentifier, AssetTxParams, ArbitTxParams, PolyTxParams, AssetRawTxParams, \
-    ArbitRawTxParams, PolyRawTxParams, RPCResponse, ModifierId, BlockData, BlockNumber, Transaction
+from brambl.types import URI, BlockIdentifier, AssetTxParams, ArbitTxParams, \
+    PolyTxParams, AssetRawTxParams, \
+    ArbitRawTxParams, PolyRawTxParams, RPCResponse, ModifierId, BlockData, \
+    BlockNumber, Transaction
 from brambl.utils.blocks import select_method_for_block_identifier
 from brambl.utils.empty import Empty, empty
 from brambl.utils.rpc_api import RPC
@@ -39,31 +41,43 @@ class BaseBifrostRequest(Module):
     def default_address(self) -> Union[Address, Empty]:
         return self._default_address
 
-    def send_raw_transaction_munger(self, transaction: Union[AssetTxParams, ArbitTxParams, PolyTxParams]) \
+    def send_raw_transaction_munger(self, transaction: Union[
+        AssetTxParams, ArbitTxParams, PolyTxParams]) \
             -> Union[AssetTxParams, ArbitTxParams, PolyTxParams]:
-        if 'sender' not in transaction and validateAddressByNetwork(self._default_network, str(self.default_address)):
-            transaction = assoc(transaction, 'sender', self.default_address)
+        if validateAddressByNetwork(
+                self._default_network, str(self.default_address)):
+            if 'sender' not in transaction:
+                transaction = assoc(transaction, 'sender',
+                                    [str(self.default_address)])
+            if 'changeAddress' not in transaction:
+                transaction = assoc(transaction, 'changeAddress',
+                                    str(self.default_address))
 
         return transaction
 
-    _send_transaction: Method[Callable[[Union[PolyTxParams, ArbitTxParams, AssetTxParams]], RPCResponse]] = Method(
+    _send_transaction: \
+        Method[Callable[[Union[PolyTxParams, ArbitTxParams, AssetTxParams]],
+                        RPCResponse]] = Method(
         RPC.topl_broadcastTx,
-        mungers=[send_raw_transaction_munger]
+        mungers=[default_root_munger]
     )
 
-    _send_raw_poly_transaction: Method[Callable[[PolyRawTxParams], RPCResponse]] = Method(
+    _send_raw_poly_transaction: \
+        Method[Callable[[PolyRawTxParams], RPCResponse]] = Method(
         RPC.topl_rawPolyTransfer,
-        mungers=[default_root_munger],
+        mungers=[send_raw_transaction_munger],
     )
 
-    _send_raw_arbit_transaction: Method[Callable[[ArbitRawTxParams], RPCResponse]] = Method(
+    _send_raw_arbit_transaction: Method[Callable[[ArbitRawTxParams],
+                                                 RPCResponse]] = Method(
         RPC.topl_rawArbitTransfer,
-        mungers=[default_root_munger],
+        mungers=[send_raw_transaction_munger],
     )
 
-    _send_raw_asset_transaction: Method[Callable[[AssetRawTxParams], RPCResponse]] = Method(
+    _send_raw_asset_transaction: Method[Callable[[AssetRawTxParams],
+                                                 RPCResponse]] = Method(
         RPC.topl_rawAssetTransfer,
-        mungers=[default_root_munger],
+        mungers=[send_raw_transaction_munger],
     )
 
     _get_transaction: Method[Callable[[ModifierId], Transaction]] = Method(
@@ -71,7 +85,8 @@ class BaseBifrostRequest(Module):
         mungers=[default_root_munger]
     )
 
-    _get_pending_transaction: Method[Callable[[ModifierId], RPCResponse]] = Method(
+    _get_pending_transaction: Method[
+        Callable[[ModifierId], RPCResponse]] = Method(
         RPC.topl_transactionFromMempool,
         mungers=[default_root_munger]
     )
@@ -93,7 +108,7 @@ class BaseBifrostRequest(Module):
 
     get_block_number: Method[Callable[[], BlockNumber]] = Method(
         RPC.topl_head,
-        mungers=None,
+        mungers=[default_root_munger],
     )
 
 
@@ -102,12 +117,12 @@ class BifrostRequest(BaseBifrostRequest, Module):
 
     _node_info: Method[Callable[[], str]] = Method(
         RPC.topl_info,
-        mungers=None,
+        mungers=[default_root_munger],
     )
 
     @property
     def node_info(self) -> str:
-        return self._node_info
+        return self._node_info({})
 
     get_delay: Method[Callable[[], int]] = Method(
         RPC.debug_delay,
@@ -120,7 +135,7 @@ class BifrostRequest(BaseBifrostRequest, Module):
 
     @property
     def block_number(self) -> BlockNumber:
-        return self.get_block_number()
+        return self.get_block_number({})
 
     """ property default_address """
 
@@ -140,14 +155,17 @@ class BifrostRequest(BaseBifrostRequest, Module):
     def get_transaction(self, transaction_id: ModifierId) -> Transaction:
         return self._get_transaction(transaction_id)
 
-    def get_pending_transaction(self, transaction_id: ModifierId) -> RPCResponse:
+    def get_pending_transaction(self,
+                                transaction_id: ModifierId) -> RPCResponse:
         return self._get_pending_transaction(transaction_id)
 
     def wait_for_transaction_receipt(
-            self, transaction_hash: ModifierId, timeout: int = 120, poll_latency: float = 0.1
+            self, transaction_hash: ModifierId, timeout: int = 120,
+            poll_latency: float = 0.1
     ) -> Transaction:
         try:
-            return wait_for_transaction_receipt(self.web3, transaction_hash, timeout, poll_latency)
+            return wait_for_transaction_receipt(self.brambl, transaction_hash,
+                                                timeout, poll_latency)
         except Timeout:
             raise TimeExhausted(
                 "Transaction {!r} is not in the chain, after {} seconds".format(
@@ -156,32 +174,39 @@ class BifrostRequest(BaseBifrostRequest, Module):
                 )
             )
 
-    def send_transaction(self, transaction: Union[PolyTxParams, ArbitTxParams, AssetTxParams]) -> HexBytes:
+    def send_transaction(self, transaction: Union[
+        PolyTxParams, ArbitTxParams, AssetTxParams]) -> HexBytes:
         return self._send_transaction(transaction)
 
-    def send_raw_poly_transaction(self, transaction: PolyRawTxParams) -> RPCResponse:
+    def send_raw_poly_transaction(self,
+                                  transaction: PolyRawTxParams) -> RPCResponse:
         return self._send_raw_poly_transaction(transaction)
 
-    def send_raw_asset_transaction(self, transaction: AssetRawTxParams) -> RPCResponse:
+    def send_raw_asset_transaction(self,
+                                   transaction: AssetRawTxParams) -> RPCResponse:
         return self._send_raw_asset_transaction(transaction)
 
-    def send_raw_arbit_transaction(self, transaction: ArbitRawTxParams) -> RPCResponse:
+    def send_raw_arbit_transaction(self,
+                                   transaction: ArbitRawTxParams) -> RPCResponse:
         return self._send_raw_arbit_transaction(transaction)
 
 
 def get_default_http_endpoint() -> URI:
-    return URI(os.environ.get('BRAMBL_HTTP_CLIENT_URI', 'http://localhost:9085'))
+    return URI(
+        os.environ.get('BRAMBL_HTTP_CLIENT_URI', 'http://localhost:9085'))
 
 
 def _get_session() -> requests_cache.CachedSession:
     return requests_cache.CachedSession('request_cache')
 
 
-def make_post_request(endpoint_uri: URI, data: str, *args: Any, **kwargs: Any) -> bytes:
+def make_post_request(endpoint_uri: URI, data: str, *args: Any,
+                      **kwargs: Any) -> bytes:
     kwargs.setdefault('timeout', 10)
     session = _get_session()
     # https://github.com/python/mypy/issues/2582
-    response = session.post(endpoint_uri, data=data, *args, **kwargs)  # type: ignore
+    response = session.post(endpoint_uri, data=data, *args,
+                            **kwargs)  # type: ignore
     response.raise_for_status()
 
     return response.content

@@ -23,14 +23,15 @@ def _munger_star_apply(fn: Callable[..., TReturn]) -> Callable[..., TReturn]:
     return inner
 
 
-def default_munger(*args: Any, **kwargs: Any) -> Tuple[()]:
-    if not args and not kwargs:
+def default_munger(module: "Module", *args: Any, **kwargs: Any) -> Tuple[()]:
+    if args is not None and kwargs is not None:
         return ()
     else:
-        raise TypeError("Parameters passed to method without parameter mungers defined.")
+        raise TypeError("Parameters passed to method without parameter "
+                        "mungers defined.")
 
 
-def default_root_munger(*args: Any) -> List[Any]:
+def default_root_munger(module: "Module", *args: Any) -> List[Any]:
     return [*args]
 
 
@@ -70,7 +71,8 @@ class Method(Generic[TFunc]):
     def __init__(self,
                  json_rpc_method: Optional[RPCEndpoint] = None,
                  mungers: Optional[Sequence[Munger]] = None,
-                 method_choice_depends_on_args: Optional[Callable[..., RPCEndpoint]] = None,
+                 method_choice_depends_on_args:
+                 Optional[Callable[..., RPCEndpoint]] = None,
                  ):
         self.json_rpc_method = json_rpc_method
         self.mungers = mungers or [default_munger]

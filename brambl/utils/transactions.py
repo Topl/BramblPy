@@ -5,12 +5,12 @@ from brambl.types import ModifierId, Transaction
 
 
 def wait_for_transaction_receipt(
-        web3: "Brambl", txn_id: ModifierId, timeout: float, poll_latency: float
+        brambl: "Brambl", txn_id: ModifierId, timeout: float, poll_latency: float
 ) -> Transaction:
     with Timeout(timeout) as _timeout:
         while True:
             try:
-                txn_receipt = web3.eth.get_transaction_receipt(txn_id)
+                txn_receipt = brambl.eth.get_transaction_receipt(txn_id)
             except TransactionNotFound:
                 txn_receipt = None
             if txn_receipt is not None:
