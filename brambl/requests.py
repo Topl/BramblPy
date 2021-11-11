@@ -29,6 +29,7 @@ class BaseBifrostRequest(Module):
     _default_network: str = "private"
 
     """ properties """
+
     @property
     def default_block(self) -> BlockIdentifier:
         return self._default_block
@@ -55,15 +56,14 @@ class BaseBifrostRequest(Module):
 
         return transaction
 
-
     def _estimate_fee_helper(self,
-                            network_prefix: str
-                            ) -> Poly:
+                             network_prefix: str
+                             ) -> Poly:
         if network_prefix == VALHALLA:
             return Poly(VALHALLA_FEE)
         elif network_prefix == TOPLNET:
             return Poly(TOPLNET_FEE)
-        else
+        else:
             return Poly(0)
 
     _send_transaction: \
@@ -203,6 +203,7 @@ class BifrostRequest(BaseBifrostRequest, Module):
 
     def estimate_fee(self, network_prefix: str) -> Poly:
         return self._estimate_fee_helper(network_prefix)
+
 
 def get_default_http_endpoint() -> URI:
     return URI(
