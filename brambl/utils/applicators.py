@@ -1,31 +1,6 @@
-from typing import Callable, Any, List, Generator, Dict, Tuple
-
-from brambl.utils.functional import to_dict
+from typing import Callable, Any, List, Generator
 
 from brambl.utils.decorators import return_arg_type
-
-
-@to_dict
-def apply_formatters_to_dict(
-        formatters: Dict[Any, Any], value: Dict[Any, Any]
-) -> Generator[Tuple[Any, Any], None, None]:
-    for key, item in value.items():
-        if key in formatters:
-            try:
-                yield key, formatters[key](item)
-            except ValueError as exc:
-                new_error_message = "Could not format invalid value %r as field %r" % (
-                    item,
-                    key,
-                )
-                raise ValueError(new_error_message) from exc
-            except TypeError as exc:
-                new_error_message = (
-                        "Could not format invalid type of %r for field %r" % (item, key)
-                )
-                raise TypeError(new_error_message) from exc
-        else:
-            yield key, item
 
 
 @return_arg_type(2)

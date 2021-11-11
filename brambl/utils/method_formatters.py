@@ -3,7 +3,7 @@ from typing import Callable, Dict, Any, Collection, Iterable, Union
 from toolz import compose
 
 from brambl.types import RPCEndpoint, TReturn
-from brambl.utils.curried import apply_formatter_at_index, apply_formatters_to_dict
+from brambl.utils.curried import apply_formatter_at_index
 from brambl.utils.formatters import remove_key_if
 from brambl.utils.functional import to_tuple
 from brambl.utils.rpc_api import RPC
