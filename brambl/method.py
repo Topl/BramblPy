@@ -16,8 +16,6 @@ if TYPE_CHECKING:
     from brambl import Brambl  # noqa: F401
     from brambl.module import Module  # noqa: F401
 
-
-@to_tuple
 def _apply_request_formatters(
         params: Any, request_formatters: Dict[RPCEndpoint, Callable[..., TReturn]]
 ) -> Tuple[Any, ...]:
