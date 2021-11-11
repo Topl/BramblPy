@@ -27,8 +27,16 @@ class TimeExhausted(Exception):
     """
     pass
 
+
 class BlockNotFound(Exception):
     """
     Raised when the block id used to lookup a block in a jsonrpc call cannot be found.
+    """
+    pass
+
+
+class InvalidAddress(ValueError):
+    """
+    The supplied address does not have a valid checksum
     """
     pass

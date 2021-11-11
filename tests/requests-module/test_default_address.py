@@ -1,4 +1,4 @@
-from brambl.types import PolyRawTxParams
+from brambl.types import PolyRawTxParams, Poly
 
 
 def test_uses_default_address_when_set(brambl, default_address,
@@ -9,8 +9,8 @@ def test_uses_default_address_when_set(brambl, default_address,
     transaction: PolyRawTxParams = {
         "propositionType": "PublicKeyEd25519",
         "data": "Unit Test 1",
-        "recipients": [[str(extra_addresses[1].address), "0"]],
-        "fee": "100",
+        "recipients": [[str(extra_addresses[1].address), Poly("0")]],
+        "fee": Poly("100"),
         "boxSelectionAlgorithm": "All"
     }
 

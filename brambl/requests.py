@@ -1,6 +1,7 @@
 import os
 # Dependencies
-from typing import Any, Union, Callable
+import warnings
+from typing import Any, Union, Callable, Dict
 
 import requests_cache
 from hexbytes import HexBytes
@@ -11,7 +12,7 @@ from brambl.consts import VALHALLA_FEE, TOPLNET, VALHALLA, TOPLNET_FEE
 from brambl.credentials.credential_manager import Ed25519CredentialManager
 from brambl.ed25519.utils.address import Address, validateAddressByNetwork
 from brambl.exceptions import TimeExhausted
-from brambl.method import Method, default_root_munger
+from brambl.method import Method, default_root_munger, return_args_directly
 from brambl.module import Module
 from brambl.types import URI, BlockIdentifier, AssetTxParams, ArbitTxParams, \
     PolyTxParams, AssetRawTxParams, \
@@ -29,6 +30,7 @@ class BaseBifrostRequest(Module):
     _default_network: str = "private"
 
     """ properties """
+
     @property
     def default_block(self) -> BlockIdentifier:
         return self._default_block
@@ -44,7 +46,7 @@ class BaseBifrostRequest(Module):
     def send_raw_transaction_munger(self, transaction: Union[
         AssetTxParams, ArbitTxParams, PolyTxParams]) \
             -> Union[AssetTxParams, ArbitTxParams, PolyTxParams]:
-        if validateAddressByNetwork(
+        if self.default_address and validateAddressByNetwork(
                 self._default_network, str(self.default_address)):
             if 'sender' not in transaction:
                 transaction = assoc(transaction, 'sender',
@@ -55,15 +57,14 @@ class BaseBifrostRequest(Module):
 
         return transaction
 
-
     def _estimate_fee_helper(self,
-                            network_prefix: str
-                            ) -> Poly:
+                             network_prefix: str
+                             ) -> Poly:
         if network_prefix == VALHALLA:
             return Poly(VALHALLA_FEE)
         elif network_prefix == TOPLNET:
             return Poly(TOPLNET_FEE)
-        else
+        else:
             return Poly(0)
 
     _send_transaction: \
@@ -117,7 +118,7 @@ class BaseBifrostRequest(Module):
         mungers=[default_root_munger],
     )
 
-    get_block_number: Method[Callable[[], BlockNumber]] = Method(
+    get_current_block: Method[Callable[[], BlockNumber]] = Method(
         RPC.topl_head,
         mungers=[default_root_munger],
     )
@@ -133,20 +134,26 @@ class BifrostRequest(BaseBifrostRequest, Module):
 
     @property
     def node_info(self) -> str:
+        warnings.warn(
+            "This method has been deprecated in some clients.",
+            category=DeprecationWarning,
+        )
         return self._node_info({})
 
-    get_delay: Method[Callable[[], int]] = Method(
-        RPC.debug_delay,
-        mungers=None,
-    )
+    get_delay: Method[Callable[[], int]] = Method(RPC.debug_delay)
 
     @property
     def delay(self) -> int:
         return self.get_delay()
 
+    get_balance: Method[Callable[..., Dict]] = Method(
+        RPC.topl_balances,
+        mungers=[return_args_directly],
+    )
+
     @property
-    def block_number(self) -> BlockNumber:
-        return self.get_block_number({})
+    def current_block(self) -> BlockNumber:
+        return self.get_current_block({})
 
     """ property default_address """
 
@@ -203,6 +210,7 @@ class BifrostRequest(BaseBifrostRequest, Module):
 
     def estimate_fee(self, network_prefix: str) -> Poly:
         return self._estimate_fee_helper(network_prefix)
+
 
 def get_default_http_endpoint() -> URI:
     return URI(

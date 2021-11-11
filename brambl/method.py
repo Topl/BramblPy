@@ -47,6 +47,10 @@ def default_root_munger(module: "Module", *args: Any) -> List[Any]:
     return [*args]
 
 
+def return_args_directly(module: "Module", *args: Any) -> Any:
+    return [*args][0]
+
+
 class Method(Generic[TFunc]):
     """Method object for Bifrost client methods
 

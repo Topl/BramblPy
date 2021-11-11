@@ -15,7 +15,7 @@ class RPC:
 
     # topl
     topl_head = RPCEndpoint("topl_head")
-    topl_balances = RPCEndpoint("topl_balances"),
+    topl_balances = RPCEndpoint("topl_balances")
     topl_transactionById = RPCEndpoint("topl_transactionById")
     topl_blockById = RPCEndpoint("topl_blockById")
     topl_blockByHeight = RPCEndpoint("topl_blockByHeight")

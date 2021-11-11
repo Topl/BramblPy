@@ -54,7 +54,6 @@ def default_address(datadir):
                                                            password)
     return Ed25519CredentialManager.from_key(derived_private_key, 0x40)
 
-
 @pytest.fixture
 def extra_addresses():
     num_addresses_to_create = 10

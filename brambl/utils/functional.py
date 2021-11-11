@@ -32,3 +32,4 @@ to_dict = apply_to_return_value(
 to_tuple = apply_to_return_value(
     tuple
 )  # type: Callable[[Callable[..., Iterable[TVal]]], Callable[..., Tuple[TVal, ...]]]
+
