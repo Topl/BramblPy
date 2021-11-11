@@ -75,7 +75,7 @@ def validate_address(value: Any, network_prefix: str) -> bool:
     """
     if not isinstance(value, str):
         raise TypeError('Address {} must be provided as a string'.format(value))
-    validateAddressByNetwork(value, network_prefix)
+    validateAddressByNetwork(network_prefix, value)
     return True
 
 

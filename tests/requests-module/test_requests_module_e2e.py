@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 def test_brambl_topl_info(brambl: "Brambl") -> None:
     with pytest.warns(DeprecationWarning,
-                      match="This mbramblod has been deprecated in some clients"):
+                      match="This method has been deprecated in some clients"):
         topl_info = brambl.requests.node_info
 
     assert is_dict(topl_info)
@@ -51,13 +51,15 @@ def test_brambl_send_transaction_addr_checksum_required(brambl: "Brambl", defaul
         'recipients': [[str(default_address.address), Poly("0")]],
         "propositionType": "PublicKeyEd25519",
         "boxSelectionAlgorithm": "All",
-        "changeAddress": str(default_address.address)
+        "changeAddress": str(default_address.address),
+        "network_prefix": "private",
+        "fee": "0"
     }
 
-    with pytest.raises(InvalidAddress):
+    with pytest.raises(ValueError):
         invalid_params = cast(PolyRawTxParams, dict(txn_params, **{'sender': [non_checksum_addr]}))
         brambl.requests.send_raw_poly_transaction(invalid_params)
 
-    with pytest.raises(InvalidAddress):
+    with pytest.raises(ValueError):
         invalid_params = cast(PolyRawTxParams, dict(txn_params, **{'recipients': [[non_checksum_addr, Poly("0")]]}))
         brambl.requests.send_raw_poly_transaction(invalid_params)

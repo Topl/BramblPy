@@ -3,27 +3,28 @@ from typing import Callable, Dict, Any, Collection, Iterable, Union
 from toolz import compose
 
 from brambl.types import RPCEndpoint, TReturn
-from brambl.utils.curried import apply_formatter_at_index
+from brambl.utils.curried import apply_formatter_to_dict
 from brambl.utils.formatters import remove_key_if
 from brambl.utils.functional import to_tuple
 from brambl.utils.rpc_api import RPC
 from brambl.utils.validation import validate_addresses, validate_addresses_nested, validate_address
 
 raw_poly_transaction_param_formatter = compose(
-    remove_key_if('recipients', lambda txn: txn['recipients'] in {[], None}
+    remove_key_if('network_prefix', lambda txn: txn['network_prefix'] not in {"", b"", None}),
+    remove_key_if('recipients', lambda txn: txn['recipients'] in [[], None]
                                             or not validate_addresses_nested(txn['recipients'], txn['network_prefix'])),
-    remove_key_if('sender', lambda txn: txn['sender'] in {[], None}
-                                                or not validate_addresses(txn['sender'], txn['network_prefix'])),
+    remove_key_if('sender', lambda txn: txn['sender'] in [[], None]
+                                        or not validate_addresses(txn['sender'], txn['network_prefix'])),
     remove_key_if('changeAddress', lambda txn: txn['changeAddress'] in {'', b'', None}
-                                            or not validate_address(txn['changeAddress'], txn['network_prefix'])),
+                                               or not validate_address(txn['changeAddress'], txn['network_prefix'])),
     remove_key_if('fee', lambda txn: txn['fee'] in {'', b'', None}),
-    remove_key_if('network_prefix', lambda txn: txn['network_prefix'] not in {"", b"", None})
 )
 
 PYTHONIC_REQUEST_FORMATTERS = {
-    #Topl
-    RPC.topl_rawPolyTransfer: apply_formatter_at_index(raw_poly_transaction_param_formatter, 0)
+    # Topl
+    RPC.topl_rawPolyTransfer: apply_formatter_to_dict(raw_poly_transaction_param_formatter)
 }
+
 
 @to_tuple
 def combine_formatters(
