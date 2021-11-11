@@ -1,10 +1,12 @@
 import functools
 import warnings
-from typing import Generic, TypeVar, Callable, Any, Optional, Union, Type, Sequence, Tuple, List, TYPE_CHECKING
+from typing import Generic, TypeVar, Callable, Any, Optional, Union, Type, Sequence, Tuple, List, TYPE_CHECKING, Dict
 
 from toolz import pipe
 
 from brambl.types import RPCEndpoint, TReturn
+from brambl.utils.functional import to_tuple
+from brambl.utils.method_formatters import get_request_formatters
 
 TFunc = TypeVar('TFunc', bound=Callable[..., Any])
 
@@ -13,6 +15,16 @@ Munger = Callable[..., Any]
 if TYPE_CHECKING:
     from brambl import Brambl  # noqa: F401
     from brambl.module import Module  # noqa: F401
+
+
+@to_tuple
+def _apply_request_formatters(
+        params: Any, request_formatters: Dict[RPCEndpoint, Callable[..., TReturn]]
+) -> Tuple[Any, ...]:
+    if request_formatters:
+        formatted_params = pipe(params, request_formatters)
+        return formatted_params
+    return params
 
 
 def _munger_star_apply(fn: Callable[..., TReturn]) -> Callable[..., TReturn]:
@@ -63,7 +75,10 @@ class Method(Generic[TFunc]):
     method inputs are passed to the method selection function, and the returned
     method string is used.
 
-    3. After the parameter processing from steps 1-2 the request is made using
+    3. request formatters are set - formatters are retrieved
+    using the json rpc method string.
+
+    4. After the parameter processing from steps 1-2 the request is made using
     the calling function returned by the module attribute ``retrieve_caller_fn``
     and the response formatters are applied to the output.
 """
@@ -71,11 +86,13 @@ class Method(Generic[TFunc]):
     def __init__(self,
                  json_rpc_method: Optional[RPCEndpoint] = None,
                  mungers: Optional[Sequence[Munger]] = None,
+                 request_formatters: Optional[Callable[..., TReturn]] = None,
                  method_choice_depends_on_args:
                  Optional[Callable[..., RPCEndpoint]] = None,
                  ):
         self.json_rpc_method = json_rpc_method
         self.mungers = mungers or [default_munger]
+        self.request_formatters = request_formatters or get_request_formatters
         self.method_choice_depends_on_args = method_choice_depends_on_args
 
     def __get__(self, obj: Optional["Module"] = None,
@@ -127,7 +144,8 @@ class Method(Generic[TFunc]):
             self.json_rpc_method = self.method_choice_depends_on_args(value=params[0])
 
         method = self.method_selector_fn()
-        request = (method, params)
+        request = (method,
+                   _apply_request_formatters(params, self.request_formatters(method)))
         return request
 
 

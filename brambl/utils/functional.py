@@ -26,4 +26,9 @@ TKey = TypeVar("TKey")
 to_dict = apply_to_return_value(
     dict
 )
-# type: Callable[[Callable[..., Iterable[Union[Mapping[TKey, TVal], Tuple[TKey, TVal]]]]], Callable[..., Dict[TKey, TVal]]]
+# type:
+# Callable[[Callable[..., Iterable[Union[Mapping[TKey, TVal], Tuple[TKey, TVal]]]]], Callable[..., Dict[TKey, TVal]]]
+
+to_tuple = apply_to_return_value(
+    tuple
+)  # type: Callable[[Callable[..., Iterable[TVal]]], Callable[..., Tuple[TVal, ...]]]

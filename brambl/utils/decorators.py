@@ -8,6 +8,23 @@ from brambl.utils.types import is_text
 T = TypeVar("T")
 
 
+def return_arg_type(at_position: int) -> Callable[..., Callable[..., T]]:
+    """
+    Wrap the return value with the result of `type(args[at_position])`.
+    """
+
+    def decorator(to_wrap: Callable[..., Any]) -> Callable[..., T]:
+        @functools.wraps(to_wrap)
+        def wrapper(*args: Any, **kwargs: Any) -> T:
+            result = to_wrap(*args, **kwargs)
+            ReturnType = type(args[at_position])
+            return ReturnType(result)  # type: ignore
+
+        return wrapper
+
+    return decorator
+
+
 def _has_one_val(*args: T, **kwargs: T) -> bool:
     vals = itertools.chain(args, kwargs.values())
     not_nones = list(filter(lambda val: val is not None, vals))
