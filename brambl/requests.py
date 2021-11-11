@@ -1,6 +1,6 @@
 import os
 # Dependencies
-from typing import Any, Union, Callable, TypedDict
+from typing import Any, Union, Callable
 
 import requests_cache
 from hexbytes import HexBytes
