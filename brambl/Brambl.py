@@ -7,10 +7,6 @@ from brambl.utils.conversions import to_bytes, Primitives, to_text, to_hex, to_i
 from brambl.utils.encoding import to_json
 from brambl.manager import RequestManager as DefaultRequestManager
 
-# Constants definitions
-validTxMethods = ['createAssetsPrototype', 'transferAssetsPrototype', 'transferTargetAssetsPrototype']
-
-
 class Brambl:
     # Client
     HttpClient = HTTPClient
