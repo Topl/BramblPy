@@ -1,6 +1,6 @@
 import unittest
 import json
-from brambl import requests
+from brambl.modules import Requests
 
 
 class TestIntegrationRequests(unittest.TestCase):

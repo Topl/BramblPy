@@ -5,7 +5,7 @@ from abc import (
 
 class BaseCredential(ABC):
     """
-    Specify convenience methods to generate proofs for tranasactions, as well as propositions (the most common currently
+    Specify convenience methods to generate proofs for transactions, as well as propositions (the most common currently
     being the public_key_hash.
     """
 
@@ -13,7 +13,7 @@ class BaseCredential(ABC):
     @abstractmethod
     def address(self):
         """
-        The checksummed public address for this account.
+        The checksummed public address for this credential.
 
         .. code-block:: python
 
@@ -53,7 +53,7 @@ class BaseCredential(ABC):
         """
         Equality test between two credentials.
 
-        Two accounts are considered the same if they are exactly the same type,
+        Two addresss are considered the same if they are exactly the same type,
         and can sign for the same address.
         """
         return type(self) == type(other) and self.address == other.address

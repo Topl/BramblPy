@@ -1,5 +1,5 @@
 import collections
-from typing import Any
+from typing import Any, Sequence
 
 bytes_types = (bytes, bytearray)
 integer_types = (int,)
@@ -16,7 +16,7 @@ def is_string(value: Any) -> bool:
 
 
 def is_list_like(obj: Any) -> bool:
-    return not is_string(obj) and isinstance(obj, collections.abc.Sequence)
+    return not is_string(obj) and isinstance(obj, Sequence)
 
 
 def is_bytes(value: Any) -> bool:

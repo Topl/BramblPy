@@ -14,7 +14,7 @@ class LocalCredential(BaseCredential):
         >>> my_local_credential.key # doctest: +SKIP
         b"\x01\x23..."
 
-    You can also get the public key by casting the account to :class:`bytes`:
+    You can also get the public key by casting the address to :class:`bytes`:
 
     .. code-block:: python
 
@@ -24,7 +24,7 @@ class LocalCredential(BaseCredential):
 
     def __init__(self, key, credential_manager, network_prefix: NetworkId, proposition_type: str):
         """
-        Initialize a new account with the the given private key.
+        Initialize a new address with the the given private key.
 
         :param brambl.ed25519.datatypes.SigningKey key: to prefill in private key execution
         :param ~brambl.ed25519.Ed25519API credential_manager: the key-unaware management API

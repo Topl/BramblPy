@@ -70,9 +70,9 @@ def test_brambl_key_manager_default_kdf(key_man, monkeypatch):
 
 
 def test_brambl_key_manager_create_variation(key_man):
-    account1 = key_man.create(network_prefix=64)
-    account2 = key_man.create(network_prefix=64)
-    assert account1 != account2
+    address1 = key_man.create(network_prefix=64)
+    address2 = key_man.create(network_prefix=64)
+    assert address1 != address2
 
 
 def test_brambl_key_manager_equality(key_man, PRIVATE_KEY):
@@ -82,10 +82,10 @@ def test_brambl_key_manager_equality(key_man, PRIVATE_KEY):
 
 
 def test_brambl_key_manager_from_key_reproducible(key_man, PRIVATE_KEY):
-    account1 = key_man.from_key(PRIVATE_KEY, network_prefix=64)
-    account2 = key_man.from_key(PRIVATE_KEY, network_prefix=64)
-    assert bytes(account1) == bytes(account2)
-    assert isinstance(str(account1), str)
+    address1 = key_man.from_key(PRIVATE_KEY, network_prefix=64)
+    address2 = key_man.from_key(PRIVATE_KEY, network_prefix=64)
+    assert bytes(address1) == bytes(address2)
+    assert isinstance(str(address1), str)
 
 
 def test_brambl_key_manager_from_key_diverge(key_man, PRIVATE_KEY, PRIVATE_KEY_ALT):
@@ -112,10 +112,10 @@ def test_brambl_credential_manager_from_key_properties(key_man, PRIVATE_KEY):
 
 
 def test_brambl_credential_manager_create_properties(key_man):
-    account = key_man.create(64)
-    assert callable(account.sign_transaction)
-    assert callable(account.sign_message)
-    assert validateAddressByNetwork('private', str(account.address))
+    address = key_man.create(64)
+    assert callable(address.sign_transaction)
+    assert callable(address.sign_message)
+    assert validateAddressByNetwork('private', str(address.address))
 
 
 @pytest.mark.parametrize(

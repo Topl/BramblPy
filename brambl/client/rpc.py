@@ -1,10 +1,9 @@
 import logging
-from sre_constants import ANY
 from typing import Any, Dict, Iterable, Optional, Tuple, Union
 from brambl.client.base import JSONBaseClient
 from brambl.datastructures import NamedElementOnion
 from brambl.exception_retry_request import http_retry_request_middleware
-from brambl.modules.Requests import get_default_http_endpoint, make_post_request
+from brambl.requests import get_default_http_endpoint, make_post_request
 from brambl.types import URI, Middleware, RPCEndpoint, RPCResponse
 from brambl.utils.functional import (
     to_dict

@@ -96,7 +96,7 @@ def address(addr, network_prefix: str):
         raise ValueError("String {} is not a valid Topl address".format(addr))
 
 
-def validateAddressByNetwork(network_prefix: str, address_to_validate: str):
+def validateAddressByNetwork(network_prefix: str, address_to_validate: str) -> bool:
     """
        Checks if the address is valid by the following 4 steps:
     1. Verify that the address is not null.
