@@ -7,6 +7,7 @@ from hexbytes import HexBytes
 from requests import Timeout
 from toolz import assoc
 
+from brambl.consts import VALHALLA_FEE, TOPLNET, VALHALLA, TOPLNET_FEE
 from brambl.credentials.credential_manager import Ed25519CredentialManager
 from brambl.ed25519.utils.address import Address, validateAddressByNetwork
 from brambl.exceptions import TimeExhausted
@@ -15,7 +16,7 @@ from brambl.module import Module
 from brambl.types import URI, BlockIdentifier, AssetTxParams, ArbitTxParams, \
     PolyTxParams, AssetRawTxParams, \
     ArbitRawTxParams, PolyRawTxParams, RPCResponse, ModifierId, BlockData, \
-    BlockNumber, Transaction
+    BlockNumber, Transaction, Poly
 from brambl.utils.blocks import select_method_for_block_identifier
 from brambl.utils.empty import Empty, empty
 from brambl.utils.rpc_api import RPC
@@ -54,6 +55,16 @@ class BaseBifrostRequest(Module):
                                     str(self.default_address))
 
         return transaction
+
+    def _estimate_fee_helper(self,
+                             network_prefix: str
+                             ) -> Poly:
+        if network_prefix == VALHALLA:
+            return Poly(VALHALLA_FEE)
+        elif network_prefix == TOPLNET:
+            return Poly(TOPLNET_FEE)
+        else:
+            return Poly(0)
 
     _send_transaction: \
         Method[Callable[[Union[PolyTxParams, ArbitTxParams, AssetTxParams]],
@@ -189,6 +200,9 @@ class BifrostRequest(BaseBifrostRequest, Module):
     def send_raw_arbit_transaction(self,
                                    transaction: ArbitRawTxParams) -> RPCResponse:
         return self._send_raw_arbit_transaction(transaction)
+
+    def estimate_fee(self, network_prefix: str) -> Poly:
+        return self._estimate_fee_helper(network_prefix)
 
 
 def get_default_http_endpoint() -> URI:
