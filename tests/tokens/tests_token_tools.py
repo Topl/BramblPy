@@ -47,9 +47,11 @@ def test_conversion_revers_round_trip_trip(amount_in_token):
     "value,expected",
     [
         ([1000000000, "nanopoly"], "1000000000"),
+        ([1000000000, "micropoly"], "1000000"),
+        ([1000000000, "millipoly"], "1000"),
         ([1000000000, "poly"], "1"),
-        ([1000000000, "nanoarbit"], "1000000000"),
-        ([1000000000, "arbit"], "1"),
+        ([1000000000, "kilopoly"], "0.001"),
+        ([1000000000, "megapoly"], "0.000001"),
     ],
 )
 def test_from_nanotoken(value, expected):
@@ -60,11 +62,13 @@ def test_from_nanotoken(value, expected):
     "value,expected",
     [
         ([1, "nanopoly"], "1"),
+        ([1, "micropoly"], "1000"),
+        ([1, "millipoly"], "1000000"),
         ([1, "poly"], "1000000000"),
-        ([1, "nanoarbit"], "1"),
-        ([1, "arbit"], "1000000000"),
+        ([1, "kilopoly"], "1000000000000"),
+        ([1, "megapoly"], "1000000000000000"),
         ([0.05, "poly"], "50000000"),
-        ([1.2, "arbit"], "1200000000"),
+        ([1.2, "poly"], "1200000000"),
     ],
 )
 def test_to_nanotoken(value, expected):

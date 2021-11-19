@@ -13,7 +13,7 @@ class denoms:
 
 
 MIN_TOKEN_VALUE = 0
-MAX_TOKEN_VALUE = 2 ** 128 - 1
+MAX_TOKEN_VALUE = 2 ** 127 - 1
 
 
 def from_nanotoken(number: int, unit: str) -> Union[int, decimal.Decimal]:

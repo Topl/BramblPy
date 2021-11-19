@@ -11,10 +11,7 @@ from brambl.utils.conversions import to_bytes, Primitives, to_text, to_hex, to_i
 from brambl.utils.encoding import to_json
 from brambl.manager import RequestManager as DefaultRequestManager
 
-# Constants definitions
 from brambl.utils.module import attach_modules
-
-validTxMethods = ['createAssetsPrototype', 'transferAssetsPrototype', 'transferTargetAssetsPrototype']
 
 
 def get_default_modules() -> Dict[str, Sequence[Any]]:
