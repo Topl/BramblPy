@@ -1,10 +1,12 @@
-from typing import Any
+import itertools
+from typing import Any, Sequence
 
 from base58 import b58decode
 
 from brambl.consts import TRANSACTION_ID_SIZE, TRANSACTION_MODIFIER_TYPE
+from brambl.ed25519.utils.address import validateAddressByNetwork
 from brambl.utils.exceptions import ValidationError
-from brambl.utils.types import is_bytes
+from brambl.utils.types import is_bytes, is_string
 
 
 def validate_tx_id(txid: Any) -> str:
@@ -60,3 +62,35 @@ def validate_private_key_bytes(value: Any) -> None:
 
 def validate_message(value: Any) -> None:
     validate_bytes(value)
+
+
+def is_not_address_string(value: Any, network_prefix: str) -> bool:
+    return (is_string(value) and not is_bytes(value) and not
+    validateAddressByNetwork(value, network_prefix))
+
+
+def validate_address(value: Any, network_prefix: str) -> bool:
+    """
+    Helper function for validating an address
+    """
+    if not isinstance(value, str):
+        raise TypeError('Address {} must be provided as a string'.format(value))
+    validateAddressByNetwork(value, network_prefix)
+    return True
+
+
+def validate_addresses(value: Sequence[Any], network_prefix: str) -> bool:
+    """
+    Helper function for validating a series of addresses (usually when initiating a transaction)
+    """
+    [validate_address(x, network_prefix) for x in value]
+    return True
+
+
+def validate_addresses_nested(value: Sequence[Sequence[Any]], network_prefix: str) -> bool:
+    """
+    Helper function for validating a series of addresses that are nested in a 2-d array (most likely for validating the recipients field of a raw
+    transfer request
+    """
+    [validate_address(x[0], network_prefix) for x in value]
+    return True

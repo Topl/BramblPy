@@ -68,6 +68,7 @@ AssetRawTxParams = TypedDict("AssetRawTxParams", {
     "consolidationAddress": Union[Address, str],
     "minting": bool,
     "boxSelectionAlgorithm": str,
+    "network_prefix": str
 }, total=False)
 
 AssetTxParams = TypedDict("AssetTxParams", {
@@ -78,7 +79,8 @@ AssetTxParams = TypedDict("AssetTxParams", {
     "timestamp": Timestamp,
     "data": Union[bytes, HexStr, Base58Str],
     "minting": bool,
-    "propositionType": str
+    "propositionType": str,
+    "network_prefix": str
 }, total=False)
 
 PolyRawTxParams = TypedDict("PolyRawTxParams", {
@@ -90,6 +92,7 @@ PolyRawTxParams = TypedDict("PolyRawTxParams", {
     "fee": Poly,
     "changeAddress": Union[Address, str],
     "boxSelectionAlgorithm": str,
+    "network_prefix": str
 }, total=False)
 
 PolyTxParams = TypedDict("PolyTxParams", {
