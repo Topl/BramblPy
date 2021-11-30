@@ -1,5 +1,5 @@
 #import settings
-from brambl.modules import Requests
+from brambl import requests
 
 b = Requests.Requests()
 print(b.chainInfo())

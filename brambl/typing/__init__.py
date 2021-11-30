@@ -1,0 +1,1 @@
+TypeStr = str

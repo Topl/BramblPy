@@ -1,10 +1,9 @@
 import logging
-from sre_constants import ANY
 from typing import Any, Dict, Iterable, Optional, Tuple, Union
 from brambl.client.base import JSONBaseClient
 from brambl.datastructures import NamedElementOnion
 from brambl.exception_retry_request import http_retry_request_middleware
-from brambl.modules.Requests import get_default_http_endpoint, make_post_request
+from brambl.requests import get_default_http_endpoint, make_post_request
 from brambl.types import URI, Middleware, RPCEndpoint, RPCResponse
 from brambl.utils.functional import (
     to_dict
@@ -17,7 +16,7 @@ class HTTPClient(JSONBaseClient):
     endpoint_uri = None
     _request_args = None
     _request_kwargs = None
-    _middlewares: Tuple[Middleware, ...] = NamedElementOnion([http_retry_request_middleware, 'http_retry_request'])
+    _middlewares: Tuple[Middleware, ...] = NamedElementOnion([(http_retry_request_middleware, 'http_retry_request')])
 
     def __init__(
         self, endpoint_uri: Optional[Union[URI, str]] = None,

@@ -84,7 +84,6 @@ class RequestManager:
         Leaving ens unspecified will prevent the middleware from resolving names.
         """
         return [
-            (attrdict_middleware, 'attrdict'),
             ##(pythonic_middleware, 'pythonic'),  #TODO Need to write the Pythonic Request and Result Formatters
             ##(validation_middleware, 'validation'),  #TODO Write validation middleware (for transactions primarily)
         ]
@@ -93,7 +92,8 @@ class RequestManager:
     # Client requests and response
     #
     def _make_request(
-            self, method: Union[RPCEndpoint, Callable[..., RPCEndpoint]], params: Any
+            self, method: Union[RPCEndpoint, Callable[..., RPCEndpoint]],
+            params: Any
     ) -> RPCResponse:
         request_func = self.client.request_func(
             self.brambl,

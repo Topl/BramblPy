@@ -1,7 +1,6 @@
 from typing import Any, Callable, Sequence, Tuple, cast, TYPE_CHECKING
 
 from importlib_metadata import itertools
-from brambl import Brambl
 from brambl.middleware import combine_middlewares
 from brambl.types import Middleware, MiddlewareOnion, RPCEndpoint, RPCResponse
 from brambl.utils.conversions import to_text
@@ -74,7 +73,7 @@ class JSONBaseClient(BaseClient):
             "jsonrpc": "2.0",
             "method": method,
             "params": params or [],
-            "id": next(self.request_counter),
+            "id": str(next(self.request_counter)),
         }
         encoded = FriendlyJsonSerde().json_encode(rpc_dict)
         return encoded
