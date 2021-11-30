@@ -16,8 +16,6 @@ if TYPE_CHECKING:
     from brambl import Brambl  # noqa: F401
     from brambl.module import Module  # noqa: F401
 
-
-@to_tuple
 def _apply_request_formatters(
         params: Any, request_formatters: Dict[RPCEndpoint, Callable[..., TReturn]]
 ) -> Tuple[Any, ...]:
@@ -45,6 +43,10 @@ def default_munger(module: "Module", *args: Any, **kwargs: Any) -> Tuple[()]:
 
 def default_root_munger(module: "Module", *args: Any) -> List[Any]:
     return [*args]
+
+
+def return_args_directly(module: "Module", *args: Any) -> Any:
+    return [*args][0]
 
 
 class Method(Generic[TFunc]):

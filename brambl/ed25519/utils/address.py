@@ -6,6 +6,7 @@ from base58 import b58decode
 from brambl.base58 import encode_base58
 from brambl.consts import ADDRESS_LENGTH, PropositionType
 from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
+from brambl.exceptions import InvalidAddress
 from brambl.typing.encoding import HexStr
 from brambl.utils.Hash import hashFunc, digestAndEncode
 from brambl.utils.hex import decode_hex
@@ -125,7 +126,7 @@ def validateAddressByNetwork(network_prefix: str, address_to_validate: str) -> b
 
         )
     elif not verify_checksum(decoded_address):
-        raise ValueError(
+        raise InvalidAddress(
             'Supplied address has invalid checksum'
         )
     return True

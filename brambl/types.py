@@ -10,8 +10,8 @@ RPCEndpoint = NewType("RPCEndpoint", str)
 if TYPE_CHECKING:
     from brambl import Brambl  # noqa: F401
 
-Poly = NewType('Poly', int)
-Arbit = NewType('Arbit', int)
+Poly = NewType('Poly', str)
+Arbit = NewType('Arbit', str)
 SecurityRoot = NewType("SecurityRoot", bytes)
 ModifierId = NewType("ModiferId", str)
 BoxId = NewType("BoxId", str)

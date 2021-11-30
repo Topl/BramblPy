@@ -1,11 +1,11 @@
 from toolz import curry
 
 from brambl.utils.applicators import (
-    apply_formatter_at_index
+    apply_formatter_to_dict as non_curried_apply_formatter_to_dict
 )
 from brambl.utils.conversions import text_if_str as non_curried_text_if_str
 
-apply_formatter_at_index = curry(apply_formatter_at_index)
+apply_formatter_to_dict = curry(non_curried_apply_formatter_to_dict)
 text_if_str = curry(non_curried_text_if_str)
 
 # Delete any methods and classes that are not intended to be importable from
