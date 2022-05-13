@@ -2,7 +2,6 @@
 A Python API wrapper to communicate with the Topl blockchain via requests made using the requests module. (Recommended for use with Python 3.x)
 
 # Installation & Usage
-To install from pip run "pip install brambl" in your project directory<br/>
 
 ----------------------------------------------------------------------<br/>
 
