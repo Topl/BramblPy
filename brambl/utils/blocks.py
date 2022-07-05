@@ -2,7 +2,7 @@ from typing import Any
 
 from toolz import curry
 
-from brambl.base58 import isBase58
+from brambl.topl_base58 import isBase58
 from brambl.types import RPCEndpoint
 from brambl.utils.types import is_text, is_bytes, is_integer, is_string
 
