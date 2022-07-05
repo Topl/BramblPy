@@ -1,5 +1,6 @@
 from base58 import b58decode
-from brambl.address import Address
+#from brambl.address import Address
+from brambl.ed25519.utils.address import Address
 from brambl.metadata import Metadata
 from brambl.utils.validation import validate_txId
 
