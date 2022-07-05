@@ -10,7 +10,7 @@ from nacl.bindings import crypto_sign_SEEDBYTES, crypto_sign_seed_keypair, crypt
 from nacl.encoding import RawEncoder
 from nacl.utils import random
 
-from brambl.base58 import encode_base58
+from brambl.topl_base58 import encode_base58
 from brambl.base58.encoding import Base58Encoder
 from brambl.ed25519.utils.address import public_key_bytes_to_address, Address, NetworkId
 
