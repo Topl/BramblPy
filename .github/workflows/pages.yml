@@ -1,5 +1,5 @@
-name: Github pages documentation generation
-on: 
+name: Github Pages documentation deployment
+on:
   push:
     branches: [ main ]
 jobs:

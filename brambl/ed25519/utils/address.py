@@ -3,7 +3,7 @@ from typing import NewType
 
 from base58 import b58decode
 
-from brambl.base58 import encode_base58
+from brambl.topl_base58 import encode_base58
 from brambl.consts import ADDRESS_LENGTH, PropositionType
 from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
 from brambl.exceptions import InvalidAddress
@@ -91,7 +91,7 @@ def address(addr, network_prefix: str):
             "address() argument must be str, bytes, bytearray, or Address instance"
         )
     # validation
-    if (validateAddressByNetwork(network_prefix=network_prefix, address=addr)):
+    if (validateAddressByNetwork(network_prefix=network_prefix, address_to_validate=addr)):
         return PublicKeyEd25519Address(addr)
     else:
         raise ValueError("String {} is not a valid Topl address".format(addr))
