@@ -91,7 +91,7 @@ def address(addr, network_prefix: str):
             "address() argument must be str, bytes, bytearray, or Address instance"
         )
     # validation
-    if (validateAddressByNetwork(network_prefix=network_prefix, address=addr)):
+    if (validateAddressByNetwork(network_prefix=network_prefix, address_to_validate=addr)):
         return PublicKeyEd25519Address(addr)
     else:
         raise ValueError("String {} is not a valid Topl address".format(addr))
