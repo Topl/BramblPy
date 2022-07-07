@@ -1,7 +1,7 @@
 from typing import Union, Callable
 
 from brambl.topl_base58 import encode_base58
-from brambl.base58.encoding import Base58Encoder
+from brambl.topl_base58.encoding import Base58Encoder
 from brambl.encoding import int_to_big_endian, big_endian_to_int
 from brambl.typing.encoding import HexStr, Base58Str
 from brambl.utils.decorators import validate_conversion_arguments, T
