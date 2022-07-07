@@ -42,6 +42,9 @@ deps['dev'] = (
 
 install_requires = deps['keyfile']
 
+with open('./README.md') as readme:
+    long_description = readme.read()
+
 setup(
     name='brambl',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
@@ -49,7 +52,7 @@ setup(
     description=(
         "A library for handling most things affiliated with the Topl Blockchain"
     ),
-    long_description_markdown_filename='README.md',
+    long_description=long_description,
     long_description_content_type="text/markdown",
     author='Sterling Wells',
     author_email='info@topl.me',
