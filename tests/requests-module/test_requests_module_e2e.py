@@ -6,7 +6,7 @@ from brambl.credentials.local import LocalCredential
 from brambl.ed25519.utils.address import Address
 from brambl.exceptions import InvalidAddress
 from brambl.types import PolyRawTxParams, Poly
-from brambl.typing.encoding import Base58Str
+from brambl.topl_typing.encoding import Base58Str
 
 from brambl.utils.types import is_dict, is_integer, is_list_like
 
