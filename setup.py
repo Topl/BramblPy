@@ -7,40 +7,6 @@ from setuptools import (
 )
 
 
-deps = {
-    'keyfile': [
-        "pycryptodome>=3.6.6,<4",
-    ],
-    'test': [
-        "pytest>=3.6,<3.7",
-    ],
-    'lint': [
-        "flake8==3.5.0",
-    ],
-    'dev': [
-        "bumpversion>=0.5.3,<1",
-        "wheel",
-        "setuptools>=36.2.0",
-        # Fixing this dependency due to: pytest 3.6.4 has requirement pluggy<0.8,>=0.5, but you'll have pluggy 0.8.0 which is incompatible.
-        "pluggy==0.7.1",
-        # Fixing this dependency due to: requests 2.20.1 has requirement idna<2.8,>=2.5, but you'll have idna 2.8 which is incompatible.
-        "idna==2.7",
-        # idna 2.7 is not supported by requests 2.18
-        "requests>=2.20,<3",
-        "tox>=2.7.0",
-        "twine",
-    ],
-}
-
-deps['dev'] = (
-    deps['keyfile'] +
-    deps['dev'] +
-    deps['test'] +
-    deps['lint']
-)
-
-
-install_requires = deps['keyfile']
 
 with open('./README.md') as readme:
     long_description = readme.read()
@@ -58,8 +24,6 @@ setup(
     author_email='info@topl.me',
     url='https://github.com/Topl/BramblPy',
     include_package_data=True,
-    install_requires=install_requires,
-    extras_require=deps,
     license="MIT",
     zip_safe=False,
     keywords='topl',
