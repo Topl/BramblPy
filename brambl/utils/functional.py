@@ -1,5 +1,5 @@
 import functools
-from collections import Iterable, Mapping
+from collections.abc import Iterable, Mapping
 from typing import Callable, TypeVar, Union, Tuple, Dict
 
 T = TypeVar("T")

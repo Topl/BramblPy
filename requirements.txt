@@ -35,6 +35,7 @@ iniconfig==1.1.1
 javaobj-py3==0.4.3
 jeepney==0.8.0
 Jinja2==3.1.2
+jsons==1.6.3
 keyring==23.6.0
 lib==4.0.0
 MarkupSafe==2.1.1
@@ -99,6 +100,7 @@ toolz==0.11.2
 tqdm==4.64.0
 twine==4.0.1
 typing_extensions==4.2.0
+typish==1.9.3
 ujson==1.35
 url-normalize==1.4.3
 urllib3==1.26.9

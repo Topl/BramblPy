@@ -1,6 +1,6 @@
 from typing import Type
 
-from brambl.base58.encoding import Base58Encoder
+from brambl.topl_base58.encoding import Base58Encoder
 from brambl.ed25519.datatypes import LazyBackend, PublicKey, SigningKey, BaseSignature, SignedMessage
 from brambl.utils.exceptions import ValidationError
 from brambl.utils.validation import validate_message
