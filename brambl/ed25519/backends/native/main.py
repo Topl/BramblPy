@@ -3,7 +3,7 @@ from typing import Optional  # noqa: F401
 
 from nacl.bindings import crypto_sign, crypto_sign_BYTES, crypto_sign_open, crypto_scalarmult_base
 
-from brambl.base58.encoding import Base58Encoder
+from brambl.topl_base58.encoding import Base58Encoder
 from brambl.ed25519.backends import BaseEd25519Backend
 from brambl.ed25519.datatypes import BaseSignature, PublicKey, BaseEd25519Key, SigningKey, SignedMessage
 

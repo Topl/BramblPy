@@ -1,4 +1,4 @@
-from brambl.base58.encoding import Base58Encoder
+from brambl.topl_base58.encoding import Base58Encoder
 from brambl.credentials.base import BaseCredential
 from brambl.ed25519.utils.address import NetworkId
 

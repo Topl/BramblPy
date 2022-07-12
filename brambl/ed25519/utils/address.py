@@ -7,7 +7,7 @@ from brambl.topl_base58 import encode_base58
 from brambl.consts import ADDRESS_LENGTH, PropositionType
 from brambl.ed25519.utils.constants import curve25519, ed25519, thresholdCurve25519
 from brambl.exceptions import InvalidAddress
-from brambl.typing.encoding import HexStr
+from brambl.topl_typing.encoding import HexStr
 from brambl.utils.Hash import hashFunc, digestAndEncode
 from brambl.utils.hex import decode_hex
 
