@@ -1,7 +1,7 @@
 import codecs
 import collections
 import sys
-from typing import Any, Union, Type, Optional, TYPE_CHECKING
+from typing import Any, Union, Type, Optional, TYPE_CHECKING, ByteString, Hashable
 from abc import (
     ABC
 )
@@ -11,7 +11,7 @@ from nacl.encoding import RawEncoder
 from nacl.utils import random
 
 from brambl.topl_base58 import encode_base58
-from brambl.base58.encoding import Base58Encoder
+from brambl.topl_base58.encoding import Base58Encoder
 from brambl.ed25519.utils.address import public_key_bytes_to_address, Address, NetworkId
 
 # Must compare against version_info[0] and not version_info.major to please mypy.
@@ -29,7 +29,7 @@ if sys.version_info[0] == 2:
         {},
     )  # type: Any
 else:
-    ByteString = collections.ByteString
+    ByteString = ByteString
 
 
 class LazyBackend:
@@ -74,7 +74,7 @@ class LazyBackend:
         return get_backend(*args, **kwargs)
 
 
-class BaseEd25519Key(ByteString, collections.Hashable):
+class BaseEd25519Key(ByteString, Hashable):
     _raw_key = None  # type: bytes
 
     def to_hex(self) -> str:

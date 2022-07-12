@@ -2,7 +2,7 @@ from typing import Any, Callable, Literal, NewType, Optional, TypedDict, Union, 
 
 from brambl.datastructures import NamedElementOnion
 from brambl.ed25519.utils.address import Address
-from brambl.typing.encoding import Base58Str, HexStr
+from brambl.topl_typing.encoding import Base58Str, HexStr
 
 TReturn = TypeVar("TReturn")
 RPCEndpoint = NewType("RPCEndpoint", str)

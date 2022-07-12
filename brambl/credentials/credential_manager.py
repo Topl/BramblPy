@@ -12,7 +12,7 @@ import os
 from Crypto.Hash import BLAKE2b
 from hexbytes import HexBytes
 
-from brambl.base58.encoding import Base58Encoder
+from brambl.topl_base58.encoding import Base58Encoder
 from brambl.credentials.datastructures import Ed25519Proof
 from brambl.credentials.local import LocalCredential
 from brambl.ed25519 import keys, Ed25519API
@@ -20,7 +20,7 @@ from brambl.ed25519 import keys, Ed25519API
 from brambl.ed25519.utils.address import NetworkId
 from brambl.ed25519.utils.constants import ed25519
 from brambl.keyfile.keyfile import decode_keyfile_json, create_keyfile_json
-from brambl.typing.encoding import Base58Str
+from brambl.topl_typing.encoding import Base58Str
 from brambl.utils.conversions import to_bytes
 from brambl.utils.curried import text_if_str
 from brambl.utils.decorators import combomethod
