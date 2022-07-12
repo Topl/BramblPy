@@ -20,7 +20,7 @@ from brambl.ed25519 import keys, Ed25519API
 from brambl.ed25519.utils.address import NetworkId
 from brambl.ed25519.utils.constants import ed25519
 from brambl.keyfile.keyfile import decode_keyfile_json, create_keyfile_json
-from brambl.typing.encoding import Base58Str
+from brambl.topl_typing.encoding import Base58Str
 from brambl.utils.conversions import to_bytes
 from brambl.utils.curried import text_if_str
 from brambl.utils.decorators import combomethod
