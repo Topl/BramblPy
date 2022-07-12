@@ -2,7 +2,7 @@ from typing import AnyStr, Union
 
 from base58 import b58encode, b58decode
 
-from brambl.typing.encoding import Base58Str
+from brambl.topl_typing.encoding import Base58Str
 from brambl.utils.types import is_string
 
 
