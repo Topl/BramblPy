@@ -5,7 +5,7 @@ import jsons as jsons
 from hexbytes import HexBytes
 
 from brambl.datastructures import AttributeDict
-from brambl.typing.encoding import HexStr
+from brambl.topl_typing.encoding import HexStr
 from brambl.utils.types import is_list_like
 
 class FriendlyJsonSerde:

@@ -6,7 +6,7 @@ from brambl.client.rpc import HTTPClient
 from brambl.ed25519.utils.address import validateAddressByNetwork
 from brambl.requests import BifrostRequest
 from brambl.types import MiddlewareOnion
-from brambl.typing.encoding import HexStr, Base58Str
+from brambl.topl_typing.encoding import HexStr, Base58Str
 from brambl.utils.conversions import to_bytes, Primitives, to_text, to_hex, to_int, to_base58
 from brambl.utils.encoding import to_json
 from brambl.manager import RequestManager as DefaultRequestManager
