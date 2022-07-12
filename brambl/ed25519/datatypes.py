@@ -1,7 +1,7 @@
 import codecs
 import collections
 import sys
-from typing import Any, Union, Type, Optional, TYPE_CHECKING
+from typing import Any, Union, Type, Optional, TYPE_CHECKING, ByteString, Hashable
 from abc import (
     ABC
 )
@@ -29,7 +29,7 @@ if sys.version_info[0] == 2:
         {},
     )  # type: Any
 else:
-    ByteString = collections.ByteString
+    ByteString = ByteString
 
 
 class LazyBackend:
@@ -74,7 +74,7 @@ class LazyBackend:
         return get_backend(*args, **kwargs)
 
 
-class BaseEd25519Key(ByteString, collections.Hashable):
+class BaseEd25519Key(ByteString, Hashable):
     _raw_key = None  # type: bytes
 
     def to_hex(self) -> str:
