@@ -2,10 +2,11 @@ import unittest
 import json
 import base58
 
-from brambl.modules import KeyManager
+from brambl.credentials import credential_manager
 from brambl.utils import Hash
 from brambl.utils import CrypTools
 from brambl.Brambl import Brambl
+from brambl.keyfile import keyfile
 import mock
 
 
@@ -14,21 +15,16 @@ def simple_urandom(length):
 
 
 class TestBasicMethods(unittest.TestCase):
-
-    def test_str2pybuf(self):
-        self.assertEqual(KeyManager.str2pybuf('test'),b'\x99\xc7\xb3')
-
-    def test_encrypt(self):
-        self.assertEqual(KeyManager.encrypt('test',b'1111111111111111',bytes(b'iv'),'aes-256-ctr'),b'\x03~r\xa5')
-
     def test_decrypt(self):
-        self.assertEqual(KeyManager.decrypt(b'\x03~r\xa5',b'1111111111111111',bytes(b'iv'),'aes-256-ctr'),b'test')
-
+      self.assertEqual(keyfile.decrypt_aes_ctr(b'\x03~r\xa5',b'1111111111111111',int.from_bytes(b'iv', byteorder = 'big')),b'test')
+    
+    def test_encrypt(self):
+      self.assertEqual(keyfile.encrypt_aes_ctr(b'test',b'1111111111111111',int.from_bytes(b'iv', byteorder = 'big')),b'\x03~r\xa5') 
+   
     def test_getMAC(self):
-        self.assertEqual(KeyManager.getMAC(b'\xcc\xe43\xb6\xe3Q\x07\xf5\xbb\xf3\x0e1k\x01\xf5"\x11IO2iX4\xda:\xf3!\x1e0\xd3-\r',
-                                           base58.b58decode("46bFSSr1npYKmZvRwoYYoQ1zN4jyrKrp5SxHe1gZBKsbNnhyUBbjEAvZwm6ntaDdkk6itTPpDusHq13DUy71Lwe5")),
-                         b'V\x81\xe1pJk\x11\xca\xb8\xc8\x9f\xe0\xd4\xd07\x04#\xdd\x9eL\xbd\xe5$\xc7\xc2%\xa3)M\x83/\xe0')
-
+      self.assertEqual(keyfile.get_mac(b'\xcc\xe43\xb6\xe3Q\x07\xf5\xbb\xf3\x0e1k\x01\xf5"\x11IO2iX4\xda:\xf3!\x1e0\xd3-\r',
+                                       base58.b58decode("46bFSSr1npYKmZvRwoYYoQ1zN4jyrKrp5SxHe1gZBKsbNnhyUBbjEAvZwm6ntaDdkk6itTPpDusHq13DUy71Lwe5")),
+                     b'V\x81\xe1pJk\x11\xca\xb8\xc8\x9f\xe0\xd4\xd07\x04#\xdd\x9eL\xbd\xe5$\xc7\xc2%\xa3)M\x83/\xe0')
     def test_digestAndEncode(self):
         blakeHash = Hash.hashFunc()
         self.assertEqual(Hash.digestAndEncode(blakeHash,'hex'),b'0e5751c026e543b2e8ab2eb06099daa1d1e5df47778f7787faab45cdf12fe3a8')
