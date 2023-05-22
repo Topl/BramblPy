@@ -46,7 +46,7 @@ python-axolotl-curve25519==0.4.1.post2
 python-dotenv==0.13.0
 pytz==2020.1
 readme-renderer==26.0
-requests==2.23.0
+requests==2.31.0
 requests-toolbelt==0.9.1
 rfc3986==1.4.0
 SecretStorage==3.1.2
